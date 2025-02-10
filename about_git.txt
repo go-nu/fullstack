@@ -1,0 +1,21 @@
+A 파일 최초 실행
+git init (초기화)
+git commit -m "버전 명" (버전 설정)
+git remote add origin [깃허브 url]
+git push -u origin main
+
+B 파일 최초 실행
+git init
+git clone [깃허브 url]
+(clone folder open)
+
+(내용 변경)
+
+git add .
+git commit -m "버전"
+git push
+
+A 파일
+git pull
+
+
