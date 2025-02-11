@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1, form{
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>회원 가입을 환영합니다</h1>
+    <form action="#" method="post">
+        <fieldset>
+            <legend>사용자 정보</legend>
+            <ul>
+                <li>
+                    <label for="id">아이디</label><input type="text" id="id"
+                    placeholder="4자 ~ 10자 사이, 공백없이" title="아이디 입력">
+                </li>
+                <li>
+                    <label for="email">이메일</label><input type="emial" id="email"
+                    title="이메일 입력">
+                </li>
+                <li>
+                    <label for="pw">비밀번호</label><input type="password" id="pw"
+                    placeholder="문자와 숫자, 특수 기호 포함" title="비밀번호 입력">
+                </li>
+                <li>
+                    <label for="r_pw">비밀번호 확인</label><input type="password" id="r_pw"
+                    title="비밀번호 확인">
+                </li>
+                <li>
+                    <label for="route">가입 경로</label><select id="route">
+                        <option selected="selected">블로그</option>
+                        <option>검색</option>
+                        <option>SNS</option>
+                        <option>기타</option>
+                    </select>
+                </li>
+                <li>
+                    메모 : <textarea rows="3" cols="60"></textarea>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>이벤트와 새로운 소식</legend>
+            <input type="radio" name="receive"> 메일 수신
+            <input type="radio" name="unreceive" checked="checked"> 메일 수신 안 함
+        </fieldset>
+        <input type="submit" value="가입하기">
+        <input type="reset" value="취소">
+    </form>
+</body>
+</html>

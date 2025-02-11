@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* #000 검정, #333 짙은회색, #ccc 흐린회색, #fff 흰색 */
+        table {
+            width: 50%;
+            border: 1px solid #333;
+            border-collapse: collapse;
+        }
+        /* 같은 스타일 적용시 ","사용 */
+        td, th {
+            border: 1px solid #333;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <!-- th : 굵게, 가운데 정렬 -->
+            <th>날짜</th>
+            <th>시간</th>
+            <th>내용</th>
+        </tr>
+        <tr>
+            <td rowspan="3">5/11(토요일)</td>
+            <td>18:00</td>
+            <td>저녁식사</td>
+        </tr>
+        <tr>
+            <td>19:00</td>
+            <td>분과별 토의 주제 발표</td>
+        </tr>
+        <tr>
+            <td>20:30</td>
+            <td>휴식및 자유토론</td>
+        </tr>
+        <tr>
+            <td rowspan="3">5/12(일요일)</td>
+            <td>07:00</td>
+            <td>분임 토의 결과발표</td>
+        </tr>
+        <tr>
+            <td>08:00</td>
+            <td>아침식사</td>
+        </tr>
+        <tr>
+            <td>09:30</td>
+            <td>추진계획 기예산 보고</td>
+        </tr>
+    </table>
+</body>
+</html>
