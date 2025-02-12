@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul, li{
+            list-style: none;
+        }
+        ul li{float: left;}
+        /* a 태그 : 하이퍼링크 = 파란글씨 + 밑줄 */
+        ul li a{
+            color: black;
+            /* 밑줄 제거 */
+            text-decoration: none;
+        }
+        /* 마우스를 올려 놓을 시 */
+        ul li:hover a{
+            background-color: yellow;
+            /* 밑줄 */
+            text-decoration: underline;
+        }
+        /* active : 마우스 클릭 시 */
+        ul li a:active{background-color: orange;}
+        
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a href="#">메뉴 1</a></li>
+        <li><a href="#">메뉴 2</a></li>
+        <li><a href="#">메뉴 3</a></li>
+        <li><a href="#">메뉴 4</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .container{
+            width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        header{
+            height: 200px;
+            background-color: olivedrab;
+            margin-bottom: 10px;
+        }
+        header .logo{
+            width: 200px;
+            height: 160px;
+            background-color: yellowgreen;
+            float: left;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+        header nav{
+            width: 800px;
+            height: 80px;
+            float: left;
+            background-color: yellowgreen;
+            margin-top: 100px;
+            margin-left: 100px;
+        }
+        header nav ul{
+            width: 600px;
+            height: 60px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            /* background-color: aliceblue; */
+        }
+        header nav ul li{
+            list-style: none;
+            float: left;
+        }
+        header nav ul li a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            width: 100px;
+            height: 30px;
+            /* background-color: aquamarine; */
+            text-align: center;
+            margin-top: 15px;
+            margin-right: 20px;
+        }
+        section{
+            height: 500px;
+            background-color: olivedrab;
+            margin-bottom: 10px;
+        }
+        section .LBox{
+            /* background-color: antiquewhite; */
+            width: 750px;
+            height: 450px;
+            float: left;
+            margin-top: 25px;
+            margin-left: 50px;
+        }
+        section .LBox .leftL{
+            background-color: yellowgreen;
+            width: 350px;
+            height: 450px;
+            float: left;
+        }
+        section .LBox .rightL{
+            background-color: yellowgreen;
+            width: 350px;
+            height: 450px;
+            float: right;
+        }
+        section .RBox {
+            /* background-color: antiquewhite; */
+            width: 250px;
+            height: 450px;
+            float: right;
+            margin-top: 25px;
+            margin-right: 50px;
+        }
+        section .RBox .upR{
+            background-color: yellowgreen;
+            width: 250px;
+            height: 200px;
+            float: right;
+        }
+        section .RBox .downR{
+            background-color: yellowgreen;
+            width: 250px;
+            height: 200px;
+            float: right;
+            margin-top: 50px;
+        }
+        footer{
+            height: 100px;
+            background-color: olivedrab;
+            padding-top: 10px;
+        }
+        footer .upF{
+            margin-left: 200px;
+            width: 500px;
+            height: 30px;
+            background-color: yellowgreen;
+        }
+        footer .downF{
+            margin-left: 200px;
+            width: 500px;
+            height: 30px;
+            background-color: yellowgreen;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo"><a href="#">Logo</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="#">MENU01</a></li>
+                    <li><a href="#">MENU02</a></li>
+                    <li><a href="#">MENU03</a></li>
+                    <li><a href="#">MENU04</a></li>
+                    <li><a href="#">MENU05</a></li>
+                </ul>
+        </nav>
+        </header>
+        <section>
+            <div class="LBox">
+                <div class="leftL">콘텐츠 그룹01</div>
+                <div class="rightL">콘텐츠 그룹02</div>
+            </div>
+            <div class="RBox">
+                <div class="upR">주요 기사</div>
+                <div class="downR">광고</div>
+            </div>
+        </section>
+        <footer>
+            <div class="upF">주소 전화번호 이메일</div>
+            <div class="downF">COPYRIGHT ⓒ All rights reserved.</div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            background-color: red;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        table{
+            text-align: center;
+        }
+        .ez {
+            background-color: yellow;
+        }
+        fieldset{
+            width: 700px;
+            /* 넓이가 있는 블럭요소 양쪽 margin: auto;는 중앙정렬 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        legend{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>오늘의 복습</h1>
+    <p>text1</p>
+    <p>text2</p>
+    <!-- alt + l + o : 라이브 서버 -->
+    <p>live server</p>
+    <table border="1">
+        <colgroup>
+            <col style="width: 100px;"/>
+            <col style="width: 100px;"/>
+            <col style="width: 100px;"/>
+            <col style="width: 100px;"/>
+            <col style="width: 100px;"/>
+        </colgroup>
+        <tr>
+            <td rowspan="2">과목 / <br/>난이도</td>
+            <td colspan="2">html / css</td>
+            <td colspan="2">javascript / jQuery</td>
+        </tr>
+        <tr>
+            <td class="ez">쉬움</td>
+            <td>재밌음</td>
+            <td>어려움</td>
+            <td style="background-color: aquamarine; color: tomato;">신기함</td>
+        </tr>
+    </table>
+    <form action="#" method="post">
+        <fieldset>
+            <legend>로그인</legend>
+            <p>ID : <input type="text"></p>
+            <p>PW : <input type="password"></p>
+        </fieldset>
+    </form>
+
+</body>
+</html>
