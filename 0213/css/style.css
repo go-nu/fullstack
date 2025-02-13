@@ -1,0 +1,93 @@
+*{margin: 0; padding: 0;}
+.container{
+    width: 1000px;
+    height: 800px;
+    margin: 0 auto;
+}
+header{
+    width: 200px;
+    height: 800px;
+    background-color: orange;
+    float: left;
+}
+header h1{
+    margin: 30px auto;
+    width: 150px;
+}
+header h1 img{
+    /* width: 150px; */
+    /* 비율은 부모 크기에 따름 */
+    width: 100%;
+}
+header ul{
+    list-style: none;
+    width: 180px;
+    border: 1px solid #333;
+    margin: 0 auto;
+}
+header ul li a{
+    display: block;
+    width: 180px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #333;
+    text-decoration: none;
+}
+header ul li a:hover{
+    background-color: #555;
+    color: #fff;
+}
+section{
+    width: 800px;
+    height: 800px;
+    background-color: aqua;
+    float: left;
+}
+section .img_slider{
+    width: 800px;
+    height: 400px;
+    background-color: chocolate;
+}
+section .contents{
+    width: 800px;
+    height: 300px;
+    background-color: cornflowerblue;
+}
+section .contents div{
+    width: 33.33%;
+    height: 300px;
+    float: left;
+}
+section .contents .notice{
+    background-color: #ccc;
+}
+section .contents .banner{
+    background-color: #aaa;
+}
+section .contents .icons{
+    background-color: #888;
+}
+section footer{
+    width: 800px;
+    height: 100px;
+    background-color: darkcyan;
+}
+section footer .f_logo{
+    width: 200px;
+    height: 100px;
+    float: left;
+    background-color: #777;
+}
+section footer .f_menu{
+    width: 600px;
+    height: 50px;
+    float: left;
+    background-color: #555;
+}
+section footer .f_copy{
+    width: 600px;
+    height: 50px;
+    float: left;
+    background-color: #333;
+}

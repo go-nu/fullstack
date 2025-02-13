@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .container{
+            width: 1200px;
+            height: 800px;
+            background-color: beige;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        header{
+            background-color: chocolate;
+            height: 100px;
+        }
+        section{
+            background-color: thistle;
+            height: 600px;
+        }
+        section .topSection{
+            background-color: lightblue;
+            height: 300px;
+        }
+        section .downSection{
+            background-color: lightskyblue;
+            height: 300px;
+        }
+        section .downSection .d1S{
+            float: left;
+            width: 400px;
+            height: 300px;
+            background-color: darkolivegreen;
+        }
+        section .downSection .d2S{
+            float: left;
+            width: 400px;
+            height: 300px;
+            background-color: darkgreen;
+        }
+        section .downSection .d3S{
+            float: left;
+            width: 400px;
+            height: 300px;
+            background-color: darkslategray;
+        }
+        footer{
+            background-color: tomato;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>header</header>
+        <section>
+            <div class="topSection">
+                topSection
+            </div>
+            <div class="downSection">
+                <div class="d1S">
+                    down1Section
+                </div>
+                <div class="d2S">
+                    down2Section
+                </div>
+                <div class="d3S">
+                    down3Section
+                </div>
+            </div>
+    </section>
+        <footer>
+            <div class="leftFooter">
+                leftFooter
+            </div>
+            <div class="rightFooter">
+                <div class="rTF">
+                    rightTopFooter
+                </div>
+                <div class="rDF">
+                    rightDownFooter
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            /* 상하좌우 p만큼 여백 추가 >> 원본크기 + px*2 */
+            padding: 10px;
+            background-color: steelblue;
+        }
+        .box2{
+            padding-top: 10px;
+            background-color: darkslateblue;
+        }
+        .box3{
+            /* 위 오른쪽 아래 왼쪽, 시계 방향으로 padding */
+            padding: 10px 20px 30px 40px;
+            background-color: saddlebrown;
+        }
+        .box4{
+            /* (상하) (좌우) 묶음 */
+            padding: 10px 20px;
+            background-color: moccasin;
+        }
+    </style>
+</head>
+<body>
+    <!-- p.191 -->
+    <div class="box box1">box1</div>
+    <div class="box box2">box2</div>
+    <div class="box box3">box3</div>
+    <div class="box box4">box4</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .container{
+            width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        header{
+            background-color: cadetblue;
+            height: 100px;
+        }
+        header h1.logo{
+            width: 200px;
+            height: 100px;
+            float: left;
+        }
+        header nav{
+            width: 600px;
+            height: 50px;
+            float: right;
+            background-color: yellow;
+            margin-top: 30px;
+            margin-right: 10px;
+        }
+        header nav ul{
+            list-style: none;
+        }
+        header nav ul li{
+            float: left;
+        }
+        header nav ul li a{
+            /* 인라인 요소의 넓이를 조절하기 위해 block 요소로 전환 */
+            display: block;
+            width: 150px;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            text-decoration: none;
+            color: #333;
+        }
+        header nav ul li a:hover{
+            background-color: #333;
+            color: white;
+        }
+        .img_slider{
+            background-color: #ccc;
+            height: 300px;
+        }
+        section{
+            background-color: burlywood;
+            height: 300px;
+        }
+        section article{
+            width: 400px;
+            height: 300px;
+            float: left;
+        }
+        section article.notice{
+            background-color: plum;
+        }
+        section article.banner{
+            background-color: palegreen;
+        }
+        section article.icons{
+            background-color: powderblue;
+        }
+        footer{
+            background-color: #333;
+            height: 100px;
+            color: #fff;
+        }
+        footer .foot_logo{
+            width: 200px;
+            height: 100px;
+            background-color: indianred;
+            float: left;
+        }
+        footer .foot_right{
+            width: 1000px;
+            height: 100px;
+            background-color: indigo;
+            float: left;
+        }
+        footer .foot_right .foot_menu{
+            height: 50px;
+            background-color: lightgreen;
+        }
+        footer .foot_right .foot_copy{
+            height: 50px;
+            background-color: lightsalmon;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">
+                <img src="./images/logo.png" alt="logo">
+            </h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Menu1</a></li>
+                    <li><a href="#">Menu2</a></li>
+                    <li><a href="#">Menu3</a></li>
+                    <li><a href="#">Menu4</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="img_slider">
+            <img src="./images/slide1.jpg" alt="">
+        </div>
+        <section>
+            <article class="notice">공지사항</article>
+            <article class="banner">배너</article>
+            <article class="icons">아이콘</article>
+        </section>
+        <footer>
+            <div class="foot_logo"></div>
+            <div class="foot_right">
+                <div class="foot_menu">메뉴</div>
+                <div class="foot_copy">address</div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

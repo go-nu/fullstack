@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        nav{
+            width: 800px;
+            height: 70px;
+            background-color: aliceblue;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+        nav>ul{
+            width: 600px;
+            height: 50px;
+            background-color: coral;
+            margin: 0 auto;
+            list-style: none;
+        }
+        nav ul li{
+            float: left;
+            margin-left: 25px;
+        }
+        /* nth-child(n) = (n)번째 요소 */
+        nav ul li:nth-child(1) a{
+            /* radius : 반지름 */
+            border-radius: 25px;
+        }
+        nav ul li:nth-child(2) a{
+            /* 모서리 지정 가능 */
+            border-top-right-radius: 25px;
+        }
+        nav ul li:nth-child(3) a{
+            /* 좌상단부터 시계 방향 */
+            border-radius: 0 0 25px 25px;
+        }
+        nav ul li a{
+            width: 120px;
+            height: 50px;
+            line-height: 50px;
+            display: block;
+            text-align: center;
+            color: #fff;
+            text-decoration: none;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">회사소개</a></li>
+            <li><a href="#">제품소개</a></li>
+            <li><a href="#">커뮤니티</a></li>
+            <li><a href="#">다운로드</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
