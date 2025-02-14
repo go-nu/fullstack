@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            /* 상하좌우 모두 패딩 */
+            padding: 10px;
+            background-color: darkslateblue;
+        }
+        .box2{
+            padding-top: 10px;
+            background-color: darkcyan;
+        }
+        .box3{
+            /* 위부터 시계방향 */
+            padding: 10px 20px 30px 40px;
+            background-color: darkseagreen;
+        }
+        .box4{
+            /* (상하) (좌우) */
+            padding: 10px 20px;
+            background-color: darkkhaki;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">box1</div>
+    <div class="box box2">box2</div>
+    <div class="box box3">box3</div>
+    <div class="box box4">box4</div>
+</body>
+</html>

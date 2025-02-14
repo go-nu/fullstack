@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .wrap{
+            width: 1200px;
+            margin: 0 auto;
+        }
+        header{
+            width: 1200px;
+            height: 200px;
+            background-color: chocolate;
+        }
+        header .logo{
+            float: left;
+            margin: 50px 0 0 20px;
+        }
+        header nav{
+            float: right;
+            margin: 120px 20px 0 0; 
+        }
+        header nav ul{
+            list-style: none;
+        }
+        header nav ul li{
+            float: left;
+            margin-right: 10px;
+        }
+        header nav ul li a{
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+        header nav ul li a:hover{
+            background-color: seashell;
+            color: black;
+            border-radius: 20px;
+        }
+        .main{
+            width: 1200px;
+            overflow: hidden;
+        }
+        .main section{
+            width: 900px;
+            height: 500px;
+            background-color: tan;
+            float: left;
+        }
+        .main aside{
+            width: 300px;
+            height: 500px;
+            background-color: yellow;
+            float: left;
+        }
+        footer{
+            width: 1200px;
+            height: 70px;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <h1 class="logo">
+                <img src="../0213/images/logo.png" alt="logo1">
+            </h1>
+            <nav>
+                <ul>
+                    <li><a href="#">MainMenu1</a></li>
+                    <li><a href="#">MainMenu2</a></li>
+                    <li><a href="#">MainMenu3</a></li>
+                    <li><a href="#">MainMenu4</a></li>
+                    <li><a href="#">MainMenu5</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="main">
+            <section>section</section>
+            <aside>aside</aside>
+        </div>
+        <footer>footer</footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            margin-top: 10px;
+            margin-left: 10px;
+            padding-top: 10px;
+            background-color: darkslateblue;
+        }
+        .box2{
+            /* float와 margin이 같이 있으면 float가 우선순위 */
+            /* margin-left: auto;
+            margin-right: auto; */
+            margin: 0 auto;
+            background-color: darkcyan;
+        }
+        .box3{
+            background-color: darkseagreen;
+        }
+        .box4{
+            background-color: darkkhaki;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">box1</div>
+    <div class="box box2">box2</div>
+    <div class="box box3">box3</div>
+    <div class="box box4">box4</div>
+</body>
+</html>

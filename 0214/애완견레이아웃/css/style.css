@@ -1,0 +1,33 @@
+*{margin: 0; padding: 0;}
+#wrapper{
+    width: 900px;
+    margin: 0 auto;
+}
+header{
+    height: 200px;
+    background-color: #f46075;
+}
+nav{
+    height: 60px;
+    background-color: #ccc;
+}
+.main{
+    height: 550px;
+}
+.main section{
+    width: 650px;
+    height: 550px;
+    background-color: skyblue;
+    float: left;
+}
+.main aside{
+    width: 250px;
+    height: 550px;
+    background-color: #ffffcc;
+    float: left;
+}
+footer{
+    height: 50px;
+    background-color: #333;
+    color: #fff;
+}

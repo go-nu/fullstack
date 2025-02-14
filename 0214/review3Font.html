@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* p{font-size: 36px;} */
+        .font1{
+            font-family: "궁서";
+            font-size: 36px;
+            font-weight: bold;
+            font-style: italic;
+            /* 줄간격 */
+            line-height: 2.0;
+        }
+        .font2{
+            /* weight style size/line-height family */
+            /* size family는 필수 */
+            font: bold italic 36px/2.0 "궁서";
+        }
+        .font3{
+            /* 들여쓰기, "-"로 내어쓰기 가능 */
+            text-indent: 20px;
+        }
+        .font4{
+            /* 글자간격(자간) */
+            letter-spacing: 10px;
+        }
+        .font5{
+            font-size: 50px;
+            font-weight: bold;
+            /* 그림자: 우 하 블러 색상 */
+            text-shadow: 10px 10px 5px red;
+        }
+        .img1{
+            box-shadow: 10px 10px 10px #333;
+        }
+        .box{
+            width: 200px;
+            height: 200px;
+            box-shadow: 10px 10px 10px #999;
+        }
+    </style>
+</head>
+<body>
+    <p>폰트 연습 2번째</p>
+    <p class="font1">폰트 연습 2번째</p>
+    <p class="font2">폰트 연습 2번째</p>
+    <p class="font3">폰트 연습 2번째</p>
+    <p class="font4">폰트 연습 2번째</p>
+    <p class="font5">폰트 연습 2번째</p>
+    <img src="../0213/images/slide1.jpg" alt="slider" width="500" class="img1">
+    <div class="box"></div>
+</body>
+</html>

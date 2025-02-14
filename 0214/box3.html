@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            border: 5px solid #333;
+            /* 전체 크키에 테두리와 패딩 포함 */
+            box-sizing: border-box;
+            background-color: darkslateblue;
+        }
+        .box2{
+            border: 5px dotted #333;
+            background-color: darkcyan;
+        }
+        .box3{
+            border: 5px dashed #333;
+            background-color: darkseagreen;
+        }
+        .box4{
+            border: 5px double #333;
+            background-color: darkkhaki;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">box1</div>
+    <div class="box box2">box2</div>
+    <div class="box box3">box3</div>
+    <div class="box box4">box4</div>
+</body>
+</html>

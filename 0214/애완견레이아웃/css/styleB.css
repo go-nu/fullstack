@@ -1,0 +1,98 @@
+*{margin: 0; padding: 0;}
+#wrapper{
+    width: 900px;
+    margin: 0 auto;
+}
+header{
+    height: 200px;
+    background-color: #f46075;
+}
+header h1{
+    float: left;
+    color: #fff;
+    margin: 70px 0 0 50px;
+}
+header .logo_p  {
+    float: right;
+    margin: 20px 20px 0 0;
+}
+nav{
+    height: 60px;
+    background-color: #ccc;
+}
+nav ul{
+    list-style: none;
+}
+nav ul li{
+    float: left;
+    margin: 10px 0 0 40px;
+}
+nav ul li a{
+    color: black;
+    display: block;
+    width: 160px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+    /* background-color: #aaa; */
+}
+nav ul li a:hover{
+    background-color: #f46075;
+    font-weight: bold;
+    color: white;
+    border-radius: 20px;
+}
+.main{
+    height: 550px;
+}
+.main section{
+    width: 650px;
+    height: 550px;
+    background-color: skyblue;
+    float: left;
+}
+.main section h2{
+    text-align: center;
+    margin: 10px 0;
+}
+.main section article{
+    border: 1px solid black;
+    background-color: white;
+    width: 300px;
+    height: 200px;
+    float: left;
+    margin: 0 0 30px 15px;
+    background-image: url(../img/bg.png);
+    background-repeat: no-repeat;
+    background-position: 8px 5px;
+}
+.main section article h3{
+    margin: 5px 0 0 35px;
+}
+.main section article p{
+    font-size: 14px;
+    margin-left: 5px;
+    /* 양쪽 정렬 */
+    text-align: justify;
+}
+.main aside{
+    width: 250px;
+    height: 550px;
+    background-color: #ffffcc;
+    float: left;
+    text-align: center;
+}
+.main aside h2{
+    padding: 10px 0;
+}
+.main aside img{
+    padding-bottom: 10px;
+}
+footer{
+    height: 50px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
+}
