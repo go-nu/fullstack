@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackGround</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .back{
+            width: 100%;
+            height: 100vh;
+        }
+        .back1{
+            background-color: aqua;
+            background-image: url(../0214/images/b1.jpg);
+        }
+        .back2{
+            background-color: burlywood;
+            background-image: url(../0214/images/b2.jpg);
+        }
+        .back3{
+            background-color: coral;
+            background-image: url(../0214/images/b3.jpg);
+            /* p.172 */
+            background-attachment: fixed;
+        }
+        .back4{
+            background-color: dodgerblue;
+            background-image: url(../0214/images/b4.jpg);
+        }
+        .back5{
+            background-color: firebrick;
+            background-image: url(../0214/images/b5.jpg);
+        }
+        .back6{
+            background-color: seagreen;
+            background-image: url(./images/b3.jpg);
+            /* p.167 */
+            background-repeat: no-repeat;
+            /* p.168 */
+            background-position: 70% 30%;
+            /* p.175 */
+            background-size: 600px 400px;
+        }
+        .back7{
+            /* p.174 */
+            /* color image repeat position / size */
+            background: sienna url(./images/b4.jpg) no-repeat 70% 30% / 600px 300px;
+        }
+        </style>
+</head>
+<body>
+    <!-- p.165 -->
+    <div class="back back1">배경1</div>
+    <div class="back back2">배경2</div>
+    <div class="back back3">배경3</div>
+    <div class="back back4">배경4</div>
+    <div class="back back5">배경5</div>
+    <div class="back back6">배경6</div>
+    <div class="back back7">배경7</div>
+</body>
+</html>
