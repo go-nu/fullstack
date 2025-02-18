@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{height: 3000px;}
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            /* 기본형, 생략되어 있음 */
+            /* position: static; */
+            background-color: darkblue;
+        }
+        .box2{
+            background-color: darkcyan;
+        }
+        .box3{
+            /* position: fixed; */
+            /* 화면에 고정(스크롤을 움직여도 화면상 위치 그대로) */
+            position: fixed;
+            right: 50px;
+            bottom: 50px;
+            background-color: darkgoldenrod;
+        }
+        .box4{
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">박스1</div>
+    <div class="box box2">박스2</div>
+    <div class="box box3">박스3</div>
+    <div class="box box4">박스4</div>
+    
+</body>
+</html>

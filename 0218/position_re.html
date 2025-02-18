@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            /* 기본형, 생략되어 있음 */
+            /* position: static; */
+            background-color: darkblue;
+        }
+        .box2{
+            background-color: darkcyan;
+        }
+        .box3{
+            /* position: relative; */
+            /* top, left로 위치 조정
+            기존 위치에서 이동, 자리값이 있음,
+            absolute의 부모(기준)역할
+            다음에 오는 태그에 영향을 주지 않음*/
+            position: relative;
+            top: 50px;
+            left: 50px;
+            background-color: darkgoldenrod;
+        }
+        .box4{
+            /* relative가 서로 겹치면, 뒤에 오는 relative가 위에 온다.(덮어쓰기)
+            z-index를 통해 순서(앞뒤위치) 조정 가능*/
+            position: relative;
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">박스1</div>
+    <div class="box box2">박스2</div>
+    <div class="box box3">박스3</div>
+    <div class="box box4">박스4</div>
+    
+</body>
+</html>

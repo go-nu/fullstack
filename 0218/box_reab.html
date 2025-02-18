@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            background-color: darkblue;
+        }
+        .bigbox{
+            position: relative;
+            width: 700px;
+            height: 500px;
+            border: 1px solid #333;
+            margin: 0 auto;
+        }
+        .box2{
+            position: absolute;
+            left: 70px; top: 50px;
+            background-color: darkcyan;
+        }
+        .box3{
+            position: absolute;
+            bottom: 30px; right: 30px;
+            background-color: darkgoldenrod;
+        }
+        /* 큰 태그에 relative로 기준선을 만들고
+        내부 태그에 absolute로 기준선 안에서 position 이동 */
+        .box4{
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">박스1</div>
+    <div class="bigbox">
+        <div class="box box2">박스2</div>
+        <div class="box box3">박스3</div>
+    </div>
+    <div class="box box4">박스4</div>
+    
+</body>
+</html>
