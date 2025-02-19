@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        .box {
+            position: absolute; left: 50%; top: 50%;
+            width: 500px; height: 500px;
+            border: 1px solid #333;
+            /* position:absolute;는 margin: 0 auto;로 중앙정렬 X*/
+            /* 바탕 위치에 left, top: 50% 주고 길이의 50%를 빼서 중앙 정렬 */
+            transform: translate(-50%, -50%);
+        }
+        .line1{
+            position: absolute; top: 50px; left: 50px;
+            width: 0px; height: 3px;
+            background-color: black;
+            animation: line1 3s forwards;
+        }
+        @keyframes line1 {
+            0%{width: 0;}
+            100%{width: 400px;}
+        }
+        .img1{
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            /* 불투명도 */
+            opacity: 0;
+            animation: img1 3s 3s forwards;
+        }
+        @keyframes img1 {
+            0% {opacity: 0;}
+            100% {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">
+        <div class="line1"></div>
+        <img src="./ani/img/woman.png" alt="" class="img1">
+    </div>
+</body>
+</html>

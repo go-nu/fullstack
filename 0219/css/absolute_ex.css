@@ -1,0 +1,73 @@
+*{margin: 0; padding: 0;}
+h2 {text-align: center; padding: 20px 0 0;}
+.bigbox {
+    position: relative;
+    width: 830px; height: 310px;
+    border: 1px solid red;
+    /* 위 좌우 아래 */
+    margin: 50px auto 0;
+}
+.box {
+    width: 200px; height: 150px;
+    position: absolute;
+}
+.box img {
+    width: 100%;
+}
+.box1 {
+    left: 0; top: 0;
+}
+.box2 {
+    left: 0; top: 160px;
+}
+.box3 {
+    width: 200px; height: 310px;
+    left: 210px; top: 0;
+}
+.box4 {
+    left: 420px; top: 0;
+}
+.box5 {
+    left: 630px; top: 0;
+}
+.box6 {
+    width: 410px; height: 150px;
+    left: 420px; top: 160px
+}
+.box::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0;
+    width: 0%; height: 100%;
+    background-color: rgba(0, 0, 255, 0.7);
+}
+.box:hover::before{
+    width: 100%;
+    transition: all 0.5s;
+}
+.box6::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 0%;
+    background-color: rgba(0, 0, 255, 0.7);
+}
+.box6:hover::before{
+    height: 100%;
+    transition: all 0.5s;
+}
+.box1 p{
+    position: absolute;
+    width: 100%; height: 100%;
+    left: 0; top: 0;
+    color: #fff;
+    padding-top: 30px;
+    box-sizing: border-box;
+    text-align: center;
+    background: url(../images/more.png) no-repeat 50% 80%;
+    transition: all 0.5s;
+    opacity: 0;
+}
+.box1 p:hover{
+    opacity: 1;
+}

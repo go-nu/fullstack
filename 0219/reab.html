@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            background-color: darkblue;
+        }
+        .bigbox{
+            width: 700px;
+            height: 500px;
+            border: 1px solid #333;
+            position: relative;
+            margin: 0 auto;
+        }
+        .box2{
+            position: absolute;
+            right: 50px;
+            bottom: 50px;
+            background-color: darkcyan;
+        }
+        .box3{
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            background-color: darkgoldenrod;
+        }
+        .box4{
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">박스1</div>
+    <div class="bigbox">
+        <div class="box box2">박스2</div>
+        <div class="box box3">박스3</div>
+    </div>
+    <div class="box box4">박스4</div>
+</body>
+</html>

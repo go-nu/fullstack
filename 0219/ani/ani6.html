@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #myball{
+            position: relative; left: 10px;
+            width: 116px; height: 160px;
+            background: url(./img/bg-main1.png) no-repeat 50% 50%;
+            animation: myani 3s infinite alternate;
+        }
+        @keyframes myani {
+            0%{top: 10px}
+            100%{top: 500px;}
+        }
+        #myball2{
+            position: relative; left: 200px;
+            width: 116px; height: 160px;
+            background: url(./img/bg-main1.png) no-repeat 50% 50%;
+            animation: myani2 3s infinite alternate;
+        }
+        @keyframes myani2 {
+            0%{top: 20px}
+            100%{top: 520px;}
+        }
+    </style>
+</head>
+<body>
+    <div id="myball"></div>
+    <div id="myball2"></div>
+</body>
+</html>

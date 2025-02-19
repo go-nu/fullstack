@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bigbox{
+            width: 500px;
+            background-color: pink;
+            padding: 10px;
+            /* 자식이 float되면 부모에 직접 높이를 입력 */
+            height: 200px;
+        }
+        .box {
+            width: 150px; height: 150px;
+            /* float: left;로 인하여 bigbox의 높이가 깨짐 */
+            float: left;
+        }
+        .box1 {
+            background-color: blueviolet;
+        }
+        .box2 {
+            background-color: brown;
+        }
+        .box3 {
+            background-color: burlywood;
+        }
+    </style>
+</head>
+<body>
+    <div class="bigbox">
+        <div class="box box1">box1</div>
+        <div class="box box2">box2</div>
+        <div class="box box3">box3</div>
+    </div>
+    <p>나는 다음에 올 요소입니다.</p>
+</body>
+</html>

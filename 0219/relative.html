@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+        }
+        .box1{
+            background-color: darkblue;
+        }
+        .box2{
+            background-color: darkcyan;
+        }
+        .box3{
+            /* 자리값이 있다. = 기존 자리를 내어주지 않음
+                left, top으로 이동
+                다음 태그에 영향을 미치지 않음
+                absolute의 부모가 되기도 함
+                기존 자리를 기준으로 계산*/
+            position: relative;
+            left: 300px;
+            top: 50px;
+            background-color: darkgoldenrod;
+        }
+        .box4{
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">박스1</div>
+    <div class="box box2">박스2</div>
+    <div class="box box3">박스3</div>
+    <div class="box box4">박스4</div>
+</body>
+</html>
