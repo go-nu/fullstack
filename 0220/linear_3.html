@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 500px; height: 300px;
+            border-radius: 10px;
+        }
+        .grad {
+            /* gradient를 지원하지 않는 브라우저에서는 background-color만 입력 */
+            background-color: #06f;
+            /* (방향, 시작색, 중간색 위치, 끝색) */
+            background: linear-gradient(to bottom, #06f, white 30%, #06f);
+        }
+    </style>
+</head>
+<body>
+    <div class="grad"></div>
+</body>
+</html>

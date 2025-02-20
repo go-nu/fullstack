@@ -1,0 +1,97 @@
+* {margin: 0; padding: 0;}
+ul {list-style: none;}
+ul li a {text-decoration: none; color: black;}
+#header_out {
+    width: 100%;
+    position: relative;
+    z-index: 5;
+}
+#header {
+    width: 1000px; height: 200px;
+    border: 1px solid #333;
+    margin: 0 auto;
+    /* box-sizing: border-box; */
+}
+#logo {
+    position: absolute;
+    width: 484px; height: 63px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+#logo img {
+    display: block;
+    width: 100%; height: 100%;
+}
+#sns {
+    float: left;
+    margin: 10px 0 0 10px;
+}
+#sns ul li {
+    float: left;
+    padding: 5px;
+}
+#nav {
+    float: right;
+    margin: 10px 10px 0 0;
+}
+#nav ul li {
+    float: left;
+    background: url(../../lush/images/bar.gif) no-repeat 100% 50%;
+    padding: 5px;
+}
+#nav ul li:last-child {
+    background: none;
+}
+.main_menu {
+    position: absolute;
+    width: 1000px; height: 50px;
+    top: 200px; left: 0;
+    background-color: #333;
+    margin: 0 auto;
+}
+.gnb{
+    width: 1000px;
+    margin: 0 auto;
+    position: absolute;
+    z-index: 10;
+}
+.main_menu ul {
+    margin: 0 auto;
+    background-color: #333;
+    color: white;
+}
+.main_menu>ul>li{
+    float: left;
+}
+.main_menu ul li a {
+    display: block;
+    width: 200px; height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: white;
+}
+.main_menu ul li ul{
+    position: absolute;
+    background-color: rgba(80, 83, 245, 0.548);
+    display: none;
+}
+.main_menu ul:hover li ul{
+    display: block;
+}
+.shadow{
+    width: 100%; height: 150px;
+    background-color: rgba(80, 83, 245, 0.548);
+    position: absolute;
+    top: 250px; left: 0;
+    display: none;
+}
+.main_menu > ul:hover + .shadow {
+    height: 260px;
+}
+#bg {
+    width: 1000px; height: 600px;
+    margin: 0 auto;
+}
+#bg img {
+    width: 100%; height: 100%;
+}
