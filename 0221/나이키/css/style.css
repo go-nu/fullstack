@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Play:wght@400;700&display=swap');
+/* reset css */
+* {margin: 0; padding: 0;}
+ul { list-style: none;}
+a {text-decoration: none; color: #bbb;}
+img {border: 0;}
+/* 풀스크린으로 동작하도록 지정 (가로 / 세로 스크롤바 제거) */
+body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #111;
+}
+.vid {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: .9;
+}
+.vid video {
+    width: 100%;
+    min-width: 1920px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+/* 나이키 로고 맨 위로 */
+h1 {
+    position: fixed;
+    top: 40px;
+    left: 50px;
+    z-index: 10;
+}
+header {
+    width: 700px;
+    height: 100%;
+    position: fixed;
+    background: linear-gradient(-45deg, #e6fc55, #b9fb05, #97e031);
+    transform: skewX(-40deg);
+    left: -400px;
+}
+/* 메뉴 오른쪽으로 이동 */
+#gnb {
+    width: 220px;
+    position: absolute;
+    right: 0;
+    top: 150px;
+}
+#gnb > li {position: relative;}
+#gnb > li > a {
+    display: block;
+    width: 220px;
+    height: 50px;
+    /* weight size/line-height family*/
+    font: bold 18px/3 play;
+    text-align: right;
+    box-sizing: border-box;
+    padding-right: 40px;
+    color: #222;
+}
+#gnb em {
+    /* 블럭요소로 변환해야 skew 적용 가능 */
+    display: inline-block;
+    /* 전체 header에 -40deg를 했으므로 +40deg를 통해 제대로 보이게 */
+    transform: skewX(40deg);
+}
+#gnb > li.on > a ,
+#gnb > li:hover > a {
+    background-color: #111;
+    color: #fff;
+}
+/* 2차 메뉴 */
+#gnb li ul {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    /* display: none;과 유사 */
+    visibility: hidden;
+    transition: all 0.6s;
+}
+#gnb ul a {
+    display: block;
+    width: 150px;
+    background-color: #222;
+    font: bold 16px/2.5 arial;
+    color: #fff;
+    box-sizing: border-box;
+    padding-left:50px ;
+    margin-bottom: 3px;
+    transition: all 0.6s;
+    border-bottom: 1px solid #69fb05;
+}
+/* 2차 메뉴 hover */
+#gnb li:hover ul{
+    left: 220px;
+    opacity: 1;
+    /* display: none -> block은 transition 적용 X */
+    visibility: visible;
+}
+#gnb ul a:hover {
+    background-color: #b9fb05;
+    color: #333;
+}
+/* sns btn style */
+#sns {
+    position: fixed;
+    top: 60px;
+    right: 50px;
+}
+#sns li {
+    float: left;
+    margin-right: 30px;
+}
+/* sns btn(웹폰트 아이콘) style */
+#sns .fa {
+    font-size: 25px;
+    color: #69fb05;
+    opacity: .6;
+    /* transform 기본값 생략가능, 써주는게 좋음 */
+    /* transform: scale(1.2); */
+    transition: all .6;
+}
+#sns .fa:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+/* 텍스트 상자 (section) style */
+.txtBox {
+    width: 340px;
+    height: 280px;
+    position: fixed;
+    top: 200px;
+    right: 70px;
+    /* border: 1px solid #fff; */
+}
+.txt {
+    position: absolute;
+    top: 200px;
+    right: 0;
+    font-size: 34px;
+    font-family: play;
+    color: #fff;
+    /* 자간 */
+    letter-spacing: -2px;
+}
+.txt strong {
+    font: bold 34px arial;
+    color: #b9fb05;
+    margin-left: 20px;
+}
+.tit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 160px;
+    color: #69fb05;
+    font-family: monoton;
+    letter-spacing: -1px;
+}
+.tit em {
+    font-size: 50px;
+    color: #fff;
+    font-family: play;
+}
+/* content box style */
+.side {
+    /* position: fixed; absolute;는 height:100%; 가능 */
+    position: fixed;
+    bottom: 0;
+    width: 800px;
+    height: 100%;
+    background-color: #111;
+    opacity: .5;
+    transform: skewX(-40deg);
+    right: -800px;
+    transition: all .6s;
+}
+.side:hover {
+    right: -500px;
+    opacity: .8;
+}
+.side .con {
+    width: 400px;
+    height: 100%;
+    position: absolute;
+    left: 150px;
+    bottom: 0;
+    background-color: #000;
+    padding: 10px;
+    transition: all 1s;
+}
+.side:hover .con {
+    left: 50px;
+}
+.side .con p {
+    width: 300px;
+    height: 100px;
+    left: 50px;
+    position: absolute;
+    bottom: 0;
+}
+.side .con p img {
+    width: 300px;
+    height: 70px;
+    opacity: .3;
+    transition: all .6s;
+}
+.side:hover .con p img:hover {
+    opacity: 1;
+}
+.side .con p:nth-child(1){
+    /* x축 이동 */
+    transform: translate(200px);
+    transition: all .4s;
+    bottom: 270px;
+}
+.side .con p:nth-child(2){
+    transform: translate(200px);
+    transition: all .8s;
+    bottom: 160px
+}
+.side .con p:nth-child(3){
+    transform: translate(200px);
+    transition: all 1.2s;
+    bottom: 50px;
+}
+.side:hover .con p {
+    transform: translate(0);
+}
+.side .con p em {
+    display: inline-block;
+    transform: skewX(40deg);
+    color: #a0bd50;
+    font: bold 16px/1.7 arial;
+}
+.side .btn {
+    width: 150px;
+    height: 50px;
+    position: absolute;
+    left: 100px;
+    bottom: 40px;
+    color: #69fb05;
+    transform: skewX(40deg);
+    /* border: 1px solid #fff; */
+}
+.btn i {
+    font-size: 60px;
+    position: absolute;
+    right: 0;
+}
+.btn i:nth-child(1) {
+    /* 이름 속성(속도) 지속시간 지연시간 반복 */
+    animation: ani linear 1.5s infinite;
+}
+.btn i:nth-child(2) {
+    animation: ani linear 1.5s .5s infinite;
+}
+.btn i:nth-child(3) {
+    animation: ani linear 1.5s 1s infinite;
+}
+@keyframes ani {
+    0%{right: 0; transform: scale(1); opacity: 1;}
+    100%{right: 100px; transform: scale(1.5); opacity: 0;}
+}
+.side:hover .btn {
+    left: 700px;
+}

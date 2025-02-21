@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Play:wght@400;700&display=swap');
+* {margin: 0; padding: 0;}
+ul {list-style: none;}
+a {text-decoration: none; color:#bbb}
+body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+.vid {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.vid video {
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+h2 {
+    position: fixed;
+    top: 40px;
+    left: 50px;
+    z-index: 10;
+}
+header {
+    position: fixed;
+    width: 1000px;
+    height: 100%;
+    background-color: #bbbbbb73;
+    transform: skewX(30deg);
+    right: -550px;
+}
+.gnb {
+    width: 220px;
+    position: absolute;
+    left: 0;
+    top: 150px;
+}
+.gnb > li {position: relative;}
+.gnb > li > a {
+    display: block;
+    width: 220px;
+    height: 50px;
+    padding-left: 15px;
+    font: bold 20px/3 play;
+    box-sizing: border-box;
+}
+.gnb > li.on > a,
+.gnb > li:hover  a{
+    background-color: #383838;
+    color: #fff;
+}
+.gnb em {
+    display: inline-block;
+    transform: skewX(-30deg);
+}
+.gnb ul {
+    width: 220px;
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    transition: all 0.5s;
+    opacity: 0;
+}
+.gnb > li:hover ul{
+    visibility: visible;
+    left: -220px;
+    opacity: 1;
+}
+.gnb ul a {
+    display: block;
+    width: 220px;
+    height: 50px;
+    padding-left: 15px;
+    font: bold 20px/3 play;
+    box-sizing: border-box;
+    text-align: center;
+}
+.gnb ul li:hover a {
+    background-color: #bbbbbb73;
+    color: #333
+}
+
+.sns {
+    position: fixed;
+    top: 60px;
+    right: 60px;
+}
+.sns li {
+    float: left;
+    margin-right: 40px;
+}
+.sns .fa{
+    font-size: 25px;
+    color: #383838;
+    opacity: 0.6;
+    transition: all 0.5s;
+}
+.sns .fa:hover{
+    opacity: 1;
+    transform: scale(2);
+}
+.txtBox {
+    width: 340px;
+    height: 260px;
+    position: fixed;
+    top: 300px;
+    left: 150px;
+}
+.txtBox .txt {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 34px;
+    font-family: play;
+    color: #fff;
+}
+.txtBox .txt strong {
+    font: bold 34px arial;
+    color: #585858;
+    margin-left: 20px;
+}
+.txtBox .tit {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 160px;
+    color: #585858;
+    font-family: monoton;
+    letter-spacing: -1;
+}
+.txtBox .tit em {
+    font-size: 50px;
+    font-family: play;
+    color: #fff;
+}
+.side {
+    position: fixed;
+    bottom: 0;
+    width: 600px;
+    height: 100%;
+    background-color: #585858;
+    opacity: .5;
+    transform: skewX(30deg);
+    left: -700px;
+    transition: all .6s;
+}
+.side:hover {
+    left: -500px;
+    opacity: .8;
+}
+.side .con {
+    position: absolute;
+    width: 500px;
+    height: 100%;
+    bottom: 0;
+    right: 200px;
+    background-color: #bbbbbb73;
+    transition: all 1s;
+}
+.side:hover .con{
+    right: 50px;
+}
+.side .con p {
+    position: absolute;
+    width: 180px;
+    right: 30px;
+}
+.side .con p img {
+    width: 150px;
+    height: 80px;
+}
+.side .con p:nth-child(1) {
+    bottom: 290px;
+    transform: translate(-100px);
+    transition: all .6s;
+}
+.side .con p:nth-child(2) {
+    bottom: 170px;
+    transform: translate(-100px);
+    transition: all .9s;
+}
+.side .con p:nth-child(3) {
+    bottom: 50px;
+    transform: translate(-100px);
+    transition: all 1.2s;
+}
+.side:hover .con p{
+    transform: translate(0);
+}
+.side .con p em {
+    display: inline-block;
+    transform: skewX(-30deg);
+    font: bold 16px/1.7 arial;
+}
+.side .btn {
+    width: 150px;
+    height: 50px;
+    position: absolute;
+    bottom: 100px;
+    right: -60px;
+    color: #fff;
+    transform: skewX(-30deg);
+}
+.btn i {
+    font-size: 60px;
+    position: absolute;
+    left: 0;
+}
+.btn i:nth-child(1) {
+    animation: ani linear 1.5s infinite;
+}
+.btn i:nth-child(2) {
+    animation: ani linear 1.5s .5s infinite;
+}
+.btn i:nth-child(3) {
+    animation: ani linear 1.5s 1s infinite;
+}
+@keyframes ani {
+    0%{left: 0; transform: scale(1); opacity: 1;}
+    100%{left: 100px; transform: scale(1.5); opacity: 0;}
+}
+.side:hover .btn {
+    opacity: 0;
+    transition: all .5s;
+}

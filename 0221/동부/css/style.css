@@ -1,0 +1,100 @@
+* {margin: 0; padding: 0;}
+ul { list-style: none;}
+a { text-decoration: none; color:#000}
+.cf::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+header {
+    width: 1920px;
+    height: 700px;
+    position: relative;
+    top: 0;
+    left: 0;
+    background: url(../../../0220/main2.jpg) no-repeat 0 0 / cover;
+}
+header nav {
+    position: absolute;
+    height: 70px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+header nav .line {
+    position: absolute;
+    z-index: 5;
+    top: 69px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 1px;
+    width: 1400px;
+    background-color: #fff;
+}
+header > nav > ul {
+    width: 1000px;
+    height: 70px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+    /* overflow: hidden;
+    transition: all 0.5s; */
+}
+/* header > nav > ul:hover {
+    height: 270px;
+} */
+header nav > ul > li {
+    /* display: inline-block;
+    vertical-align: top; */
+    float: left;
+}
+header nav ul li a {
+    display: block;
+    width: 200px;
+    height: 70px;
+    line-height: 70px;
+    color: #fff;
+    font-weight: bold;
+    position: relative;
+}
+header nav ul li a::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    left: 0;
+    bottom: 0;
+    transform: scale(0,1);
+    transition: all 0.5s ;
+}
+header nav ul li a:hover::after {
+    transform: scale(1,1);
+}
+header nav ul ul a {
+    height: 40px;
+    line-height: 40px;
+}
+header nav ul li ul {
+    /* display: none; */
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+header nav ul:hover li ul {
+    /* display: block; */
+    height: 200px;
+}
+header nav .sub_shadow {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    left: 0;
+    top: 0;
+    background-color: #042e6f;
+    transition: all 0.5s;
+}
+header nav ul:hover + .sub_shadow {
+    height: 300px;
+}
