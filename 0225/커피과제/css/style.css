@@ -1,0 +1,321 @@
+*{margin: 0;padding: 0;}
+@media screen and (min-width: 1100px) {
+    
+.wrap{
+    width:900px;
+    margin: 0 auto;
+}
+header{
+    position: relative;
+    height:300px;
+    background:url('../images/top.jpg') no-repeat 0 0 / cover ;
+} 
+header h1{
+    position: absolute;
+    bottom:50px;
+    right:50px;
+    color:#fff;
+}
+nav{
+    width:900px;
+    height:70px;
+    background-color: #2a1d0a;
+}
+nav ul {
+    list-style: none;
+}
+nav ul li{
+    float: left;
+    margin-left: 25px;
+    margin-top: 15px;
+}
+nav ul li a{
+   display: block;
+   width:150px;
+   height:40px;
+   line-height: 40px;
+   color:#fff;
+   border: 1px solid #fff;
+   text-align: center;
+   border-radius: 20px;
+   text-decoration: none;
+   font-weight: bold;
+}
+nav ul li a:hover{
+    background-color: #fff;
+    color:#000;
+    text-decoration: underline;
+}
+.content{
+    height:550px;
+}
+section{
+    width:650px;
+    height:550px;
+    background-color: #ccc;
+    float:left;
+}
+section h3{
+    padding: 10px 0;
+    text-align: center;
+}
+section article{
+    width:270px; height:200px;
+    border: 1px solid #333;
+    float: left;
+    padding: 10px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+article:hover{
+    background-color: rgba(223, 255, 211, 0.5);
+}
+article h4{
+    background: url(../images/kong.png) no-repeat 0 0;
+    padding-left: 30px;
+    padding-bottom: 10px;
+}
+article p{
+    line-height: 1.7em;
+    text-align: justify;
+}
+aside{
+	width:250px;
+	height:550px;
+	background-color:#726054;
+	float:left;
+	text-align:center;
+}
+aside h3{
+    padding: 10px 0;
+}
+aside img{
+    width:220px;
+    padding-bottom: 15px;
+}
+footer{
+    margin-top: 200px;
+    height:60px;
+    line-height: 60px;
+    background-color: #333;
+    color:#fff;
+    text-align: center;
+}
+}
+
+
+
+@media screen and (max-width: 1109px) and (min-width: 651px){
+    
+    .wrap{
+        width:100%;
+        margin: 0 auto;
+    }
+    header{
+        position: relative;
+        height:300px;
+        background:url('../images/top.jpg') no-repeat 0 0 / cover ;
+    } 
+    header h1{
+        position: absolute;
+        bottom:50px;
+        right:50px;
+        color:#fff;
+    }
+    nav{
+        width:100%;
+        height:140px;
+        background-color: #2a1d0a;
+    }
+    nav ul {
+        list-style: none;
+    }
+    nav ul li{
+        width: 30%;
+        float: left;
+        margin-left: 10px;
+        margin-top: 15px;
+        text-align: center;
+    }
+    nav ul li a{
+       display: block;
+       width:100%;
+       height:40px;
+       line-height: 40px;
+       color:#fff;
+       border: 1px solid #fff;
+       text-align: center;
+       border-radius: 20px;
+       text-decoration: none;
+       font-weight: bold;
+    }
+    nav ul li a:hover{
+        background-color: #fff;
+        color:#000;
+        text-decoration: underline;
+    }
+    .content{
+        height:100%;
+    }
+    section{
+        width:100%;
+        height:450px;
+        padding-bottom: 10px;
+        background-color: #ccc;
+    }
+    section h3{
+        padding: 10px 0;
+        text-align: center;
+    }
+    section article{
+        width:40%; height: 160px;
+        border: 1px solid #333;
+        padding: 10px;
+        margin-left: 20px;
+        margin-bottom: 20px;
+        float: left;
+        font-size: 14px;
+    }
+    article:hover{
+        background-color: rgba(223, 255, 211, 0.5);
+    }
+    article h4{
+        background: url(../images/kong.png) no-repeat 0 0;
+        padding-left: 30px;
+        padding-bottom: 10px;
+    }
+    article p{
+        line-height: 1.7em;
+        text-align: justify;
+    }
+    aside{
+        width:100%;
+        height:100%;
+        background-color:#726054;
+        text-align:center;
+        float: left;
+    }
+    aside h3{
+        padding: 10px 0;
+    }
+    aside img{
+        width:30%;
+        margin: 10px auto;
+    }
+    footer{
+        height:60px;
+        line-height: 60px;
+        background-color: #333;
+        color:#fff;
+        text-align: center;
+        clear: both;
+    }
+    }
+    
+
+
+
+
+@media screen and (max-width: 650px) {
+    
+    .wrap{
+        width:100%;
+        margin: 0 auto;
+    }
+    header{
+        position: relative;
+        height:300px;
+        background:url('../images/top.jpg') no-repeat 0 0 / cover ;
+    } 
+    header h1{
+        position: absolute;
+        bottom:50px;
+        right:50px;
+        color:#fff;
+    }
+    nav{
+        width:100%;
+        height:140px;
+        background-color: #2a1d0a;
+    }
+    nav ul {
+        list-style: none;
+    }
+    nav ul li{
+        width: 30%;
+        float: left;
+        margin-left: 10px;
+        margin-top: 15px;
+        text-align: center;
+    }
+    nav ul li a{
+       display: block;
+       width:100%;
+       height:40px;
+       line-height: 40px;
+       color:#fff;
+       border: 1px solid #fff;
+       text-align: center;
+       border-radius: 20px;
+       text-decoration: none;
+       font-weight: bold;
+    }
+    nav ul li a:hover{
+        background-color: #fff;
+        color:#000;
+        text-decoration: underline;
+    }
+    .content{
+        height:100%;
+    }
+    section{
+        width:100%;
+        height:100%;
+        padding-bottom: 10px;
+        background-color: #ccc;
+    }
+    section h3{
+        padding: 10px 0;
+        text-align: center;
+    }
+    section article{
+        width:90%; height:auto;
+        border: 1px solid #333;
+        padding: 10px;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+    article:hover{
+        background-color: rgba(223, 255, 211, 0.5);
+    }
+    article h4{
+        background: url(../images/kong.png) no-repeat 0 0;
+        padding-left: 30px;
+        padding-bottom: 10px;
+    }
+    article p{
+        line-height: 1.7em;
+        text-align: justify;
+    }
+    aside{
+        width:100%;
+        height:100%;
+        background-color:#726054;
+        text-align:center;
+    }
+    aside h3{
+        padding: 10px 0;
+    }
+    aside img{
+        width:60%;
+        margin: 10px auto;
+    }
+    footer{
+        height:60px;
+        line-height: 60px;
+        background-color: #333;
+        color:#fff;
+        text-align: center;
+    }
+    }
+    

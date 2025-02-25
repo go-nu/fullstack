@@ -1,0 +1,64 @@
+* {margin: 0; padding: 0;}
+ul {list-style: none;}
+a {text-decoration: none;
+    color: black;
+    text-align: center;
+    display: block;
+    width: 180px;
+    height: 50px;
+    line-height: 50px;}
+
+header {
+    width: 1000px;
+    height: 200px;
+    background-color: antiquewhite;
+    position: relative;
+    margin: 0 auto;
+    position: relative;
+}
+.logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.mm {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 150px;
+    left: 0px;
+}
+.mm > ul {
+    position: relative;
+    width: 1000px;
+    height: 50px;
+    margin: 0 auto;
+    border-top: 1px solid rosybrown;
+}
+.mm > ul > li {
+    float: left;
+    text-align: center;
+}
+.mm ul li a {
+    display: block;
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+}
+.mm ul li ul {
+    position: absolute;
+    height: 0px;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+.mm ul:hover li ul {
+    height: 250px;
+    border-top: 3px solid rosybrown;
+}
+.mm a:hover {
+    font-weight: bold;
+}
+.mm ul ul a:hover {
+    background: url(./sec5_tit2.png) no-repeat 30% 50%;
+}

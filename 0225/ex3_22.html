@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var sum = 0;
+        var num = '3의 배수 ';
+        for (var i = 1; i < 10; i++) {
+            if (i % 3 === 0) {
+            num += i + ' ';
+            // continue;는 true일때 다음 문장을 읽지 않고 for문으로 복귀
+            continue;
+        }
+        sum += i;
+    }
+    document.write(`${num} 제외 총합 : ${sum}`)
+    </script>
+</body>
+</html>

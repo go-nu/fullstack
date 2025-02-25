@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+*{margin: 0;padding: 0;}    
+.box{
+   width:200px;
+   height:200px;
+}
+.box1{
+    background-color: burlywood;
+}
+.box1 p {
+    /* margin 병합 현상
+    부모와 자식이 모두 블럭요소일때
+    자식에게 margin을 주면 부모에게 흡수됨*/
+    margin-top: 20px;
+}
+.box2{
+    background-color: plum;
+    margin-bottom: 50px;
+}
+/* margin 중첩 현상 */
+.box3{
+    background-color: yellowgreen;
+    margin-top: 50px;
+}
+.box4{
+    background-color: tomato;
+}
+
+</style>
+</head>
+<body>
+    <div class="box box1"><p>박스1</p></div>
+    <div class="box box2"><p>박스2</p></div>
+    <div class="box box3"><p>박스3</p></div>
+    <div class="box box4"><p>박스4</p></div>
+</body>
+</html>

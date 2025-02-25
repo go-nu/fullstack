@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // prompt로 월을 입력받아
+        // 3, 4, 5는 봄
+        // 6, 7, 8은 여름
+        // 9, 10, 11은 가을
+        // 12, 1, 2는 겨울
+        var month = prompt("월을 입력하세요 : ", "");
+        var season = "";
+
+        if (month == "3" || month == "4" || month == "5") {
+            season = "봄";
+        }
+        else if (month == "6" || month == "7" || month == "8") {
+            season = "여름";
+        }
+        else if (month == "9" || month == "10" || month == "11") {
+            season = "가을";
+        }
+        else if (month == "12" || month == "1" || month == "2") {
+            season = "겨울";
+        }
+        else {
+            season = "잘못된 입력";
+        }
+        document.write (season);
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<script>
+//국어 영어 수학 세과목을 입력받아 총점과 평균을 구하시오
+//prompt 는 원래 문자를 입력받는 함수이다.
+//세가지를 연산하기 전에 숫자로 변경 Number
+var kor = Number(prompt("국어점수입력",""));
+var mat = Number( prompt("수학점수입력",""));
+var eng = Number(prompt("영어점수입력",""));
+var sum = kor + mat + eng;
+document.write("합계는 :"+ sum +"<br/>");
+var avg = sum /3;
+document.write("평균는 :"+ avg);
+
+</script>    
+</head>
+<body>
+    
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <p id="gnb"> 나있음</p> -->
+    <script>
+    //number
+    var num1 = 10;
+    var num2 = 10.2;
+    var num3 = 1e+2;
+    console.log(num1 + "," + num2 + "," + num3);
+
+    //string
+    var str1 = '문자';
+    var str2="문자는 '문자'";
+    var str3 = '문자는 "문자"';
+    // escape 문자 - 크롬에서 검색
+    var str4 = 'you\' re too smart...';
+    console.log(str1 + "," + str2 + "," + str3 + ',' + str4 +'<br/>' );
+
+    //boolean  - 참(true) 거짓(false)
+    var com1 = (5 > 4);
+    var com2 = (5 < 4);
+    console.log(com1 + ',' + com2);
+
+    //undefined - 정의 되지 않았다.
+    var storage; //strage 값이 할당되지않았다.
+    console.log(storage) ;  
+    //null  -> 무(없을무)
+    //문서안에 #gnb를 선택해서 -> gnb에 대입
+    var gnb = document.getElementById('gnb');
+    console.log(gnb) ;
+
+     // typeof
+    var type1 = 10;
+    var type2 = '문자';
+    var type3 = true;
+    console.log(typeof type1 + ',' + typeof type2 + ',' + typeof type3);
+  </script>
+</body>
+</html>

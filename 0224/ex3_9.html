@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<script>
+// + , - , * , /
+var num1 = 20;
+var num2 = 10;
+var score1 = num1 + num2;
+var score2 = num1 - num2;
+var score3 = num1 * num2;
+var score4 = num1 / num2;
+console.log(score1 + ',' + score2 + ',' + score3 + ',' + score4);
+
+var evenOdd = 2 ; //짝홀수 판별
+var result = evenOdd % 2; // evenOdd 를 2로 나눈 나머지
+var comment;
+if(result === 0){
+    comment = evenOdd + '는(은)  "짝수" 입니다. ';
+}else{
+    comment = evenOdd + '는(은)  "홀수" 입니다. ';
+}
+console.log(comment);
+
+// ++ , -- 하나씩 증가/감소
+var increase = 0;
+var add = 0;
+++increase; //increase = increase + 1;
+console.log(increase); 
+increase++; //increase = increase + 1;
+console.log(increase);
+
+add = ++increase;
+console.log(add + ',' + increase);
+add = increase++;
+console.log(add + ',' + increase);
+
+
+
+
+</script>    
+</head>
+<body>
+    
+</body>
+</html>
