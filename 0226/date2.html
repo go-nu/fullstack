@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth()+1;
+        var date = today.getDate();
+        var hours = today.getHours();
+        var minutes = today.getMinutes();
+        var seconds = today.getSeconds();
+        var day = today.getDay();
+        var day0;
+        switch (day) {
+            case 0:
+                day0 = "일";
+                break;
+            case 1:
+                day0 = "월";
+                break;
+            case 2:
+                day0 = "화";
+                break;
+            case 3:
+                day0 = "수";
+                break;
+            case 4:
+                day0 = "목";
+                break;
+            case 5:
+                day0 = "금";
+                break;
+            case 6:
+                day0 = "토";
+                break;
+        
+            default:
+                break;
+        }
+        /*
+        if (day = 0) {
+            day0 = "일";
+        } else if(day = 1) {
+            day0 = "월";
+        } else if(day = 2) {
+            day0 = "화";
+        } else if(day = 3) {
+            day0 = "수";
+        } else if(day = 4) {
+            day0 = "목";
+        } else if(day = 5) {
+            day0 = "금";
+        } else if(day = 6) {
+            day0 = "토";
+        }*/
+        document.write(year + "년 " + month + "월 " + date + "일 " + day0 + "요일 " + hours + "시 " + minutes + "분 " + seconds + "초");
+        document.write(`<br/>${year}년 ${month}월 ${date}일 ${day0}요일 ${hours}시 ${minutes}분 ${seconds}초`);
+        
+        // var today1 = new Date(2025, 2, 26);
+        // alert(today1);
+    </script>
+</body>
+</html>

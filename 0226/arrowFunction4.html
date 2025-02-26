@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //블럭문이 필요한 경우
+        function multiply1(a, b) {
+            var result = a * b;
+            return result;
+        }
+        // 2문장 이상일 경우 블럭을 생략할 수 없음.
+        var multiply = (a, b) => {
+            var result = a * b;
+            return result;
+        }
+
+        console.log(multiply());
+    </script>
+</body>
+</html>

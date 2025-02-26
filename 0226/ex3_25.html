@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>익명함수</title>
+</head>
+<body>
+    <script>
+        (function(){
+            life();
+        })();
+
+        function life() {
+            document.write('즉시 실행 함수1');
+        }
+
+        var instant = (function() {
+            document.write('즉시 실행 함수2');
+        })();
+    </script>
+</body>
+</html>

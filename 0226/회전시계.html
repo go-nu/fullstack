@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {margin: 0; padding: 0;}
+        #clock {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 100px auto 0;
+            border: 1px solid #333;
+        }
+        #clock img{
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        <span id="year">0000</span>년
+        <span id="month">00</span>월
+        <span id="date">00</span>일
+        <span id="day">0</span>요일
+        <span id="hours">00</span>시
+        <span id="minutes">00</span>분
+        <span id="seconds">00</span>초
+    </h1>
+
+    <div id="clock">
+        <img src="./images/clock.png" alt="시계" id="clock1">
+        <img src="./images/h.png" alt="시" id="hour1">
+        <img src="./images/m.png" alt="분" id="minute1">
+        <img src="./images/s.png" alt="초" id="second1">
+    </div>
+
+
+    <script>
+        function autoTime() {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth()+1;
+            var date = today.getDate();
+            var hours = today.getHours();
+            var minutes = today.getMinutes();
+            var seconds = today.getSeconds();
+            var day = today.getDay();
+            var yoil;
+            switch (day) {
+                case 0:
+                    yoil = "일";
+                    break;
+                case 1:
+                    yoil = "월";
+                    break;
+                case 2:
+                    yoil = "화";
+                    break;
+                case 3:
+                    yoil = "수";
+                    break;
+                case 4:
+                    yoil = "목";
+                    break;
+                case 5:
+                    yoil = "금";
+                    break;
+                case 6:
+                    yoil = "토";
+                    break;
+            
+                default:
+                    break;
+            }
+
+            document.getElementById("year").innerHTML = year;
+            document.getElementById("month").innerHTML = month;
+            document.getElementById("date").innerHTML = date;
+            document.getElementById("day").innerHTML = yoil;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+            document.getElementById("seconds").innerHTML = seconds;
+        
+            var si = document.getElementById('hour1');
+            var bun = document.getElementById('minute1');
+            var cho = document.getElementById('second1');
+
+            if (hours > 12) {
+                hours -= 12;
+            }
+
+            var dh = hours * 30 + minutes * .5;
+            var dm = minutes * 6 + seconds / 12;
+            var ds = seconds * 6;
+
+            si.style.transform = "rotate("+dh+"deg)";
+            bun.style.transform = "rotate("+dm+"deg)";
+            cho.style.transform = "rotate("+ds+"deg)";
+        }
+        
+        autoTime();
+        setInterval(autoTime, 1000);
+
+    </script>
+</body>
+</html>

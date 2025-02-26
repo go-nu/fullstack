@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        <span id="year">0000</span>년
+        <span id="month">00</span>월
+        <span id="date">00</span>일
+        <span id="day">0</span>요일
+        <span id="hours">00</span>시
+        <span id="minutes">00</span>분
+        <span id="seconds">00</span>초
+    </h1>
+
+
+    <script>
+        function autoTime() {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth()+1;
+            var date = today.getDate();
+            var hours = today.getHours();
+            var minutes = today.getMinutes();
+            var seconds = today.getSeconds();
+            var day = today.getDay();
+            var day0;
+            switch (day) {
+                case 0:
+                    day0 = "일";
+                    break;
+                case 1:
+                    day0 = "월";
+                    break;
+                case 2:
+                    day0 = "화";
+                    break;
+                case 3:
+                    day0 = "수";
+                    break;
+                case 4:
+                    day0 = "목";
+                    break;
+                case 5:
+                    day0 = "금";
+                    break;
+                case 6:
+                    day0 = "토";
+                    break;
+            
+                default:
+                    break;
+            }
+
+            document.getElementById("year").innerHTML = year;
+            document.getElementById("month").innerHTML = month;
+            document.getElementById("date").innerHTML = date;
+            document.getElementById("day").innerHTML = day0;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+            document.getElementById("seconds").innerHTML = seconds;
+        }
+        
+        autoTime();
+        setInterval(autoTime, 1000);
+    </script>
+</body>
+</html>

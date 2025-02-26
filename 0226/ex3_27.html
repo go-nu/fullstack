@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function exampass(name, h, c, j) {
+            var comment = name + " 학생은 ";
+            if (h >= 60 && c >= 60 && j >= 60) {
+                comment += "전과목 PASS";
+            }
+            else {
+                if(h < 60) {
+                    comment += "html 재시험";
+                }
+                if(c < 60) {
+                    comment += "css 재시험";
+                }
+                if(j < 60) {
+                    comment += "javavscript 재시험";
+                }
+            }
+            return comment;
+        }
+        console.log(exampass('이함수', 80, 90, 70));
+        console.log(exampass('저함수', 80, 50, 50));
+    </script>
+</body>
+</html>

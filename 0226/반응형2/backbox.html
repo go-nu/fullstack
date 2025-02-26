@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {margin: 0; padding: 0;}
+        .box{
+            width: 400px;
+            height: 400px;
+            border: 1px solid #333;
+            margin-bottom: 10px;
+            margin: 10px auto;
+        }
+        .box1{
+            background: url(./images/pic2.jpg) no-repeat 50% 50%;
+            background-size: contain;
+            /* 한쪽면이 가득 찰 때까지만 크기를 늘림*/
+        }
+        .box2{
+            background: url(./images/pic2.jpg) no-repeat 50% 50%;
+            background-size: cover;
+            /* 전체를 가득 채우고 나머지는 숨김(안보임) */
+        }
+    </style>
+</head>
+<body>
+    <div class="box box1">
+
+    </div>
+    <div class="box box2">
+
+    </div>
+</body>
+</html>

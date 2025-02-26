@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 일반 함수
+        function hi() {
+            document.write("Hi!");
+        }
+        hi();
+        //익명 함수
+        var hello = function() {
+            document.write("<br/> Hello.");
+        }
+        hello();
+        //즉시 실행 함수
+        (function(){
+            document.write("<br/> Wendsday");
+        })();
+        (function(x, y){
+            document.write("<br/>" + (x * y));
+        })(3, 4);
+        // return
+        function bms(i, j) {
+            if (i >= j) {
+                return i - j;
+            }
+            else return j - i;
+        }
+        document.write("<br/>" + bms(10, 14))
+        function test(name, score1, score2, score3) {
+            result = "<br/>" + name +"는 "
+            if (score1 >= 70) {
+                result += "합격 ";
+            } else {
+                result += "불합격 ";
+            }
+            if (score2 >= 70) {
+                result += "합격 ";
+            } else {
+                result += "불합격 ";
+            }
+            if (score3 >= 70) {
+                result += "합격 ";
+            } else {
+                result += "불합격 ";
+            }
+            return result += "입니다.";
+        }
+        document.write(test('고건우', 70, 68, 80));
+        // 화살표 함수
+        var add1 = (a, b) => a + b;
+        document.write("<br/>" + add1(9, 2));
+        var add2 = (a, b) => {
+            sum = a + b;
+            return sum;
+        }
+        document.write("<br/>" + add2(5, 6));
+        // 전역 변수와 지역 변수
+        var eat = "choco";
+        function snack() {
+            var eat = "icecream";
+            document.write("<br/>" + eat);
+        }
+        snack();
+        document.write("/ " + eat);
+    </script>
+</body>
+</html>

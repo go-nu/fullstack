@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 전역변수
+        var globalMessage = "나는 전역변수.";
+        function showMessage() {
+            var localMessage = "나는 지역변수";
+            console.log(globalMessage); // 전역 변수 접근 가능
+            console.log(localMessage); // 지역 변수 접근 가능
+        }
+        showMessage();
+        console.log(globalMessage); // 전역 변수 접근 가능
+        console.log(localMessage); // 지역 변수 접근 가능
+
+    </script>
+</body>
+</html>
