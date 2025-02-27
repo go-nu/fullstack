@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 200px;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+
+    </div>
+    <script>
+        var x = '10';
+        var y = '20';
+        console.log(x + y);
+        
+        var a = Number(x);
+        var b = Number(y);
+        var c = parseInt(x);
+        var d = parseInt(y);
+        console.log(a + b);
+        console.log(c + d);
+
+        var k = document.getElementById("box").offsetTop;
+        console.log(k);
+
+        var j = window.getComputedStyle(document.getElementById("box")).top;
+        var j_1 = parseInt(window.getComputedStyle(document.getElementById("box")).top);
+        console.log(j);
+        console.log(j_1);
+
+    </script>
+</body>
+</html>

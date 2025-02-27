@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 함수레벨 스코프
+        var a = 10;
+        function test() {
+            var x = 10; // var로 선언된 변수 = 함수레벨 스코프
+            console.log(x); // 함수 내에서 x로 접근 가능
+            if(true) {
+                var y = 20; // var로 선언된변수는 블록을넘어 함수 내에서 유효
+            }
+            console.log(y); // 함수 내에서 y도 접근 가능
+        }
+        test();
+        console.log(a);
+        // 함수 외부에서는 x, y에 접근할 수 없음
+        console.log(x);
+        console.log(y);
+    </script>
+</body>
+</html>

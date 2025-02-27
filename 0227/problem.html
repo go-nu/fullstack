@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var str1 = prompt("문자열 입력 :", "");
+        document.write(str1.length + "<br/>");
+
+        var str2 = "programming";
+        if (str2.includes("g")) {
+            document.write("문자 g는 "+ str2.indexOf("g")+"번째 인덱스에 있습니다." + "<br/>")
+        }
+        /*
+        var str2 = prompt("문자열 입력 :", "");
+        var char = prompt("찾을 문자 입력 :", "");
+        var index = str2.indexOf(char);
+        if (index !== -1) {
+            console.log(`문자 "${char}"는 ${index}번째 인덱스에 있습니다.`);
+        } else {
+            console.log(`문자 "${char}"는 문자열에 존재하지 않습니다.`);
+        }
+        */
+
+        var str3 = prompt("대문자 변환 : ", "");
+        document.write(str3.toUpperCase() + "<br/>");
+
+        var str4 = "I love JavaScript!";
+        if (str4.includes("love")) {
+            document.write("love 단어가 포함되어 있습니다.<br/>");
+        }
+        /*
+        let str = prompt("문자열을 입력하세요:");
+        let word = prompt("찾을 단어를 입력하세요:");
+
+        if (str.includes(word)) {
+            console.log(`"${word}" 단어가 포함되어 있습니다.`);
+        } else {
+            console.log(`"${word}" 단어가 포함되지 않았습니다.`);
+        }
+        */
+
+        var str8 = "banana";
+        var count = 0;
+        for (i = 0; i < str8.length; i++) {
+            if (str8[i] =='a') {
+                count++;
+            }
+        }
+        document.write("a는 " + count + "번 등장합니다." + "<br/>");
+
+
+        var str9 = "I love Python!";
+        document.write(str9.replace('Python', 'JavaScript') + "<br/>");
+
+        var str10 = prompt("공백을 기준으로 배열 변환", "");
+        var division = str10.split(" ");
+        document.write(division[0] + ", " + division[1] + ", " + division[2]);
+        // division.forEach(function(item)) {
+        //     console.log(item);
+        // }
+
+
+    </script>
+</body>
+</html>

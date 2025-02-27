@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 블록레벨 스코프
+        var a = 10;
+        function test() {
+            var x = 10; // var로 선언된 변수 = 함수레벨 스코프
+            console.log(x); // 함수 내에서 x로 접근 가능
+            if(true) {
+                let y = 20; // let은 해당 블록 내에서만 유효
+                console.log(y); // if 블록 내부에서 유효
+            }
+            console.log(y); // y is not defined
+
+        }
+        test();
+    </script>
+</body>
+</html>

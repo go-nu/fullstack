@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #333;
+        }
+        .tab {
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active-content {
+            display: block;
+        }
+        .tab.active-tab {
+            color: #319170;
+            font-weight: bold;
+            font-size: 17px;
+            border-bottom: 2px solid #319170;
+        }
+        a {text-decoration: none; color: #000;}
+        .tab-content a .p1 {
+            border: 1px solid blue;
+            color: blue;
+            width: 80px;
+            text-align: center;
+        }
+        .tab-content a .p2 {
+            border: 1px solid green;
+            color: green;
+            width: 80px;
+            text-align: center;
+        }
+        .tab-content a .p3 {
+            border: 1px solid blue;
+            color: blue;
+            width: 80px;
+            text-align: center;
+        }
+        .tab-content a .p4 {
+            border: 1px solid red;
+            color: red;
+            width: 80px;
+            text-align: center;
+        }
+        .tab-content a > p {
+            display: block;
+            border: 1px solid #333;
+        }
+        .tab-content a > .txt {
+            display: inline;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab-container">
+        <div id="menutab1" class = "tab active-tab" onclick="changeTab('tab1')">공지사항</div>  
+        <div id="menutab2" class="tab" onclick="changeTab('tab2')">독서ㆍ문화ㆍ행사</div>
+    </div>
+    <div id="tab1" class="tab-content active-content">
+        <a href="#"><p class="p1">통합</p><p class="txt">[푸른들] 3월 따로 또 같이</p></a>
+        <a href="#"><p class="p1">통합</p><p class="txt">[길꽃][서울문화의 밤]도서관의 밤 우리가족 책놀이</p></a>
+        <a href="#"><p class="p1">통합</p><p class="txt">[푸른들] 2025년 2분기 정규 프로그램 참여자 모집 안내</p></a>
+        <a href="#"><p class="p1">통합</p><p class="txt">[가양]2025 2분기 정규프로그램 모집안내</p></a>
+        <a href="#"><p class="p1">통합</p><p class="txt">[곰달래]개관 12주년 기념행사 안내</p></a>
+    </div>
+    <div id="tab2" class="tab-content">
+        <a href="#"><p class="p2">길꽃</p><p class="txt">[길꽃][서울문화의 밤]도서관의 밤 우리가족 책놀이</p></a>
+        <a href="#"><p class="p3">강서영어</p><p class="txt">TRPG로 고전 읽기 -80일간의 세계일주-</p></a>
+        <a href="#"><p class="p4">등빛</p><p class="txt">[2025년 2분기 정규 문화] 세계 역사 속 그날</p></a>
+        <a href="#"><p class="p4">등빛</p><p class="txt">[2025년 2분기 정규 문화] 문해력 UP 사고력 UP:읽기의 깊이, 생각의 깊이</p></a>
+        <a href="#"><p class="p4">등빛</p><p class="txt">[2025년 2분기 정규 문화] 독서랑 논술이랑</p></a>
+    </div>
+</body>
+</html>
+
+<script>
+    function changeTab(tabId) {
+        const allTabs = document.querySelectorAll('.tab');
+        const allContent = document.querySelectorAll('.tab-content');
+
+        allTabs.forEach(function(tab){
+            tab.classList.remove('active-tab');
+        });
+        allContent.forEach(function(content){
+            content.classList.remove('active-content');
+        });
+
+        const selectedTab = document.getElementById("menu" + tabId);
+        selectedTab.classList.add('active-tab')
+        const selectedContent = document.getElementById(tabId);
+        selectedContent.classList.add('active-content')
+    }
+</script>

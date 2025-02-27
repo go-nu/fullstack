@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // charAt()
+        // index번호 5번에 있는 문자 추출
+        var str = "Javascript";
+        console.log(str.charAt(5));
+        var str = "Javascript";
+        console.log(str.indexOf('a'))
+        // 'a'가 포함되어 있으면 index_num 반환
+        console.log(str.indexOf('k'))
+        // 'k'가 포함되어 있지 않으면 -1 반환
+
+        // lastIndexOf()
+        var str = "Javascript";
+        console.log(str.lastIndexOf('a'));
+        
+        // includes() : 해당 단어가 포함되어 있는지
+        var str = "Javascript";
+        console.log(str.includes("script"));
+        
+        // substring()
+        var str = 'http://icoxpublish.com';
+        console.log(str.substring(0, 4)); // 0 <= i < 4
+        console.log(str.substring(7)); // i < 7
+        // substr() : 해당 index부터 n개 글자 추출
+        var str = 'http://icoxpublish.com';
+        console.log(str.substr(7, 4)); // 7부터 4글자
+        // split()
+        var str = "Javascript_jQuery";
+        var division = str.split("_"); // _를 기준으로 나눈 배열 생성
+        console.log(division[0] + ", " + division[1]);
+        
+        // replace()
+        var str = "m_out.gif";
+        console.log(str.replace('out', 'over'));
+
+        // concat() 아주중요
+        var str1 = 'nav';
+        var str2 = '_bg';
+        console.log(str1.concat(str2));
+
+        // trim() 공백제거
+        var str = " remo ve bla n k";
+        console.log(str.trim());
+
+        // toLowerCase(), toUpperCase()
+        var str = "LowerCase";
+        console.log(str.toLowerCase()); // 중요
+        var str = "UpperCase";
+        console.log(str.toUpperCase());
+    </script>
+</body>
+</html>
