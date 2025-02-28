@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/fade1.css">
+</head>
+<body>
+    <div id="slider-container">
+        <div class="slider">
+            <div class="slide fade">
+                <img src="img/slide1.jpg" alt="Slide 1">
+            </div>
+            <div class="slide fade">
+                <img src="img/slide2.jpg" alt="Slide 2">
+            </div>
+            <div class="slide fade">
+                <img src="img/slide3.jpg" alt="Slide 3">
+            </div>
+        </div>
+        <div class="pager">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </div>
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function currentSlide(n){
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n){
+            let i;
+            const slides = document.getElementsByClassName('slide');
+            const dots = document.getElementsByClassName('dot');
+
+            if(n > slides.length){
+                slideIndex = 1;
+            }
+
+            for(i = 0; i < slides.length; i++){
+                slides[i].classList.remove('on');
+            }
+            // slides.forEach(slide => slide.classList.remove('on'));
+
+            for (i = 0; i < dots.length; i++) {
+                dots[i].classList.remove('active');
+            }
+            // dots.forEach(dot => dot.classList.remove('active'));
+
+            slides[slideIndex - 1].classList.add('on');
+            dots[slideIndex - 1].classList.add('active');
+
+        }
+
+        setInterval(function(){
+            plusSlides(1);
+        }, 3000);
+        // setInterval(function(){}, delay); 매개변수와 함께 전달
+        // setInterval(function, delay); 매개변수 없이 함수 호출
+
+        function plusSlides(i) {
+            showSlides(slideIndex += i);
+        }
+
+    </script>
+</body>
+</html>
