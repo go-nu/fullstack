@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #box {width: 200px; height: 200px}
+        .red-bg {
+            background-color: red;
+        }
+        .blue-bg {
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="box" class="red-bg"></div>
+    <button id="changeColorBtn">컬러변경</button>
+</body>
+</html>
+<script>
+    const box = document.getElementById('box');
+    const button = document.getElementById('changeColorBtn');
+    button.addEventListener('click', function(){
+        
+        if(box.classList.contains('red-bg')) {
+            box.classList.remove('red-bg');
+            box.classList.add('blue-bg');
+        } else {
+            box.classList.remove('blue-bg');
+            box.classList.add('red-bg');
+       }
+    });
+</script>
