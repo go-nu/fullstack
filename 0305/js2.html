@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var a = true;
+        var b = false;
+        var c = 10 > 5;
+        var d = Boolean(null);
+        // Boolean(); 데이터가 없으면 false
+        document.write(a + '<br/>');
+        document.write(b + '<br/>');
+        document.write(c + '<br/>');
+        document.write(d + '<br/>');
+
+        var num = 100;
+        var str = "Javascript";
+        var num = 10; // 변수의 첫글자는 $, _, 영문자
+        // 예약어나 숫자는 올 수 없음
+
+        var s; // 변수는 초기값을 줘야함, - undefined
+        document.write(s + '<br/>');
+
+        document.write(typeof num + '<br/>');
+        document.write(typeof str + '<br/>');
+
+        var t1 = "학교 종이 ";
+        var t2 = "땡땡땡";
+        var result = t1 + t2
+        document.write(result); // 문자 + 문자
+        // 숫자 + 문자
+
+        var str1 = "<table border = 1>";
+        str1 += "<tr>"
+        str1 += "<td>1</td><td>2</td><td>3</td>"
+        str1 += "</tr>";
+        str1 += "</table>";
+        console.log(str1);
+        document.write(str1);
+
+    </script>
+</body>
+</html>

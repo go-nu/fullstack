@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        // html, css를 읽고 나서 실행
+        // window.onload = fnction(){내용}
+        document.addEventListener('DOMContentLoaded', function(){
+        
+        // const element = document.getElementById('myDiv');
+        const element = document.querySelector('#myDiv');
+        console.log(element.textContent); // Hello, world! 출력
+        
+        // const elements = document.getElementsByClassName('myClass');
+        const elements = document.querySelectorAll('.myClass');
+        console.log(elements[0].textContent);
+        console.log(elements[1].textContent);
+    
+        // const ps = document.querySelectorAll('p');
+        const ps = document.getElementsByTagName('p')
+        console.log(ps[0].textContent);
+        console.log(ps[1].textContent);
+    });
+    </script>
 </head>
 <body>
     <div id="myDiv">Hello, World!</div>
@@ -13,18 +33,3 @@
     <p>Paragraph 2</p>
 </body>
 </html>
-<script>
-    // const element = document.getElementById('myDiv');
-    const element = document.querySelector('#myDiv');
-    console.log(element.textContent); // Hello, world! 출력
-    
-    // const elements = document.getElementsByClassName('myClass');
-    const elements = document.querySelectorAll('.myClass');
-    console.log(elements[0].textContent);
-    console.log(elements[1].textContent);
-
-    // const ps = document.querySelectorAll('p');
-    const ps = document.getElementsByTagName('p')
-    console.log(ps[0].textContent);
-    console.log(ps[1].textContent);
-</script>

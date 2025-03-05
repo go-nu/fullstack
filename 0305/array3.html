@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var greenArr = ["교대", "방배", "강남"];
+        var yellowArr = ["미금","정자","수서"];
+        // splice (i, j, element...) i번 index부터 j개를 지우고 elemnt 더하기
+        greenArr.splice(2, 1, "서초", "역삼");
+        document.write(greenArr, "<br/>");
+
+        var data1 = yellowArr.pop(); // 마지막 뽑기
+        var data2 = yellowArr.shift(); // 맨 앞 뽑기
+        
+        yellowArr.push(data2); // 마지막에 삽입
+        document.write(yellowArr, "<br/>");
+        
+        yellowArr.unshift(data1); // 맨 앞에 삽입
+        document.write(yellowArr, "<br/>");
+    </script>
+</body>
+</html>

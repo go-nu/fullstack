@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .aqua { color: aqua;}
+        .green { color: green;}
+        .red { color: red;}
+    </style>
+</head>
+<body>
+    <script>
+         //for문을 이용하여 1부터 100까지 5의 배수일 경우 에는 빨간색글자
+        //5의배수이면서 7의배수아닐때 빨간색글자
+        //7의 배수일경우는 초록색글자 
+        //7의 배수이면서 5의배수가 아닐때 초록색글자
+        //그리고 5의 배수이면서 7의 배수일경우
+        // aqua 색 글자로 출력하는 예제
+        for (var i = 1; i <= 100; i++) {
+            if (i % 5 == 0 && i %7 != 0) {
+                document.write("<p class='red'>" + i + "</p>");
+            } else if (i % 7 == 0 && i %5 != 0){
+                document.write("<p class='green'>" + i + "</p>");
+            } else if (i % 7 == 0 && i %5 == 0){
+                document.write("<p class='aqua'>" + i + "</p>");
+            }
+        }
+    </script>
+</body>
+</html>

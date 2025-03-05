@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <style>
+        .mm li.on{background-color: red; color: #fff;}
+        .sm li{display: none;}
+        .sm .active{display: block;}
+    </style>
+    <script>
+        $(function(){
+            $(".mm li").click(function(){
+                var i = $(this).index();
+                $('.mm li').removeClass('on');
+                $(this).addClass('on');
+
+                $('.sm li').removeClass('active');
+                $('.sm li').eq(i).addClass('active');
+            });
+        });
+    </script>
+</head>
+<body>
+    <ul class="mm">
+        <li class="on">난 1번</li>
+        <li>난 2번</li>
+        <li>난 3번</li>
+        <li>난 4번</li>
+    </ul>
+    <ul class="sm">
+        <li class="active">난 1번 짝</li>
+        <li>난 2번 짝</li>
+        <li>난 3번 짝</li>
+        <li>난 4번 짝</li>
+    </ul>
+</body>
+</html>

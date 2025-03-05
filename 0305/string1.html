@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var t = "Hello Thank you good luck to you";
+        // 문제1 인덱스 번호 16에 저장된 한문자 추출
+        document.write(t.charAt(16), "<br/>");
+
+        //문2 처음 나오는 "you"의 인덱스 번호 반환, 없으면 -1
+        document.write(t.indexOf("you"), "<br/>");
+        //문3 주어진 인덱스 번호 뒤부터 탐색
+        document.write(t.indexOf("you", 16), "<br/>");
+        // 뒤에서부터 찾기, 번호는 앞에서부터 셈
+        document.write(t.lastIndexOf("you"), "<br>"); //오른쪽부터 29
+        document.write(t.lastIndexOf("you", 25), "<br><br><br>");
+
+        document.write(t.match("luck"), "<br>"); //luck 일치하는 문자 반환
+        document.write(t.search("you"), "<br>"); //12
+        document.write(t.substr(21, 4), "<br>");//인덱스 21부터 4글자
+        document.write(t.substring(6, 12), "<br>");//인덱스 6부터 12이전
+        document.write(t.replace("you","me"), "<br><br><br>");
+
+        document.write(t.toLowerCase(), "<br>");//소문자로
+        document.write(t.toUpperCase(), "<br>");//대문자로
+        document.write(t.length, "<br>"); //갯수
+        var s = t.split(" ");//split(" ") 을 기준으로 배열로 만듬
+        document.write(s[0], "<br>");
+        document.write(s[1], "<br>");
+        document.write(s[2], "<br>");
+        document.write(s[3], "<br>");
+        document.write(s[4], "<br><br><br>");
+
+        var str = "A";
+        var t = str.charCodeAt(0); //아스키코드 A의 값 65
+        document.write(t, "<br>");
+        document.write(String.fromCharCode(65), "<br>");
+        //코드값 65 문자로 변환하면 'A'
+
+
+
+    </script>
+</body>
+</html>

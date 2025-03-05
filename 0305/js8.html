@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 사이트 이동
+        // 즐겨찾는 사이트가 네이버, 다음, 네이트, 구글 중 선택
+        // switch case문 이용, 사이트로 이동
+        var site = prompt("네이버, 다음, 네이트, 구글 중 선택", "");
+        var url;
+        switch (site) {
+            case "다음":
+                url = "www.daum.net"
+                break;    
+            case "네이버":
+                url = "www.naver.com"
+                break;
+            case "네이트":
+                url = "www.nate.com"
+                break;
+            case "구글":
+                url = "www.google.com"
+                break;
+        
+            default:
+                break;
+        }
+
+        if(url) {
+            location.href = ("https://" + url);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 적정 체중을 구하는 테스트기 만들기
+        //체중과 신장을 입력받아
+        // 적정 체중 = (본인 신장 - 100) * 0.9
+        //normal_w = (height-100)*0.9; 
+        // ex) 신장 -180 체중 74 kg 일때
+        // 정정체중을 초과한 경우  - 적정체중을 초과했습니다.
+        // 아닌경우는 정상입니다. 라고 출력
+
+        var weight = prompt("체중을 입력하세요.")
+        var tall = prompt("키를 입력하세요.")
+        
+        var normal_w = (tall-100)*0.9;
+
+        var result;
+        weight > normal_w ? (result = "적정 체중을 초과했습니다.") : (result = "정상입니다.");
+        document.write(result);
+    </script>
+</body>
+</html>
