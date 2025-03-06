@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <style type="text/css">
+    *{margin:0; padding:0;}
+    #box1{width:100px; height:100px; background-color:#f00;
+            position:relative;left:0;}
+    </style>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+    var box1 = document.getElementById('box1');
+    function animateBox(){
+        box1.style.transition = 'left 2s, width 2S,height 2s, opacity 2s';
+        box1.style.left = "500px";
+        box1.style.width = "200px";
+        box1.style.height = "200px";
+        box1.style.opacity = "0.5";
+b
+        setTimeout(function(){
+            box1.style.transition = 'left 1s, width 1s,height 1s, opacity 1s';
+            box1.style.left = "0";
+            box1.style.width = "100px";
+            box1.style.height = "100px";
+            box1.style.opacity = "1";
+        },2000);
+    }
+    animateBox();
+});
+
+
+</script>
+
+
+</head>
+<body>
+    <div id="box1">박스1</div>
+</body>
+</html>

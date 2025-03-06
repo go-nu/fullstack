@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <style>
+        h1{
+            width: 200px;
+            text-align: center;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        h1.on{
+            background-color: blueviolet;
+            color: #fff;
+        }
+
+    </style>
+    <script>
+        $(function(){
+            $("h1").click(function(){
+                if($(this).hasClass('on')){
+                    $(this).removeClass('on');
+                }else{
+                    $(this).addClass('on');
+                }
+
+                // $(this).toggleClass('on'); 위랑 같음
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>난버튼</h1>
+</body>
+</html>
