@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        ul {list-style: none;}
+        header {
+            width: 600px;
+            height: 200px;
+            margin: 0 auto;
+            background-color: deepskyblue;
+        }
+        #img_slide {
+            width: 600px;
+            height: 255px;
+            margin: 0 auto;
+            position: relative;
+        }
+        #img_slide ul{
+            width: 4800px;
+            height: 255px;
+        }
+        #img_slide ul li{
+            width: 600px;
+            float: left;
+        }
+        #img_slide p a{
+            position: absolute;
+            width: 38px;
+            height: 36px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        #img_slide p a.prev {
+            left: 20px;
+        }
+        #img_slide p a.next {
+            right: 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header></header>
+    <div id="img_slide">
+        <ul id="banner">
+            <li><a href="#"><img src="./images/car1.jpg" alt=""></a></li>
+            <li><a href="#"><img src="./images/car2.jpg" alt=""></a></li>
+            <li><a href="#"><img src="./images/car3.jpg" alt=""></a></li>
+            <li><a href="#"><img src="./images/car4.jpg" alt=""></a></li>
+        </ul>
+        <p>
+            <a href="#" class="prev">
+                <img src="./images/prev_btn.png" alt="prev">
+            </a>
+            <a href="#" class="next">
+                <img src="./images/next_btn.png" alt="next">
+            </a>
+        </p>
+    </div>
+</body>
+</html>
+<script>
+    var list = document.getElementById('banner');
+    var listLi = document.querySelectorAll('#banner li');
+
+    var copyobj = listLi[0].cloneNode(true);
+    list.append(copyobj);
+
+    var num = 0;
+    document.querySelector('.next').addEventListener('click', function(e){
+        e.preventDefault;
+
+        if(num === 4) {
+            num = 0;
+            list.style.transition = 'none';
+            list.style.marginLeft = 0 + "px";
+        }
+
+        setTimeout(function() {
+            num++;
+            list.style.transition = 'margin-left 0.5s';
+            list.style.marginLeft = -600 * num + "px";
+        }, 50)
+    });
+    document.querySelector('.prev').addEventListener('click', function(e){
+        e.preventDefault;
+
+        if(num === 0) {
+            num = 4;
+            list.style.transition = 'none';
+            list.style.marginLeft = -600 * num + "px";
+        }
+
+        setTimeout(function() {
+            num--;
+            list.style.transition = 'margin-left 0.5s';
+            list.style.marginLeft = -600 * num + "px";
+        }, 50)
+    });
+</script>

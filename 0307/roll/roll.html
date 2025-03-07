@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <style>
+        *{margin: 0;padding: 0;}
+        li {list-style: none; float: left; width: 80px;}
+        /* img 크기 72px - 여백 8px */
+        h1 {text-align: center;}
+        #banner_wrap {
+            width: 260px;
+            padding: 10px 20px;
+            margin: 0 auto;
+            border: 1px solid #aaa;
+        }
+        #banner {
+            width: 800px;
+            border: 1px solid red;
+            height: 54px;
+        }
+        #frame {
+            width: 232px;
+            height: 54px;
+            position: relative;
+            margin: 10px auto;
+            border: 1px solid blue;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>롤링 슬라이드 배너 만들기</h1>
+    <div id="banner_wrap">
+        <div id="frame">
+            <ul id="banner">
+                <li><a href=""><img src="./images/pic_t1.jpg" alt="사진1"></a></li>
+                <li><a href=""><img src="./images/pic_t2.jpg" alt="사진2"></a></li>
+                <li><a href=""><img src="./images/pic_t3.jpg" alt="사진3"></a></li>
+                <li><a href=""><img src="./images/pic_t4.jpg" alt="사진4"></a></li>
+                <li><a href=""><img src="./images/pic_t5.jpg" alt="사진5"></a></li>
+            </ul>
+        </div>
+        <p>
+            <a href="#" class="prev">
+                <img src="./images/prev_btn.png" alt="이전">
+            </a>
+            <a href="#" class="next">
+                <img src="./images/next_btn.png" alt="다음">
+            </a>
+        </p>
+    </div>
+</body>
+</html>
+
+<script>
+// #banner_wrap 슬라이드 전체 갑싸는 선택자
+// #frame 232x54 px 사진 3장 감싸는 선택자 파란 테두리
+// 완성후 overflow:hidden
+// #banner가 전체사진을 나열할 크기의 선택자 w800px 빨간 테두리
+$(function(){
+    var num = 0; // 슬라이드 증감 번호
+    var li_W = $('#banner li').eq(0).width(); // li 넓이 = 80
+    // var li_W = $('#banner li').eq(0).css('width') = "80px"로 나와 숫자형으로 바꿔줘야함
+    var copy1 = $('#banner li:lt(3)').clone(); // li중 index가 3미만(less than) 복사 "Ctrl + C"
+    // 앞 사진 3장 복사
+    $('#banner').append(copy1); // 붙이기 "Ctrl + V"
+    $('.next').click(function(){
+        if(num == 5) {
+            num = 0;
+            $('#banner').css('margin-left', 0);
+        }
+        num++;
+        $('#banner').stop().animate({'margin-left':- li_W * num},500)
+        return false;
+    });
+    $('.prev').click(function(){
+        if(num == 0) {
+            num = 5;
+            $('#banner').css('margin-left', - li_W * num);
+        }
+        num--;
+        $('#banner').stop().animate({'margin-left':- li_W * num},500)
+        return false;
+    });
+
+    var id = setInterval(autoplay, 2000);
+
+    function autoplay(){
+        if(num == 5) {
+            num = 0;
+            $('#banner').css('margin-left', 0);
+        }
+        num++;
+        $('#banner').stop().animate({'margin-left':- li_W * num},500)
+    }
+
+});
+</script>
