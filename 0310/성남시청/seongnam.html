@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../bxSlider/js/jquery-3.1.1.min.js" />
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script> 
+    <script src="../bxSlider/js/jquery.bxslider.js"></script>
+    <style>
+        a {display: none;}
+        .down .count {
+            float: left;
+        }
+        .over_btn {float: left; margin-left: 10px;}
+        .over_btn span{
+            display: inline-block;
+            width: 20px;
+            height: 21px;
+            /* border: 1px solid #333; */
+            text-indent: -9999px;
+        }
+        .prev {
+            background: url(./img/slickButton.png);
+        }
+        .stop {
+            background: url(./img/slickButton.png) -20px 0;
+        }
+        .stop.on {
+            background: url(./img/slickButton.png) -40px 0;
+        }
+        .next {
+            background: url(./img/slickButton.png) -60px 0;
+        }
+    </style>
+    <script>
+        $(function(){
+            var slide = $('.bxup').bxSlider({
+                auto:true,
+                controls:false,
+                onSlideAfter:function(){
+                    $('.count span').text(slide.getCurrentSlide()+1);
+                }
+            });
+            $('.prev').click(function(){
+                slide.goToPrevSlide();
+            });
+            $('.next').click(function(){
+                slide.goToNextSlide();
+            });
+            $('.stop').click(function(){
+                if(!$(this).hasClass('on')) {
+                    $(this).addClass('on');
+                    slide.stopAuto();
+                } else {
+                    $(this).removeClass('on');
+                    slide.startAuto();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header></header>
+    <section>
+        <article>          
+            <ul class="bxup">
+                <li><img src="./img/sn1.jpg" alt=""></li>
+                <li><img src="./img/sn2.png" alt=""></li>
+                <li><img src="./img/sn3.png" alt=""></li>
+                <li><img src="./img/sn4.png" alt=""></li>
+                <li><img src="./img/sn5.png" alt=""></li>
+                <li><img src="./img/sn6.jpg" alt=""></li>
+                <li><img src="./img/sn7.png" alt=""></li>
+            </ul>
+            <div class="down">
+                <div class="count"><span>1</span>&nbsp; / 7</div>
+                <div class="over_btn">
+                    <span class="prev">뒤로</span>
+                    <span class="stop">멈춤</span>
+                    <span class="next">앞으로</span>
+                </div>
+            </div>
+        </article>
+    </section>
+</body>
+</html>
