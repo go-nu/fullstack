@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script> 
+    <script src="js/jquery.mousewheel.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <!-- 쿠키를 저장할 수 있게 도와주는 플러그인 -->
+
+<style>
+*{margin: 0;padding:0;}
+a{text-decoration: none;}
+article{
+    width:100%;
+    height:100vh;
+}    
+#article1{
+    background-color: burlywood;
+}
+#article2 {
+    background-color: coral;
+}
+
+#article3 {
+    background-color: darkcyan
+}
+
+#article4 {
+    background-color: darksalmon
+}
+nav{
+    position: absolute;
+    top:0;
+    height:100px;
+    width:100%;
+    background: rgba(255,255,255,0.5);
+}
+nav.on{
+    position: fixed;
+    background: rgba(0,0,0,0.5);
+}
+nav.on ul li a{
+    color:#fff;
+}
+nav.on ul li.on a{
+    color:orange;
+    font-weight: bold;
+}
+
+nav ul{
+    width: 1000px;
+    height:100px;
+    margin: 0 auto;
+    list-style: none;
+}
+nav ul li {float: left;}
+nav ul li a {
+    display: block;
+    width: 250px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 32px;
+    color: #000;
+    text-align: center;
+}
+nav ul li.on a{
+    color:orange;
+    font-weight: bold;
+}
+h2{
+    position: fixed;
+    bottom: 100px;
+    right: 0;
+    z-index: 100;
+}
+
+#floatdiv{
+    width: 70px;
+    height:200px;
+    background-color: dimgray;
+    padding-top: 10px;
+    position: absolute;
+    right:50px;
+    top:250px;
+}
+#floatdiv ul li{
+    list-style: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 13px;
+    background-color: #fff;
+    margin-left: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+#floatdiv ul li.on{
+    background-color: orange;
+}
+#popup{
+    width:301px;
+	height:351px;
+	position:absolute;
+	top:210px;
+	left:50px;
+	box-shadow:2px 2px 5px rgba(0,0,0,0.5); 
+    display: none;
+}
+#notice_wrap{
+	width:301px;
+	position:absolute;
+	left:400px;
+	top:210px;
+	box-shadow:0 0 8px #000;
+	font-size:12px;
+}
+#notice_wrap img{float:left;}
+.closeWrap{
+	background-color:#000;
+	color:#fff;
+	text-align:right;
+	padding:5px 10px;
+}
+.closeWrap button{
+	margin-left:20px; cursor:pointer;
+}
+
+
+
+</style>
+
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li class="on"><a href="#article1">회사소개</a></li>
+            <li><a href="#article2">제품소개</a></li>
+            <li><a href="#article3">커뮤니티</a></li>
+            <li><a href="#article4">다운로드</a></li>
+        </ul>
+    </nav>
+    <section>
+        <article id="article1"></article>
+        <article id="article2"></article>
+        <article id="article3"></article>
+        <article id="article4"></article>
+        <!-- 앵커기능 anchor  -->
+    </section>
+    <h2>현재스크롤위치 : <span id="sTop">000</span></h2>
+    <div id="floatdiv">
+        <ul>
+            <li class="on"><span id="btn1"></span></li>
+            <li><span id="btn2"></span></li>
+            <li><span id="btn3"></span></li>
+            <li><span id="btn4"></span></li>
+        </ul>
+    </div>
+
+    <div id="popup">
+        <img src="images/popup.jpg" usemap="#pop"  alt="">
+        <map name="pop" id="pop">
+            <area shape="rect" coords="252,330,295,348" href="#" alt="창닫기">
+            <area shape="rect" coords="95,332,215,345" href="#" alt="오늘 하루 열지않음">
+        </map>
+    </div>
+    <div id="notice_wrap">
+        <img src="images/popup1.jpg" alt="공지사항"/>
+        <p class="closeWrap">
+           <input type="checkbox" name="expiresChk" id="expiresChk" >
+           <label for="expiresChk">3일 동안 이 창 열지않기</label>
+        
+           <button class="closeBtn">닫기</button>
+        </p>
+     </div>
+
+
+</body>
+</html>
+<script>
+$(function(){
+   var a0 =  $('section>article').eq(0).offset().top;
+   var a1 = $('section > article').eq(1).offset().top;
+   var a2 = $('section > article').eq(2).offset().top; //1938
+   var a3 = $('section > article').eq(3).offset().top;
+   console.log(a0, a1, a2, a3);
+   //article이 화면 최상단부터 떨어진거리
+    var dTop = $('#floatdiv').offset().top; //250
+    $(window).scroll(function(){
+
+        var sct = $(this).scrollTop(); //스크롤의 위치값을 sct저장
+        $('#sTop').text(sct);
+        $('#floatdiv').stop().animate({top:dTop+sct},500);
+        if(sct > 0){
+            $('nav').addClass('on'); 
+        }else{
+            $('nav').removeClass('on'); 
+        }
+
+        // if(sct >= $('section>article').eq(0).offset().top ){
+        //     $('nav ul li').removeClass('on');
+        //     $('nav ul li').eq(0).addClass('on');
+        // }
+        // if(sct >= $('section>article').eq(1).offset().top ){
+        //     $('nav ul li').removeClass('on');
+        //    $('nav ul li').eq(1).addClass('on');
+        // }
+        // if(sct >= $('section>article').eq(2).offset().top ){
+        //     $('nav ul li').removeClass('on');
+        //    $('nav ul li').eq(2).addClass('on');
+        // }
+        // if(sct >= $('section>article').eq(3).offset().top ){
+        //     $('nav ul li').removeClass('on');
+        //    $('nav ul li').eq(3).addClass('on');
+        // }
+
+        for(var i = 0; i < 4; i++){
+            if(sct >= $('section>article').eq(i).offset().top ){
+                $('nav ul li').removeClass('on');
+                $('nav ul li').eq(i).addClass('on');
+                $('#floatdiv ul li').removeClass('on');
+                $('#floatdiv ul li').eq(i).addClass('on');
+            }
+        }
+
+
+    });
+
+    $('nav ul li').click(function(){
+        var i = $(this).index();
+        var offset_t =  $('section>article').eq(i).offset().top;
+        //alert(offset_t);
+
+        $('html, body').stop().animate({scrollTop : offset_t},1300);
+        //$('nav ul li').removeClass('on');
+        //$('nav ul li').eq(i).addClass('on');
+        return false;
+    });
+
+    $('#floatdiv ul li').click(function(){
+        var i = $(this).index();
+        var offset_t =  $('section>article').eq(i).offset().top;
+        //alert(offset_t);
+
+        $('html, body').stop().animate({scrollTop : offset_t},1300);
+        //$('nav ul li').removeClass('on');
+        //$('nav ul li').eq(i).addClass('on');
+        return false;
+    });
+
+    // $('section>article').mousewheel(function(event, d){
+    //     console.log(d);
+
+    //     if(d > 0){ //휠을 위로 올렸을때
+    //         var prev = $(this).prev().offset().top;
+    //         //alert(prev);
+    //         $('html, body').stop().animate({scrollTop : prev},1300,'easeOutBounce');
+    //     }
+    //     if(d < 0){ //휠을 위로 올렸을때
+    //         var next = $(this).next().offset().top;
+    //         //alert(next);
+    //         $('html, body').stop().animate({scrollTop : next},1300,'easeOutBounce');
+    //     }
+
+    // });
+
+    $("#popup").draggable();
+
+    if($.cookie('pop')!='no'){ //쿠키 pop변수에 no가 없으면 팝업창을 보여줘라
+        $('#popup').show();
+    }
+
+    $('#popup area:eq(0)').click(function(){
+        $('#popup').fadeOut('fast');
+        //창닫기 버튼을 클릭하면 팝업창 서서히 사라짐
+    });
+
+    $('#popup area:eq(1)').click(function(){
+       $.cookie('pop','no',{expires:1});//쿠키 pop이라는 변수에 no를 하루동안저장후
+       $('#popup').fadeOut('fast');//팝업창 서서히 사라짐
+    });
+
+    $('#notice_wrap').draggable();
+
+    if($.cookie('popup')=='none'){
+        $('#notice_wrap').hide();
+    }
+
+  var chk =  $("#expiresChk");
+  $('.closeBtn').on('click',closePop);  
+
+  function closePop(){
+    if(chk.is(":checked")){//input 창에 checked가 되있으면
+        $.cookie('popup','none',{expires:3});
+        //chk 변수가 checked를 가지고 있으면 popup에 none을 3일동안 저장해라
+    }
+    $('#notice_wrap').fadeOut("fast");
+  }  
+
+});
+
+</script>
