@@ -1,9 +1,11 @@
 * {margin: 0; padding: 0;}
 ul {list-style: none;}
 a{text-decoration: none; color: #000;}
-header {
+body {
     width: 100%;
     min-width: 1300px;
+}
+header {
     border-top: 5px solid #009223;
     position: relative;
 }
@@ -117,6 +119,7 @@ header {
     top: 160px;
     left: 50%;
     transform: translateX(-50%);
+    width: 1920px;
     height: 440px;
 }
 .bxslider ul li img{
@@ -163,8 +166,10 @@ header {
 section {
     position: relative;
     top: 640px;
-    padding: 60px;
+    padding-top: 60px;
     height: 560px;
+    width: 1170px;
+    margin: 0 auto;
 }
 section h1 {
     height: 70px;
@@ -173,14 +178,14 @@ section h1 {
 }
 .sectionMenu .tab {
     position: absolute;
-    right: 10px;
+    right: 0;
     top: 44px;
-    width: 800px;
-    height: 30px;
 }
 .sectionMenu .tab li {
     float: left;
-    margin: 0 23px;
+    position: relative;
+    margin-left: 23px;
+    padding: 0 0 0 25px;
 }
 .sectionMenu .tab li:nth-child(2),
 .sectionMenu .tab li:nth-child(4),
@@ -190,4 +195,99 @@ section h1 {
 }
 .sectionMenu .tab a {
     display: block;
+}
+.sectionMenu .tab li {
+    position: relative;
+    /* margin-left: 23px; */
+    padding-left: 25px;
+    text-align: center;
+}
+.sectionMenu .tab li::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 3px;
+    width: 1px;
+    height: 15px;
+    background-color: #ddd;
+}
+.sectionMenu .tab li:first-child::after {
+    display: none;
+}
+.sectionMenu .tab a.on {
+    font-weight: bold;
+    color: #009223;
+}
+.sectionSlide {
+    position: relative;
+    width: 1200px;
+    height: 320px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.sectionSlide ul{
+    position: absolute;
+    width: 100%;
+    float: left;
+}
+
+.sectionSlide .menu_cl0 {
+    left: 0;
+}
+.sectionSlide .menu_cl1 {
+    left: 100%;
+}
+.sectionSlide .menu_fl {
+    left: 100%;
+}
+.sectionSlide .menu_pr0 {
+    left: 200%;
+}
+.sectionSlide .menu_pr1 {
+    left: 200%;
+}
+.sectionSlide .menu_br {
+    left: 300%;
+}
+.sectionSlide li {
+    float: left;
+    width: 260px;
+    height: 320px;
+}
+.sectionSlide li a{
+    display: block;
+    text-align: center;
+    line-height: 120%;
+}
+.sectionSlide li img {
+    height: 182px;
+}
+.sectionSlide li p {
+    font-size: 13px;
+    width: 260px;
+    color: #999;
+    letter-spacing: -2px;
+}
+.controls a {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 160px;
+    transform: translateY(-50);
+    /* z-index: 100; */
+    text-indent: -9999px;
+}
+.controls .prevBtn {
+    background: url(../img/icon_event_slider_arr.png) no-repeat 0 0;
+    left: -150px;
+}
+.controls .prevBtn:hover {
+    background: url(../img/icon_event_slider_arr.png) no-repeat 0 -50px;
+}
+.controls .nextBtn {
+    background: url(../img/icon_event_slider_arr.png) no-repeat -50px 0;
+    right: -150px;
+}
+.controls .nextBtn:hover {
+    background: url(../img/icon_event_slider_arr.png) no-repeat -50px -50px;
 }
