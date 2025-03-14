@@ -3,136 +3,139 @@ ul {list-style: none;}
 a{text-decoration: none; color: #000;}
 body {
     width: 100%;
-    min-width: 1300px;
+    min-width: 1920px;
 }
 header {
-    border-top: 5px solid #009223;
     position: relative;
+    top: 0; left: 0;
+    width: 100%;
+    height: 165px;
+    border-top: 5px solid #009223;
+}
+.top_wrap {
+    width: 1170px;
+    margin: 0 auto;
+    position: relative;
+}
+.top_wrap::after {
+    content: '';
+    position: absolute;
+    top: 164px;
+    left: 0;
+    background-color: #e5e5e5;
+    width: 100%;
+    height: 1px;
 }
 .logo {
     position: absolute;
     top: 35px;
     left: 50%;
     transform: translateX(-50%);
+    text-indent: -9999px;
 }
-.logo a{
+.logo a {
     display: block;
-    background: url(../img/logo_w.png) no-repeat;
+    background: url(../img/logo_w.png) no-repeat 0 0;
     width: 202px;
     height: 40px;
-    text-indent: -9999px;
 }
 .login {
     position: absolute;
-    display: block;
-    right: 25px;
     top: 40px;
-    width: 200px;
-    height: 30px;
+    right: 25px;
 }
 .login ul li {
     float: left;
-    line-height: 30px;
+    margin-left: 30px;
 }
-.login ul li:nth-child(2) {
-    cursor: default;
-}
-.login a {
+.login ul li a {
+    display: block;
     color: #666;
     font-size: 13px;
-}
-.login li:nth-child(2) {
-    color: #ddd;
-}
-.login img {
-    margin-left: 10px;
+    height: 30px;
+    line-height: 30px;
 }
 .mm {
     position: absolute;
+    text-align: center;
+    top: 98px; left: 0;
     width: 100%;
-    height: 50px;
-    top: 98px;
-    margin: 0 auto;
-    padding-top: 10px;
-    border-bottom: 1px;
 }
 .mm > ul{
-    width: 1000px;
-    position: absolute;
-    left: 50%;
-    z-index: 10;
+    display: inline-block;
     text-align: center;
-    transform: translateX(-50%);
-}
-.mm ul {
-    vertical-align: top;
+    z-index: 10;
 }
 .mm > ul > li {
     float: left;
-}
-.mm ul li a {
-    display: block;
-    text-align: center;
     width: 165px;
-    padding-top: 20px;
 }
 .mm > ul > li > a {
-    font-weight: bold;
+    display: block;
+    padding-top: 20px;
     font-size: 18px;
-    color: #292929
+    font-weight: bold;
 }
-.mm ul li ul {
-    height: 0px;
+.sm {
+    top: 0; left: 0;
+    width: 100%;
+    padding-top: 67px;
+}
+.sm ul {
+    text-align: center;
+    position:absolute;
+	top:75px;
+	height:0;
+    opacity: 0;
+	padding-top:20px;
     overflow: hidden;
     transition: all 0.3s;
+    z-index: 10;
 }
-.mm>ul>li:hover >a{
-    color: #009223;
+.mm ul:hover li .sm ul{
+    height:250px;
+    opacity: 1;
 }
-.mm ul:hover li ul{
-    height: 300px;
-}
-.mm ul ul li a {
-    color: #666;
+.sm ul li a {
+    text-align: center;
     font-size: 15px;
-}
-.mm ul ul li a:hover {
-    color: #009223;
-    text-decoration: underline;
+    color: #666;
+    padding: 8px 0 9px;
+    display: block;
 }
 .shadow {
     position: absolute;
+    top: 65px;
+    left: 0;
     width: 100%;
     height: 0;
-    top: 62px;
     background-color: #fff;
+    border-top: 1px solid #e5e5e5;
     transition: all 0.3s;
-    border-top: 1px solid #ddd;
-    box-sizing: border-box;
     z-index: 5;
 }
 .mm ul:hover + .shadow{
-    height: 300px;
+	height: 250px;
+}
+
+.bxSl {
+    position: relative;
+    width: 100%;
+    height: 490px;
 }
 .bxslider {
-    position: absolute;
-    top: 160px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1920px;
-    height: 440px;
+    position: relative;
 }
-.bxslider ul li img{
+.slider img {
     margin: 0 auto;
 }
 .quickmenu{
     position: absolute;
     left: 50%;
-    top: 560px;
-    /* transform: translateX(-50%); */
-    width: 1170px;
     z-index: 5;
+    bottom: 0px;
 }
+.quickmenu ul li {float: left;}
 .quickmenu ul li a {
     display: block;
     width: 300px;
@@ -162,61 +165,53 @@ header {
     color: #fff;
     border-radius: 0 0 30px 0;
 }
-.quickmenu ul li {float: left;}
-section {
-    position: relative;
-    top: 640px;
+
+.tabSl {
     padding-top: 60px;
+    width: 1200px;
     height: 560px;
-    width: 1170px;
     margin: 0 auto;
+    position: relative;
 }
-section h1 {
-    height: 70px;
+.tabS1 .tabTop {
+    width: 1170px;
+}
+.tabTop h1 {
+    color: #292929;
     font-size: 40px;
-    background: url(../img/bul_tit.png) no-repeat 0 10px;
+    font-weight: bold;
+    background: url(../img/bul_tit.png) no-repeat 0 12px;
+    padding: 17px 0 0 25px;
+    margin-bottom: 1px;
 }
-.sectionMenu .tab {
+.tabTop .tab {
     position: absolute;
-    right: 0;
     top: 44px;
+    right: 0;
+    margin-top: 30px;
 }
-.sectionMenu .tab li {
+.tab li {
     float: left;
     position: relative;
     margin-left: 23px;
-    padding: 0 0 0 25px;
-}
-.sectionMenu .tab li:nth-child(2),
-.sectionMenu .tab li:nth-child(4),
-.sectionMenu .tab li:nth-child(6) {
-    color: #ddd;
-    cursor: default;
-}
-.sectionMenu .tab a {
-    display: block;
-}
-.sectionMenu .tab li {
-    position: relative;
-    /* margin-left: 23px; */
     padding-left: 25px;
-    text-align: center;
 }
-.sectionMenu .tab li::after {
-    content: "";
+.tab li:first-child:after {
+    display: none;
+}
+.tab li::after {
+    content: '';
     position: absolute;
-    left: 0px;
     top: 3px;
+    left: 0;
     width: 1px;
     height: 15px;
     background-color: #ddd;
 }
-.sectionMenu .tab li:first-child::after {
-    display: none;
-}
-.sectionMenu .tab a.on {
-    font-weight: bold;
-    color: #009223;
+.tabBottom {
+    position: absolute;
+    width: 100%;
+    height: 320px;
 }
 .sectionSlide {
     position: relative;
@@ -259,7 +254,7 @@ section h1 {
     text-align: center;
     line-height: 120%;
 }
-.sectionSlide li img {
+.sectionSlide img {
     height: 182px;
 }
 .sectionSlide li p {
