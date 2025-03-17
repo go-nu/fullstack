@@ -4,83 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./css/jquery.bxslider.css">
+    <link rel="stylesheet" href="./css/style3.css">
+    <link rel="stylesheet" href="./css/jquery.bxslider3.css">
     <script src="./js/jquery-3.1.1.min.js"></script>
     <script src="./js/jquery.bxslider.js"></script>
-    <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/subway.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script> 
+    <script src="js/jquery.mousewheel.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="./js/subway3.js"></script>
 </head>
 <body>
-    <!-- Main Header <main menu, bxSlider> -->
     <header>
-        <div class="logo"><a href="#">로고</a></div>
-        <div class="login">
-            <ul>
-                <li><a href="#">로그인</a></li>
-                <li>ㆍ</li>
-                <li><a href="#">회원가입</a></li>
-                <li><a href="#"><img src="./img/icon_utill_global.png" alt=""></a></li>
-            </ul>
+        <div class="top_wrap">
+            <div class="logo">
+                <a href="#">로고</a>
+            </div>
+            <div class="login">
+                <ul>
+                    <li><a href="#">로그인</a></li>
+                    <li><a href="#">회원가입</a></li>
+                    <li><a href="#"><img src="./img/icon_utill_global.png" alt=""></a></li>
+                </ul>
+            </div>
         </div>
-        <div class="mm">
-            <ul>
-                <li>
-                    <a href="#">메뉴소개</a>
-                    <ul>
-                        <li><a href="#">샌드위치</a></li>
-                        <li><a href="#">랩ㆍ기타</a></li>
-                        <li><a href="#">샐러드</a></li>
-                        <li><a href="#">아침메뉴</a></li>
-                        <li><a href="#">스마일 썹</a></li>
-                        <li><a href="#">단체메뉴</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">이용방법</a>
-                    <ul>
-                        <li><a href="#">써브웨이 이용방법</a></li>
-                        <li><a href="#">단체메뉴 이용방법</a></li>
-                        <li><a href="#">신선한 재료 소개</a></li>
-                        <li><a href="#">App 이용방법</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">새소식</a>
-                    <ul>
-                        <li><a href="#">이벤트ㆍ프로모션</a></li>
-                        <li><a href="#">뉴스ㆍ공지사항</a></li>
-                        <li><a href="#">광고영상</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">써브웨이</a>
-                    <ul>
-                        <li><a href="#">써브웨이 역사</a></li>
-                        <li><a href="#">써브웨이 약속</a></li>
-                        <li><a href="#">샌드위치 아티스트 지원</a></li>
-                        <li><a href="#">매장찾기</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">가맹점</a>
-                    <ul>
-                        <li><a href="#">써브웨이 프랜차이즈</a></li>
-                        <li><a href="#">가맹관련 FAQ</a></li>
-                        <li><a href="#">가맹신청ㆍ문의</a></li>
-                        <li><a href="#">지사안내</a></li>
-                        <li><a href="#">사업설명회</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">온라인 주문</a>
-                    <ul>
-                        <li><a href="#">FAST-SUB</a></li>
-                        <li><a href="#">HOME-SUB</a></li>
-                        <li><a href="#">단체주문</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="shadow"></div>
-        </div>
+        <nav>
+            <div class="mm">
+                <ul>
+                    <li>
+                        <a href="#">메뉴소개</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">샌드위치</a></li>
+                                <li><a href="#">랩ㆍ기타</a></li>
+                                <li><a href="#">샐러드</a></li>
+                                <li><a href="#">아침메뉴</a></li>
+                                <li><a href="#">스마일 썹</a></li>
+                                <li><a href="#">단체메뉴</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">이용방법</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">써브웨이 이용방법</a></li>
+                                <li><a href="#">단체메뉴 이용방법</a></li>
+                                <li><a href="#">신선한 재료 소개</a></li>
+                                <li><a href="#">App 이용방법</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">새소식</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">이벤트ㆍ프로모션</a></li>
+                                <li><a href="#">뉴스ㆍ공지사항</a></li>
+                                <li><a href="#">광고영상</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">써브웨이</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">써브웨이 역사</a></li>
+                                <li><a href="#">써브웨이 약속</a></li>
+                                <li><a href="#">샌드위치 아티스트 지원</a></li>
+                                <li><a href="#">매장찾기</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">가맹점</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">써브웨이 프랜차이즈</a></li>
+                                <li><a href="#">가맹관련 FAQ</a></li>
+                                <li><a href="#">가맹신청ㆍ문의</a></li>
+                                <li><a href="#">지사안내</a></li>
+                                <li><a href="#">사업설명회</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><a href="#">온라인 주문</a>
+                        <div class="sm">
+                            <ul>
+                                <li><a href="#">FAST-SUB</a></li>
+                                <li><a href="#">HOME-SUB</a></li>
+                                <li><a href="#">단체주문</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="shadow"></div>
+            </div>            
+        </nav>
+    </header>
+    <section class="bxSl">
         <div class="bxslider">
             <ul class="slider">
                 <li><a href="#"><img src="./img/PC배너이미지(1920x440)_20250219115747298.jpg" alt=""></a></li>
@@ -96,236 +118,355 @@
                 <li><a href="#"><img src="./img/icon_franchise.png" alt=""><strong>가맹신청ㆍ문의</strong></a></li>
             </ul>
         </div>
-    </header>
+    </section>
     
-    <!-- Section <Menu, notice, etc> -->
-    <section>
-        <h1>Subway's Menu</h1>
-        <div class="sectionMenu">
-            <ul class="tab">
-                <li><a href="#" class="cl on">클래식</a></li>
-                <li><a href="#" class="fl">프레쉬&라이트</a></li>
-                <li><a href="#" class="pr">프리미엄</a></li>
-                <li><a href="#" class="br">아침메뉴</a></li>
-            </ul>
+    <section class="tabSl">
+        <!-- 탭메뉴 -->
+        <div class="tabTop">
+            <h1>Subway's Menu</h1>
+            <div class="sectionMenu">
+                <ul class="tab">
+                    <li><a href="#" class="cl on">클래식</a></li>
+                    <li><a href="#" class="fl">프레쉬&라이트</a></li>
+                    <li><a href="#" class="pr">프리미엄</a></li>
+                    <li><a href="#" class="br">아침메뉴</a></li>
+                </ul>
+            </div>
         </div>
-        <ul class="sectionSlide">
-            <ul class="menu_cl">
-                <ul class="cl0">
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_cl06_01.jpg" alt="">
-                                <h3>에그마요</h3>
-                            </div>
-                            <p>부드러운 달걀과 고소한 마요네즈가 만나<br/>
-                                더 부드러운 스테디 셀러</p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_cl01_01.jpg" alt="">
-                                <h3>에그마요</h3>
-                            </div>
-                            <p>페퍼로니, 살라미 그리고 햄이 만들어내는 최의<br/>
-                                조화! 전세계가 사랑하는 써브웨이의 베스트 셀러!<br/>
-                                Biggest Meatiest Tastiest, its' B.M.T!</p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_cl02_01.jpg" alt="">
-                                <h3>비엘티</h3>
-                            </div>
-                            <p>오리지널 아메리칸 스타일 베이컨의<br/>
-                                풍미와 바삭함 그대로
-                            </p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_cl04_01.jpg" alt="">
-                                <h3>햄</h3>
-                            </div>
-                            <p>기본 중에 기본!<br/>
-                                풍부한 햄이 만들어내는<br/>
-                                입 안 가득 넘치는 맛의 향연
-                            </p>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="cl1">
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_cl05_01.jpg" alt="">
-                                <h3>참치</h3>
-                            </div>
-                            <p>남녀노소 누구나 좋아하는<br/>
-                                담백한 참치와 고소한 마요네드의<br/>
-                                완벽한조화
-                            </p>
-                        </a>
-                    </li>
-                </ul>
+        <!-- 탭슬라이드 -->
+        <div class="tabBottom">
+            <ul class="sectionSlide">
+                <li>
+                    <ul class="menu_cl">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_cl06_01.jpg" alt="">
+                                    <h3>에그마요</h3>
+                                </div>
+                                <p>부드러운 달걀과 고소한 마요네즈가 만나<br/>
+                                    더 부드러운 스테디 셀러</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_cl01_01.jpg" alt="">
+                                    <h3>에그마요</h3>
+                                </div>
+                                <p>페퍼로니, 살라미 그리고 햄이 만들어내는 최의<br/>
+                                    조화! 전세계가 사랑하는 써브웨이의 베스트 셀러!<br/>
+                                    Biggest Meatiest Tastiest, its' B.M.T!</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_cl02_01.jpg" alt="">
+                                    <h3>비엘티</h3>
+                                </div>
+                                <p>오리지널 아메리칸 스타일 베이컨의<br/>
+                                    풍미와 바삭함 그대로
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_cl04_01.jpg" alt="">
+                                    <h3>햄</h3>
+                                </div>
+                                <p>기본 중에 기본!<br/>
+                                    풍부한 햄이 만들어내는<br/>
+                                    입 안 가득 넘치는 맛의 향연
+                                </p>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <li>
+                    <ul class="menu_fl">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_fl01_01.jpg" alt="">
+                                    <h3>로티세리 바비큐 치킨</h3>
+                                </div>
+                                <p>촉촉한 바비큐 치킨의 풍미가득.<br/>
+                                    손으로 찢어 더욱 부드러운 치킨의 혁명
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_fl02_01.jpg" alt="">
+                                    <h3>로스트 치킨</h3>
+                                </div>
+                                <p>오븐에 구워 담백한 저칼로리<br/>
+                                    닭가슴살의 건강한 풍미
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_fl04_01.jpg" alt="">
+                                    <h3>써브웨이 클럽</h3>
+                                </div>
+                                <p>명실공히 시그니처 써브!<br/>
+                                    치킨 슬라이스, 햄, 베이컨의 완벽한 앙상블
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_fl06_01.jpg" alt="">
+                                    <h3>베지</h3>
+                                </div>
+                                <p>갓 구운 빵과 신선한 7가지 야채로<br/>
+                                    즐기는 깔끔한 한끼
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <ul class="menu_pr">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_pm10_01.jpg" alt="">
+                                    <h3>쉬림프</h3>
+                                </div>
+                                <p>탱글한 식감이 그대로 살아있는 통새우가<br/>
+                                    5마리 들어가 한 입 베어 먹을 때 마다 <br/>
+                                    진짜 새우의 풍미가 가득
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_pm08_01.jpg" alt="">
+                                    <h3>폴드 포크 바비큐</h3>
+                                </div>
+                                <p>훈연한 미국 정통 스타일의 리얼 바비큐 폴드포크가<br/>
+                                    들어간 샌드위치
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_pm01_01.jpg" alt="">
+                                    <h3>스테이크&치즈</h3>
+                                </div>
+                                <p>육즙이 쫙~<br/>
+                                    풍부한 비프 스테이크의 풍미가 입안 한가득
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_pm06_01.jpg" alt="">
+                                    <h3>스파이시 이탈리안</h3>
+                                </div>
+                                <p>살라미, 페퍼로니가 입안 한가득!<br/>
+                                    쏘 핫한 이탈리아의 맛
+                                </p>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <li>
+                    <ul class="menu_br">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_bf01.png" alt="">
+                                    <h3>햄, 에그&치즈</h3>
+                                </div>
+                                <p>푹신한 오믈렛과 햄의 가장 클래식한 조화</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_bf02.png" alt="">
+                                    <h3>웨스턴, 에그 & 치즈</h3>
+                                </div>
+                                <p>토마토, 피망, 양파 세가지 야채가 더해져<br/>
+                                    더욱 신선한 하루 시작
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="cl2">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_cl05_01.jpg" alt="">
+                                    <h3>참치</h3>
+                                </div>
+                                <p>남녀노소 누구나 좋아하는<br/>
+                                    담백한 참치와 고소한 마요네드의<br/>
+                                    완벽한조화
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="pr2">
+                        <li>
+                            <a href="#">
+                                <div class="wrap2hover">
+                                    <img src="./img/sandwich_pm07_01.jpg" alt="">
+                                    <h3>치킨 데리야끼</h3>
+                                </div>
+                                <p>담백한 치킨 스트림에 달콤짭쪼름한 써브웨이<br/>
+                                    특제 데리야끼 소스와의 환상적인 만남
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
-            <ul class="menu_fl">
-                <li><a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_fl01_01.jpg" alt="">
-                            <h3>로티세리 바비큐 치킨</h3>
-                        </div>
-                        <p>촉촉한 바비큐 치킨의 풍미가득.<br/>
-                            손으로 찢어 더욱 부드러운 치킨의 혁명
+            <!-- 화살표 -->
+            <div class="controls">
+                <a href="#" class="prevBtn">prev</a>
+                <a href="#" class="nextBtn">next</a>
+            </div>
+        </div>
+    </section>
+    <div class="noticebg">
+        <section class="notice">
+            <div class="noticeTop">
+                <div class="n1">
+                    <p>써브웨이를<br />제대로 즐기는 방법!</p>
+                    <a class="btn" href="#"><span>이용방법</span></a>
+                </div>
+                <div class="n2">
+                    <p>50년 역사를 가진<br />No.1 프랜차이즈의 성장기</p>
+                    <a class="btn" href="#"><span>써브웨이 역사</span></a>
+                    <img src="./img/img_subway_history.png" />
+                </div>
+            </div>
+            <div class="noticeBottom">
+                <div class="whats_new">
+                    <div class="noticeL">
+                        <h2>What's New</h2>
+                        <p>
+                            써브웨이의 다양한 소식을<br />
+                            빠르게 전달해드립니다.
                         </p>
-                    </a>
-                </li>
-                <li><a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_fl02_01.jpg" alt="">
-                            <h3>로스트 치킨</h3>
-                        </div>
-                        <p>오븐에 구워 담백한 저칼로리<br/>
-                            닭가슴살의 건강한 풍미
-                        </p>
-                    </a>
-                </li>
-                <li><a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_fl04_01.jpg" alt="">
-                            <h3>써브웨이 클럽</h3>
-                        </div>
-                        <p>명실공히 시그니처 써브!<br/>
-                            치킨 슬라이스, 햄, 베이컨의 완벽한 앙상블
-                        </p>
-                    </a>
-                </li>
-                <li><a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_fl06_01.jpg" alt="">
-                            <h3>베지</h3>
-                        </div>
-                        <p>갓 구운 빵과 신선한 7가지 야채로<br/>
-                            즐기는 깔끔한 한끼
-                        </p>
-                    </a>
-                </li>
-            </ul>
-            <ul class="menu_pr">
-                <ul class="pr0">
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_pm10_01.jpg" alt="">
-                                <h3>쉬림프</h3>
-                            </div>
-                            <p>탱글한 식감이 그대로 살아있는 통새우가<br/>
-                                5마리 들어가 한 입 베어 먹을 때 마다 <br/>
-                                진짜 새우의 풍미가 가득
-                            </p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_pm08_01.jpg" alt="">
-                                <h3>폴드 포크 바비큐</h3>
-                            </div>
-                            <p>훈연한 미국 정통 스타일의 리얼 바비큐 폴드포크가<br/>
-                                들어간 샌드위치
-                            </p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_pm01_01.jpg" alt="">
-                                <h3>스테이크&치즈</h3>
-                            </div>
-                            <p>육즙이 쫙~<br/>
-                                풍부한 비프 스테이크의 풍미가 입안 한가득
-                            </p>
-                        </a>
-                    </li>
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_pm06_01.jpg" alt="">
-                                <h3>스파이시 이탈리안</h3>
-                            </div>
-                            <p>살라미, 페퍼로니가 입안 한가득!<br/>
-                                쏘 핫한 이탈리아의 맛
-                            </p>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="pr1">
-                    <li><a href="#">
-                            <div class="wrap2hover">
-                                <img src="./img/sandwich_pm07_01.jpg" alt="">
-                                <h3>치킨 데리야끼</h3>
-                            </div>
-                            <p>담백한 치킨 스트림에 달콤짭쪼름한 써브웨이<br/>
-                                특제 데리야끼 소스와의 환상적인 만남
-                            </p>
-                        </a>
-                    </li>
-                </ul>
-            </ul>
-            <ul class="menu_br">
-                <li><a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_bf01.png" alt="">
-                            <h3>햄, 에그&치즈</h3>
-                        </div>
-                        <p>푹신한 오믈렛과 햄의 가장 클래식한 조화</p>
+                    </div>
+                    <div class="noticeR">
+                        <ul>
+                            <li><a href="#" data-idx="308">써브웨이와 함께하는 JTBC 토일드라마 &#39;협상의 기술&#39;</a></li>
+                            <li><a href="#" data-idx="307">미사용 모바일 상품권 재발급 안내</a></li>
+                            <li><a href="#" data-idx="306">2025 설 연휴 매장운영 안내</a></li>
+                        </ul>
+                        <a class="more" href="#">more</a>
+                    </div>
+                </div>
+                <div class="ad">
+                    <ul class="ad_bxslider">
+                        <li>
+                            <a href="#">
+                                <img alt="" src="./img/270X300_나의완벽한비서_M-02_staffcredit_써브웨이_20250205043905216.jpg" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img alt="" src="./img/270X300_Poster_Banner_열혈사제2_20241118113020213.jpg" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img alt="" src="./img/270X300_Poster_Banner_손해보기싫어서_20240903043711105.jpg" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img alt="" src="./img/270X300 (2)_20240514051750841.jpg" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img alt="" src="./img/270X300 (1)_20240313043948532.jpg" />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <section class="etc">
+        <div class="quick_menu">
+            <ul>
+                <li>
+                    <a href="#">
+                        <div class="icon"></div>
+                        <strong>프랜차이즈</strong>
+                        <span>개설절차/투자비용 정보</span>
                     </a>
                 </li>
                 <li>
                     <a href="#">
-                        <div class="wrap2hover">
-                            <img src="./img/sandwich_bf02.png" alt="">
-                            <h3>웨스턴, 에그 & 치즈</h3>
-                        </div>
-                        <p>토마토, 피망, 양파 세가지 야채가 더해져<br/>
-                            더욱 신선한 하루 시작
-                        </p>
+                        <div class="icon"></div>
+                        <strong>지사안내</strong>
+                        <span>수도권/지방 지사정보</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon"></div>
+                        <strong>광고영상</strong>
+                        <span>TV광고/동영상</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon"></div>
+                        <strong>고객문의</strong>
+                        <span>자주하는 질문/1:1문의</span>
                     </a>
                 </li>
             </ul>
-        </ul>
-        <div class="controls">
-            <a href="#" class="prevBtn">prev</a>
-            <a href="#" class="nextBtn">next</a>
+        </div>
+        <div class="popup">
+            <img src="./img/PC_미사용_모바일_상품권-안내_팝업 (2)_20250206120556840.jpg" alt="">
+            <p class="closeWrap">
+                <input type="checkbox" name="expiresChk" id="expiresChk">
+                <label for="expiresChk">오늘 하루 그만 보기</label>
+
+                <button class="closeBtn">닫기</button>
+            </p>
         </div>
     </section>
-    <section2>
-        <div class="notice1">
-            <p>써브웨이를<br/>
-                제대로즐기는 방법
-            </p>
-            <div class="n1Btn">이용방법</div>
-        </div>
-        <div class="notice2">
-            <span></span>
-            <p>50년 역사를 가진 <br/>
-                No.1 프랜차이즈의 성장기
-            </p>
-            <div class="n2Btn">써브웨이 역사</div>
-        </div>
-        <div class="notice3">
-            <h3>What's New</h3>
-            <p>써브웨이의 다양한 소식을 <br/>
-                빠르게 전달해드립니다.
-            </p>
-            <div class="n3Menu">
-                <ul>
-                    <li>써브웨이와 함께하는 JTBC 토일다라마 '협상의 기술'</li>
-                    <li>미사용 모바일 상품권 재발급 안내</li>
-                    <li>202 설 연휴 매장운영 안내</li>
-                </ul>
-                <p>more</p>
-            </div>
-        </div>
-        <div class="notice4">ad</div>
-    </section2>
-    <!-- footer -->
     <footer>
+        <div class="content_bottom">
+            <div class="footer_menu">
+                <ul>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#"><strong>개인정보처리방침</strong></a></li>
+                    <li><a href="#">써브카드</a></li>
+                    <li><a href="#" target="_blank">점주관리자</a></li>
+                </ul>
+            </div>
 
+            <span class="addr">서울시 서초구 강남대로 535 프린스빌딩 15층</span>
+            <span class="rep">대표 : INSOO CHO(인수조)</span>
+            <span class="tel">전화 : 02-797-5036</span>
+            <span class="rep">사업자등록번호 : 101-84-04143</span>
+            <p class="copyright">SUBWAY® is a Registered Trademark of Subway IP LLC. © 2021 Subway IP LLC. All Rights Reserved.</p>
+            <a class="sns_area instagram" href="#" target="_blank">instagram</a>
+            <a class="sns_area fackbook" href="#" target="_blank">facebook</a>
+        </div>
     </footer>
 </body>
 </html>

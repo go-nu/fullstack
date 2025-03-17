@@ -1,0 +1,26 @@
+http://openweathermap.org/
+Api key
+
+**본인 API
+901eb32acb8f0ed322955a8cc65ea76c
+
+하단 Subscription > How to start
+
+http://api.openweathermap.org/data/2.5/forecast?id=524901&appid={API key}
+**{중괄호}까지 지우고 API 넣기
+
+id=524901 : 도시코드
+
+도시 코드 얻는 법
+Weather in your city에 seoul 검색
+주소 뒤 숫자가 도시코드 1835848
+
+예보 (forecast)
+http://api.openweathermap.org/data/2.5/forecast?id=1835848&appid=901eb32acb8f0ed322955a8cc65ea76c
+
+절대온도(kelvin) -> 섭씨
+http://api.openweathermap.org/data/2.5/forecast?id=1835848&appid=901eb32acb8f0ed322955a8cc65ea76c&units=metric
+
+현재 날씨 정보			(forecast -> weather)
+http://api.openweathermap.org/data/2.5/weather?id=1835848&appid=901eb32acb8f0ed322955a8cc65ea76c&units=metric
+
