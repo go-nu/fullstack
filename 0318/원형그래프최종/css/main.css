@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+/* Base */
+html { font-family: "Helvetica Neue", "Arial", sans-serif; height: 100%; }
+body { height: 100%; }
+p { margin: 0; }
+.scene { position: relative; height: 100%; overflow: hidden; width: 100%; }
+
+/* 인포 그래픽 */
+
+
+
+
+

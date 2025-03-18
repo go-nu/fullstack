@@ -1,0 +1,92 @@
+*{margin:0;padding:0;}
+
+body{
+   font:normal 18px/1.5 "Helvetica Neue", sans-serif;
+}
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+.flex-wrapper {
+    display: flex;
+    height: 100%;
+}
+.flex-wrapper a {
+    position: relative;
+    flex:1; /* 1:1:1:1:1 로 나눔 */
+    transition: all 0.4s;
+}
+.flex-wrapper a.one {
+    background-color: red;
+    background: url(../images/a1.jpg) no-repeat 50% 50% /cover;
+}
+.flex-wrapper a.two {
+    background-color: green;
+    background: url(../images/a2.jpg) no-repeat 50% 50% /cover;
+}
+.flex-wrapper a.three {
+    background-color: steelblue;
+    background: url(../images/a3.jpg) no-repeat 50% 50% /cover;
+}
+.flex-wrapper a.four {
+    background-color: orange;
+    background: url(../images/a4.jpg) no-repeat 50% 50% /cover;
+}
+.flex-wrapper a.five {
+    background-color: tomato;
+    background: url(../images/a5.jpg) no-repeat 50% 50% /cover;
+}
+.flex-wrapper a:hover {
+    flex: 3; /* hover된 객체에 3:1:1:1:1 */
+}
+.flex-wrapper .overlay {
+    padding: 0 10px;
+    position: absolute;
+    /* width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0; */
+    top: 0;left: 0;bottom: 0;right: 0;
+    display: flex;
+    align-items: center; /* 세로(수직) 중앙 정렬 */
+    justify-content: center; /* 가로(수평) 중앙 정렬 */
+}
+.flex-wrapper a:hover .overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+/* .overlay-inner '*'을 사용해 하위 모든 선택자를 가르킴 */
+.flex-wrapper a .overlay-inner *{
+    color: #fff;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+}
+.flex-wrapper a .overlay-inner h2 {
+    transform: translateY(-60px);
+}
+.flex-wrapper a .overlay-inner p {
+    transform: translateY(60px);
+}
+.flex-wrapper a:hover .overlay-inner *{
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s 0.3s; /* 마우스를 올릴때만 transition 적용 */
+    /* transform: translateY(60px); */
+    transform: none; /* 원래 위치나 크키로 돌아옴 */
+}
+
+/* 800px 이하 */
+@media screen and (max-width:800px){
+    .flex-wrapper {
+        flex-direction: column; /* 세로나열 (기본형 row) */
+    }
+    .flex-wrapper a:hover .overlay {
+        background-color: transparent; /* 투명 색상 */
+    }
+    .flex-wrapper a .overlay *{
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+}

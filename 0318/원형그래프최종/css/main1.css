@@ -1,0 +1,142 @@
+@charset "UTF-8";
+
+/* Base */
+html { font-family: "Helvetica Neue", "Arial", sans-serif; height: 100%; }
+body { height: 100%; }
+p { margin: 0; }
+.scene { position: relative; height: 100%; overflow: hidden; width: 100%; }
+
+/* 인포 그래픽 */
+
+#scene-2 .scene-bg{
+	position:absolute;
+	min-width:100%;
+	max-width:100%;
+	width:auto;
+	height:auto;
+	
+}
+#scene-2-content{
+	position:absolute;
+	width:30%;
+	min-width:600px;
+	height:100%;
+	top:0;
+	border:1px solid red;
+	right:-50%;
+}
+.charts{
+	position:relative;
+	margin:0 auto;
+	width:600px;
+	height:600px;
+	top:50%;
+	margin-top:-300px;
+	overflow:hidden;
+}
+.chart{
+	float:left;
+	position:relative;
+	margin:20px;
+	width:240px;
+	height:240px;
+	border:1px solid green;
+}
+.circle-mask-outer,
+.circle-mask-inner{
+	position:absolute;
+	width:120px;
+	height:240px;
+	overflow:hidden;
+}
+
+.circle-mask-outer.left{
+	left:0;
+
+}
+
+.circle-mask-outer.right{
+	right:0;
+}
+.circle-mask-outer.left .circle-mask-inner{
+	left:100%;
+	transform-origin:0 50%;
+	/*중심축 왼쪽 중앙*/
+}
+
+.circle-mask-outer.right .circle-mask-inner{
+	right:100%;
+	transform-origin:100% 50%;
+	/*중심축 오른쪽 중앙*/
+}
+
+
+.circle-body{
+	border-radius:50%;
+	position:absolute;
+	width:240px;
+	height:240px;
+}
+/* 원형마스크 */
+
+.circle-mask-outer.left .circle-body{
+	right:0;
+}
+.circle-mask-outer.right .circle-body{
+	left:0;
+}
+
+#water .circle-body{
+	background-color:#0078ff;
+}
+#sunshine .circle-body{
+	background-color:#ef6122;
+}
+
+#birds .circle-body{
+	background-color:#9a22ef;
+}
+#woods .circle-body{
+	background-color:#138600;
+}
+.chart-content{
+	position:absolute;
+	left:20px;
+	top:20px;
+	width:200px;
+	height:160px;
+	background-color:#fff;
+	border-radius:50%;
+	padding-top:40px;
+	text-align:center;
+	box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+.chart-content .icon{}
+
+.chart-content .text{
+	left:5px;
+	line-height:1;
+	position:relative;
+}
+.chart-content .percent-number{
+	font-size:50px;
+	font-weight:bold;
+}
+.chart-content .percent-symbol{
+	font-size:30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

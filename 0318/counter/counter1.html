@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/jquery-3.1.1.min.js"></script>
+    <style>
+        .box1 {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            background: red;
+            left: 0;
+
+        }
+    </style>
+    <script>
+        $(function(){
+            // $('.box1').stop().animate({left:"500px"}, 1000);
+            $({percent:0}).animate({percent:111},{
+                duration:3000,
+                progress:function(){
+                    var now = this.percent
+                    $('#num').text(Math.ceil(now));
+                },
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 id="num">000</h1>
+    <div class="box box1"></div>
+</body>
+</html>
