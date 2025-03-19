@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/flexslider.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/jquery.flexslider.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#wrap .flexslider { border:0; }
+		.flex-caption {
+		  width: 96%;
+		  padding: 2%;
+		  left: 0;
+		  bottom: 0;
+		  background: rgba(0,0,0,.5);
+		  color: #fff;
+		  text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+		  font-size: 14px;
+		  line-height: 18px;
+		}
+
+		@media screen and (max-width:950px) {
+			#wrap { width:96%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<div class="flexslider">
+				<ul class="slides">
+					<li>
+						<img src="img/flexslider/kitchen_adventurer_caramel.jpg" />
+						<p class="flex-caption">Adventurer Cheesecake Brownie</p>
+					</li>
+					<li>
+						<img src="img/flexslider/kitchen_adventurer_cheesecake_brownie.jpg" />
+						<p class="flex-caption">Adventurer Lemon</p>
+					</li>
+					<li>
+						<img src="img/flexslider/kitchen_adventurer_donut.jpg" />
+						<p class="flex-caption">Adventurer Donut</p>
+					</li>
+					<li>
+						<img src="img/flexslider/kitchen_adventurer_lemon.jpg" />
+						<p class="flex-caption">Adventurer Caramel</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$('.flexslider').flexslider({
+			animation: "slide"
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

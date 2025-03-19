@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+
+		<!-- 스타일 -->
+		<link rel="stylesheet" type="text/css" href="../common/css/slick.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/slick-theme.css">
+		<style type="text/css">
+		img { max-width:inherit; }
+
+		/* easing */
+		.e-i2{-webkit-transition:all .2s ease-in;
+		-moz-transition:all .2s ease-in;
+		-o-transition:all .2s ease-in;
+		transition:all .2s ease-in;}
+		.e-i3{-webkit-transition:all .3s ease-in;
+		-moz-transition:all .3s ease-in;
+		-o-transition:all .3s ease-in;
+		transition:all .3s ease-in;}
+		.e-cb{-webkit-transition:all 1.5s cubic-bezier(.58, .36, .84, .87);
+		-moz-transition:all 1.5s cubic-bezier(.58, .36, .84, .87);
+		-o-transition:all 1.5s cubic-bezier(.58, .36, .84, .87);
+		transition:all 1.5s cubic-bezier(.58, .36, .84, .87);}
+		.e-o2{-webkit-transition:all .2s ease-out;
+		-moz-transition:all .2s ease-out;
+		-o-transition:all .2s ease-out;
+		transition:all .2s ease-out;}
+		.e-o3{-webkit-transition:all .3s ease-out;
+		-moz-transition:all .3s ease-out;
+		-o-transition:all .3s ease-out;
+		transition:all .3s ease-out;}
+		.e-c3{
+		-webkit-transition:all .3s cubic-bezier(.96, .04, .10, 1.01);
+		-moz-transition:all .3s cubic-bezier(.96, .04, .10, 1.01);
+		-o-transition:all .3s cubic-bezier(.96, .04, .10, 1.01);
+		transition:all .3s cubic-bezier(.96, .04, .10, 1.01);}
+
+		#wrap{width:100%; overflow-x:hidden; position:relative;}
+		.home { z-index:999; }
+		#visual .slogen{position:absolute; top:370px; left:0; width:100%; text-align:center; z-index:995;}
+		#visual .main_visual{width:100%; overflow:hidden; position:relative; z-index:990;}
+		#visual .main_visual .slick-slide{width:100%; height:980px;}
+		#visual .main_visual .slick-slide img{display:block; position:absolute; top:0; left:50%; width:1920px; margin-left:-960px;
+		-webkit-transform:scale(1.05);
+		-moz-transform:scale(1.05);
+		-o-transform:scale(1.05);
+		transform:scale(1.05);}
+		#visual .main_visual .slick-slide.slick-active img{
+		-webkit-transform:scale(1.0);
+		-moz-transform:scale(1.0);
+		-o-transform:scale(1.0);
+		transform:scale(1.0);}
+
+		#visual .main_visual .slick-prev,
+		#visual .main_visual .slick-next
+		{
+			font-size: 0;
+			line-height: 0;
+
+			position: absolute;
+			top: 50%;
+
+			display: block;
+
+			width: 38px;
+			height: 74px;
+			padding: 0;
+			margin-top: -10px\9; /*lte IE 8*/
+			-webkit-transform: translate(0, -50%);
+			-ms-transform: translate(0, -50%);
+			transform: translate(0, -50%);
+
+			cursor: pointer;
+
+			color: transparent;
+			border: none;
+			outline: none;
+			z-index:9990;
+		}
+
+		#visual .main_visual .slick-prev:before,
+		#visual .main_visual .slick-next:before { opacity:0; }
+
+		#visual .main_visual .slick-prev
+		{
+			left: 30px;
+			background: url("img/slick/btn_prev.png") 0 0 no-repeat;
+		}
+		#visual .main_visual .slick-next
+		{
+			right: 30px;
+			background: url("img/slick/btn_next.png") 0 0 no-repeat;
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<a href="../index-2.html" class="home">Home</a>
+		<div id="wrap">
+			<!-- visual -->
+			<div id="visual">
+				<div class="slogen"><img src="img/slick/main_slogen.png" alt="로하스 리조트에 오신걸 환영합니다. lohas park resort" /></div>
+				<div class="main_visual">
+					<div class="slick-slide visual-1"><img src="img/slick/main_visual_1.jpg" class="e-cb" alt="" /></div>
+					<div class="slick-slide visual-1"><img src="img/slick/main_visual_2.jpg" class="e-cb" alt="" /></div>
+					<div class="slick-slide visual-1"><img src="img/slick/main_visual_3.jpg" class="e-cb" alt="" /></div>
+					<div class="slick-slide visual-1"><img src="img/slick/main_visual_4.jpg" class="e-cb" alt="" /></div>
+				</div>
+			</div>
+			<!-- //visual -->
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/slick2.js"></script>
+		<script type="text/javascript">
+		$('.main_visual').slick({
+			autoplay:true,
+			autoplaySpeed:3500,
+			arrows: true,
+			dots: false,
+			infinite: true,
+			speed:2000,
+			fade: true
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

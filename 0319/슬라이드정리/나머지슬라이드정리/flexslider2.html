@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/flexslider.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/jquery.flexslider.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#wrap .flexslider { border:0; margin-bottom:0; }
+		.custom-navigation { position:absolute; left:0; bottom:0; width:100%; padding:10px 0; background:rgba(255, 255, 255, 0.85); box-shadow:1px 2px 5px 0px rgba(179,170,179,1); }
+		.custom-navigation a.flex-prev { position:absolute; left:10px; top:10px; }
+		.custom-navigation a.flex-next { position:absolute; right:10px; top:10px; }
+		.custom-navigation .flex-control-nav { position:relative; bottom:inherit; top:3px; }
+
+		@media screen and (max-width:950px) {
+			#wrap { width:96%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<div class="flexslider">
+				<ul class="slides">
+					<li><img src="img/flexslider/kitchen_adventurer_caramel.jpg" /></li>
+					<li><img src="img/flexslider/kitchen_adventurer_cheesecake_brownie.jpg" /></li>
+					<li><img src="img/flexslider/kitchen_adventurer_donut.jpg" /></li>
+					<li><img src="img/flexslider/kitchen_adventurer_lemon.jpg" /></li>
+				</ul>
+			</div>
+			<div class="custom-navigation">
+				<a href="#" class="flex-prev">Prev</a>
+				<div class="custom-controls-container"></div>
+				<a href="#" class="flex-next">Next</a>
+			</div>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$('.flexslider').flexslider({
+			animation: "slide",
+			controlsContainer: $(".custom-controls-container"),
+			customDirectionNav: $(".custom-navigation a")
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

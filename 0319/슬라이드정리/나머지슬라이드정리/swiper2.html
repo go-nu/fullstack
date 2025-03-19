@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/swiper.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/swiper.min.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.special_wrap img { width:100%; }
+		.special_wrap div.gd_detail { padding:25px 10px 7px; }
+		.special_wrap .gallery-top { height: 80%; width: 100%; }
+		.special_wrap .gallery-thumbs { height: 20%; box-sizing: border-box; padding: 5px 0 25px; margin-top:5px !important; border-top:1px solid #d1d1d1; }
+		.special_wrap .gallery-thumbs .swiper-wrapper { left:-37%; }
+		.special_wrap .gallery-thumbs .swiper-slide { width: 25%; height: 100%; opacity: 0.4; border: 2px solid transparent; box-sizing:border-box; }
+		.special_wrap .gallery-thumbs .swiper-slide-active { opacity: 1; border: 2px solid #6762c6; }
+
+		.special_wrap .swiper-pagination { border-top:1px solid #d1d1d1; font-size:13px; color:#6762c6; text-align:right; bottom:8px; }
+		.special_wrap .swiper-pagination-current { font-weight:bold; }
+		.special_wrap .swiper-pagination-total { font-weight:bold; color:#0b004a; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div class="special_wrap">
+			<div class="gd_detail">
+				<div class="swiper-container gallery-top">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="img/swiper/sdr01-1.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-2.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-3.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-4.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-5.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-6.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-7.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-8.jpg" alt="" /></div>
+					</div>
+				</div>
+				<div class="swiper-container gallery-thumbs">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="img/swiper/sdr01-1.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-2.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-3.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-4.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-5.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-6.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-7.jpg" alt="" /></div>
+						<div class="swiper-slide"><img src="img/swiper/sdr01-8.jpg" alt="" /></div>
+					</div>
+					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+			<!-- // gd_detail -->
+		</div>
+		<!-- // special_wrap -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		var galleryTop = new Swiper('.gallery-top', {
+			autoplay: 2500,
+			autoplayDisableOnInteraction: false,
+			autoplayStopOnLast: false
+		});
+		var galleryThumbs = new Swiper('.gallery-thumbs', {
+			// spaceBetween: 3,
+			centeredSlides: true,
+			slidesPerView: 'auto',
+			touchRatio: 0.2,
+			slideToClickedSlide: true,
+			pagination: '#tab01 .swiper-pagination',
+			paginationType: 'fraction',
+			paginationFractionRender: function (swiper, currentClassName, totalClassName) {
+				return '<span class="' + currentClassName + '"></span>' +
+						 ' / ' +
+						 '<span class="' + totalClassName + '"></span>';
+			}
+		});
+		galleryTop.params.control = galleryThumbs;
+		galleryThumbs.params.control = galleryTop;
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.carousel.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.theme.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.transitions.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/owl.carousel.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.top_visiual { position:relative; width:100%; }
+		.top_visiual img { width:100%; }
+		.top_visiual a.arrow_l { position:absolute; left:30px; top:50%; margin-top:-8px; display:block; width:51px; z-index:1; }
+		.top_visiual a.arrow_r { position:absolute; right:30px; top:50%; margin-top:-8px; display:block; width:51px; z-index:1; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div class="top_visiual">
+			<div class="main_sdr">
+				<div><img src="img/owl2/vis1.jpg" alt="" /></div>
+				<div><img src="img/owl2/vis2.jpg" alt="" /></div>
+				<div><img src="img/owl2/vis3.jpg" alt="" /></div>
+			</div>
+			<a href="#" class="arrow_l"><img src="img/owl2/arrow_l.png" alt="" /></a>
+			<a href="#" class="arrow_r"><img src="img/owl2/arrow_r.png" alt="" /></a>
+		</div>
+		<!-- // top_visual -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$(".main_sdr").owlCarousel({
+			singleItem : true,
+			items : 1,
+			pagination: false,
+			transitionStyle : "fade", // Option: "fade", "backSlide", "goDown", "fadeUp"
+			autoPlay: 5000,
+			responsiveRefreshRate: 0,
+			slideSpeed: 1000,
+			touchDrag: false,
+			mouseDrag: false,
+			afterInit: function(){
+				$('.top_init').css('display','none');
+				$('#wrap').css('margin-top', $('.top_visiual').outerHeight());
+			},
+			afterUpdate: function(){
+				$('#wrap').css('margin-top', $('.top_visiual').outerHeight());
+			}
+		});
+
+		var main_bnr = $('.main_sdr').data('owlCarousel');
+
+		$('.arrow_l').on('click', function(){
+			main_bnr.prev();
+			return false;
+		});
+		$('.arrow_r').on('click', function(){
+			main_bnr.next();
+			return false;
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

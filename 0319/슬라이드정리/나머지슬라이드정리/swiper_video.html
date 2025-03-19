@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<!-- Mirrored from heroyooi.ivyro.net/admin/jQuery/slider/swiper_video.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Oct 2018 02:39:00 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/swiper.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/swiper.min.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.instar-view-wrap video, .instar-view-wrap img { width:100%; }
+		.instar-view-swiper .btnMute { position:absolute; left:10px; bottom:15px; display:block; width:39px; height:39px; background:url('img/img_mo_pickershop_insta_v2.png') 0 0 no-repeat; background-size:auto 39px; text-indent:-20000px; }
+		.instar-view-swiper .btnMute.off { background:url('img/img_mo_pickershop_insta_v1.png') 0 0 no-repeat; background-size:auto 39px; }
+		.instar-view-swiper .btnPlay { position:absolute; left:50%; top:50%; width:137px; height:137px; margin:-68px 0 0 -68px; text-indent:-20000px; background:url('img/img_mo_play.png') 0 0 no-repeat; background-size:auto 137px; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<a href="../index-2.html" class="home">Home</a>
+<div class="instar-view-wrap">
+	<div class="instar-view-swiper">
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<video class="instarVideo" loop playsinline poster="../../../../scontent-hkg3-1.cdninstagram.com/t51.2885-15/e15/20214285_1468179289887048_8001880069402263552_n.jpg" src="https://scontent-hkg3-1.cdninstagram.com/t50.2886-16/20373789_1437521216317354_8077941844270383104_n.mp4">
+					</video>
+					<span class="btnMute">mute</span>
+					<span class="btnPlay">play</span>
+				</div>
+				<div class="swiper-slide">
+					<video class="instarVideo" loop playsinline poster="../../../../scontent-hkg3-1.cdninstagram.com/t51.2885-15/e15/20214120_1994698397426947_4247668633645350912_n.jpg" src="https://scontent-hkg3-1.cdninstagram.com/t50.2886-16/20372503_110400416285832_463234440739422208_n.mp4">
+					</video>
+					<span class="btnMute">mute</span>
+					<span class="btnPlay">play</span>
+				</div>
+				<div class="swiper-slide">
+					<img src="../../../../s3.ap-northeast-2.amazonaws.com/owho/data/file/mystyle/thumb-2950631903_bayqMsfC_25ff9d6826e0d9064f5237a9b2074469586b2f8d_800x800.jpg" alt="">
+				</div>
+			</div>
+		</div>
+		<!-- // swiper-container -->
+	</div>
+	<!-- // instar-view-swiper -->
+</div>
+<!-- // instar-view-wrap -->
+<div>Contents...</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		var $vid_swiper = $('.instar-view-swiper'),
+			 $vid = $('video.instarVideo'),
+			 $vid_play = $vid_swiper.find('span.btnPlay'),
+			 $vid_mute = $vid_swiper.find('span.btnMute'),
+			 $vid_length = $('video.instarVideo').length;
+
+		// 플레이 버튼 클릭 시
+		$vid_play.on('click', function(){
+			$(this).fadeOut();
+			$(this).parent().find('video.instarVideo')[0].play();
+		});
+
+		// 비디오 화면 클릭 시
+		$vid.on('click', function(){
+			if($(this).parent().find('span.btnPlay').css('display')=='none'){ // 재생 시 동작
+				$(this).parent().find('span.btnPlay').fadeIn();
+				$(this)[0].pause();
+			}else{ // 정지 시 동작
+				$(this).parent().find('span.btnPlay').fadeOut();
+				$(this)[0].play();
+			}
+		});
+
+		// 음소거 버튼 클릭 시
+		$vid_mute.on('click', function(){
+			if($(this).hasClass('off')){ // 음소거 상태에서 동작
+				$(this).parent().find('video.instarVideo')[0].muted=false;
+				$(this).removeClass('off');
+			}else{
+				$(this).parent().find('video.instarVideo')[0].muted=true;
+				$(this).addClass('off');
+			}
+		});
+
+		var instar_view_swiper = new Swiper('.instar-view-swiper .swiper-container', {
+			pagination: '.instar-view-swiper .swiper-pagination',
+			paginationClickable: true,
+			grabCursor: true,
+			slidesPerView: 'auto',
+			autoHeight: true,
+			onInit: function ( swiper ) {
+				setTimeout(function(){
+					swiper.updateAutoHeight();
+				}, 150);
+			},
+			onSlideChangeStart: function (swiper) {
+				// for(var i=0; i<$vid_length; i++){
+					// $vid[i].load();
+				// }
+				swiper.updateAutoHeight();
+			},
+			onSlideChangeEnd: function (swiper) {
+				for(var i=0; i<$vid_length; i++){
+					$vid[i].pause();
+					$vid[i].muted=false;
+				}
+				$vid_play.show();
+				$vid_mute.removeClass('off');
+			}
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+<!-- Mirrored from heroyooi.ivyro.net/admin/jQuery/slider/swiper_video.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Oct 2018 02:39:04 GMT -->
+</html>

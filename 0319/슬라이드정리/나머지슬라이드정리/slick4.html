@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+
+		<!-- 스타일 -->
+		<link rel="stylesheet" type="text/css" href="../common/css/slick.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/slick-theme.css">
+		<style type="text/css">
+		body {
+			background:#000;
+			overflow:hidden;
+			webkit-transition:all .3s ease-in; 
+			-moz-transition:all .3s ease-in; 
+			-o-transition:all .3s ease-in;
+			transition:all .3s ease-in;
+		}
+
+		/* main_slider */
+		.main-slider { position:relative; width:100%; height:100%; }
+		.main-slider .pf_1{
+			background: url("img/slick/visual_pic_1_bg.jpg") center 50% no-repeat; 
+			-webkit-background-size:cover;
+			-moz-background-size:cover;
+			-o-background-size:cover;
+			background-size:cover;
+		}
+		.main-slider .pf_2{
+			background: url("img/slick/visual_pic_2_bg.jpg") center 50% no-repeat; 
+			-webkit-background-size:cover;
+			-moz-background-size:cover;
+			-o-background-size:cover;
+			background-size:cover;
+		}
+		.main-slider .pf_3{
+			background: url("img/slick/visual_pic_3_bg.jpg") center 50% no-repeat; 
+			-webkit-background-size:cover;
+			-moz-background-size:cover;
+			-o-background-size:cover;
+			background-size:cover;
+		}
+		.main-slider .pf_4{
+			background: url("img/slick/visual_pic_4_bg.jpg") center 50% no-repeat; 
+			-webkit-background-size:cover;
+			-moz-background-size:cover;
+			-o-background-size:cover;
+			background-size:cover;
+		}
+
+		.main-slider .pf { 
+			position:relative; width:100vw; height:100vh; color:#fff; font-size:200px; text-align:center; line-height:100vh;
+			-webkit-transition:all .3s ease-in; 
+			-moz-transition:all .3s ease-in; 
+			-o-transition:all .3s ease-in; 
+			transition:all .3s ease-in; 
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<!-- visual -->
+		<div class="main-slider">
+			<div class="pf pf_1">
+				111
+			</div>
+			<div class="pf pf_2">
+				222
+			</div>
+			<div class="pf pf_3">
+				333
+			</div>
+			<div class="pf pf_4">
+				444
+			</div>
+		</div>
+		<!-- //visual -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/slick2.js"></script>
+		<script type="text/javascript">
+		$('.main-slider').slick({
+			arrows: true,
+			infinite: false,
+			speed:350,
+			cssEase: 'linear'
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

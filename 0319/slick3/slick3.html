@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/slick-theme.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/slick.js"></script>
+ <style>
+    #mainVisual{position:relative; width:100%; overflow:hidden;}
+    #mainVisual .visual-item{position:relative; width:100%; 
+		overflow:hidden;} 
+        /* 각각 슬라이드 */
+    #mainVisual .visual-item>img{  
+        /* > 추가 */
+        width:100%;
+        transform: scale(1.2,1.2);
+        transition:transform 5000ms ease-in-out ;
+        /* 사이즈(scale)를 5초에 간에  transition을 적용*/
+    }
+    #mainVisual .visual-txt{position:absolute; bottom:10%;
+    left:6%}
+    #mainVisual .visual-inner-txt{
+        border-left:1px solid rgba(255,255,255,0.3); 
+        /* 추가 */
+        padding-left:22px; color:#fff; padding-bottom:30px;
+    }
+    #mainVisual .visual-inner-txt h2,
+    #mainVisual .visual-inner-txt strong,
+    #mainVisual .visual-inner-txt span,
+    #mainVisual .visual-inner-txt p{
+        display: block;
+        opacity: 0;
+        transform:translateX(10%);
+        transition:all 0.5s;
+    }
+    #mainVisual .visual-inner-txt strong{
+        padding: 40px 0 15px;
+        font-size:20px;
+        font-weight:300;
+        /* transition:all 0.5s 0.2s; */
+        transition-delay:0.2s; line-height:25px
+    }
+    #mainVisual .visual-txt a{
+        margin-left:23px; color:#fff; 
+		padding:0 42px 5px 0; 
+		transition:all 0.5s 0.8s;
+	}
+    #mainVisual .visual-item.active > img{
+        transform: scale(1,1);
+    }
+    #mainVisual .active .visual-inner-txt h2,
+    #mainVisual .active .visual-inner-txt strong,
+    #mainVisual .active .visual-inner-txt span,
+    #mainVisual .active .visual-inner-txt p{
+        transform:translateX(0);
+    }
+    #mainVisual .active .visual-inner-txt h2,
+    #mainVisual .active .visual-inner-txt strong,
+    #mainVisual .active .visual-inner-txt a{
+        opacity:1.0;
+    }
+    #mainVisual .active .visual-inner-txt span{
+        opacity:0.73; 
+    }
+    #mainVisual .active .visual-inner-txt p{
+        opacity:0.54;
+    }
+
+    #mainVisual .slick-arrow{
+        position:absolute; 
+        bottom:10%; 
+        margin-bottom:270px;width:63px; 
+        height:59px; left:6%; background:none; 
+        border:0; cursor:pointer; z-index:99; font-size:0; 
+        transition:all 300ms
+        /* 300ms -> 0.3s와 동일 */
+    }
+    #mainVisual .slick-arrow.slick-prev{
+        background:url(img/slick/main_visual_prev_btn.png) no-repeat;
+    }
+    #mainVisual .slick-arrow.slick-next{
+        margin-left:70px;
+        background:url(img/slick/main_visual_next_btn.png) no-repeat;
+    }
+    #mainVisual .scroll-icon{
+        position:absolute; 
+		bottom:32px; left:50%; width:72px; margin-left:-36px; 
+		text-align:center;
+    }
+    #mainVisual .scroll-icon span{display:block; color:#fff;
+		font-weight:300; font-size:10px; opacity:0.75; margin-bottom:15px;}
+
+    #mainVisual .slick-prev:before,
+    #mainVisual .slick-next:before { opacity:0; }   
+ </style>
+ <script>
+$(function(){
+   var $slick_carousel = $('.visual-img');
+
+   $slick_carousel.on('init',function(event,slick){
+     $(".visual-item").eq(0).addClass("active");
+   });
+
+
+   $slick_carousel.on('afterChange',function(event,slick,currentSlide){
+    //event객체 - 이벤트의 정보
+    // console.log('이벤트위치정보',event.clientX, event.clientY);
+    //slick -  $slick_carousel의 인스턴스 참조
+    //$slick_carousel의 다양한 메서드나 속성 접근 가능
+    console.log('total slides',slick.slideCount);
+     $(".visual-item").removeClass("active");
+     $(this).find(".visual-item").eq(currentSlide).addClass('active');
+   });
+
+
+   $slick_carousel.slick({
+        dots:false,
+        infinite: true,
+        arrows:true,
+        pauseOnHover:false,
+        autoplay:true,
+        fade:true,
+        autoplaySpeed: 5000,
+        slidesToShow: 1,
+        slidesToScroll: 1
+   });
+
+});
+
+
+
+ </script>   
+
+
+</head>
+<body>
+    <!-- visual -->
+		<section id="mainVisual">
+			<div class="visual-img">
+				<div class="visual-item">
+					<img src="img/slick/main_visual_03.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt3.png" alt="고객과 함께 성장하는 동반자" /></h2>
+							<strong>항상 고객을 생각하고, 고객과 같이 발전하고 동행할 수 있는<br/>기업이 되도록 최선을 다하고있습니다. </strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_02_2.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt2.png" alt="품질안전 우선주의 기업" /></h2>
+							<strong>반도체, LCD설비, 생산장비사업 및 PLANT사업에 진출하여 우수한 기술력과<br/>
+							경험으로 성공적인 사업을 진행하고 있습니다</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_01.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt1.png" alt="미래를 선도하는 기업" /></h2>
+							<strong>미래를 선도하는 기업이라는 이념 아래 차별화된<br/>고객가치를 창조하기 위해 끊임없이 노력하고 있습니다.</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_01_2.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt1.png" alt="미래를 선도하는 기업" /></h2>
+							<strong>미래를 선도하는 기업이라는 이념 아래 차별화된<br/>고객가치를 창조하기 위해 끊임없이 노력하고 있습니다.</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- //visual -->
+</body>
+</html>

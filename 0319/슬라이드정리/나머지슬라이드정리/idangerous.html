@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/idangerous.swiper.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/idangerous.swiper-2.0.min.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#swiper-wrap { margin:0 auto; width:610px; padding:30px 20px; background:#eee; }
+		.swiper-content div.ev_detail dt { position:relative; margin-bottom:17px; }
+		.swiper-content div.ev_detail dt p.title { font-size:15px; font-weight:bold; color:#333; }
+		.swiper-content div.ev_detail dt p.date { position:absolute; right:0; top:0; font-size:12px; color:#888; }
+		.swiper-content div.ev_detail p.txt { padding-top:28px; font-size:13px; color:#666; line-height:1.6; text-align:center; }
+
+		.swiper-content a.btn_prev { position:absolute; left:20px; top:208px; display:block; width:56px; height:56px; text-indent:-20000px; background:url('img/idangerous/btn_pre.png') 0 0 no-repeat; }
+		.swiper-content a.btn_next { position:absolute; right:20px; top:208px; display:block; width:56px; height:56px; text-indent:-20000px; background:url('img/idangerous/btn_next.png') 0 0 no-repeat; }
+		.swiper-content a.btn_prev:hover { background:url('img/idangerous/btn_pre_on.png') 0 0 no-repeat; }
+		.swiper-content a.btn_next:hover { background:url('img/idangerous/btn_next_on.png') 0 0 no-repeat; }
+
+		.swiper-content p.count { position:absolute; left:10px; bottom:10px; font-size:13px; color:#888; }
+		.swiper-content p.count span.now { font-weight:bold; color:#007777; }
+
+		.swiper-container.swiper-nav { padding-left:10px; border-bottom:1px solid #00b4aa; height:92px; padding-bottom:20px; }
+		.swiper-nav .swiper-slide { position:relative; width:150px; height:92px; cursor:pointer; }
+		.swiper-nav .swiper-slide:first-child { margin-left:0; }
+		.swiper-nav img { width:140px; height:92px; }
+		.swiper-nav .swiper-slide div.cover { position:absolute; left:0; top:0; border:4px solid #00b4aa; width:132px; height:84px; display:none; }
+		.swiper-nav .swiper-slide.active-nav div.cover { display:block; }
+		.swiper-nav .swiper-slide:hover div.cover { display:block; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="swiper-wrap">
+			<div class="swiper-container swiper-content">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 축가111</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">111 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 축가222</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">222 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 333</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">333 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 444</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">444 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 555</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">5555 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 666</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">666 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 777</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">777 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+					<div class="swiper-slide">
+						<div class="ev_detail">
+							<dl>
+								<dt>
+									<p class="title">김도균님 결혼식 사회 및 888</p>
+									<p class="date">2014.07.12</p>
+								</dt>
+								<dd><img src="img/idangerous/pop_slideimg1.png" alt="" /></dd>
+							</dl>
+							<p class="txt">888 졸탄과 가수 정동하가 김도균님의 결혼식에 사회와 축가를 맡아 진행했습니다. <br />행복이 가득한 결혼식의 조금의 기쁨이 더했졌다면 저희는 행복합니다. </p>
+						</div>
+					</div>
+					<!-- // swiper-slide -->
+				</div>
+				<!-- // swiper-wrapper -->
+				<a href="#" class="btn_prev">이전 버튼</a>
+				<a href="#" class="btn_next">다음 버튼</a>
+				<p class="count"><span class="now">1</span> / <span class="tot">3</span></p>
+			</div>
+			<!-- // swiper-content -->
+			<div class="swiper-container swiper-nav">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide active-nav">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+					<div class="swiper-slide">
+						<img src="img/idangerous/pop_slideimg1.png" alt="" />
+						<div class="cover"></div>
+					</div>
+				</div>
+				<!-- // swiper-wrapper -->
+			</div>
+			<!-- // swiper-nav -->
+		</div>
+		<!-- // swiper-wrap -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		function setContentSize() {
+			$('.swiper-content').css({
+				height: 542
+			})
+		}
+		setContentSize()
+		$(window).resize(function(){
+			setContentSize()
+		})
+
+		//Swiper Content
+		var contentSwiper = $('.swiper-content').swiper({
+			// loop:true,
+			onSlideChangeStart: function(){
+				updateNavPosition()
+			}
+		});
+
+		//Button
+		$('.swiper-content a.btn_prev').on('click', function(e){
+			e.preventDefault()
+			contentSwiper.swipePrev();
+		});
+		$('.swiper-content a.btn_next').on('click', function(e){
+			e.preventDefault()
+			contentSwiper.swipeNext();
+		});
+
+		//Nav
+		var navSwiper = $('.swiper-nav').swiper({
+			visibilityFullFit: true,
+			slidesPerView:'auto',
+			//Thumbnails Clicks
+			onSlideClick: function(){
+				contentSwiper.swipeTo( navSwiper.clickedSlideIndex )
+			}
+		});
+
+		$('.swiper-content p.count span.tot').text( $('.swiper-nav .swiper-slide').length );
+
+		//Update Nav Position
+		function updateNavPosition(){
+			$('.swiper-content p.count span.now').text(contentSwiper.activeIndex+1);
+			$('.swiper-nav .active-nav').removeClass('active-nav')
+			var activeNav = $('.swiper-nav .swiper-slide').eq(contentSwiper.activeIndex).addClass('active-nav')
+			if (!activeNav.hasClass('swiper-slide-visible')) {
+				if (activeNav.index()>navSwiper.activeIndex) {
+					var thumbsPerNav = Math.floor(navSwiper.width/activeNav.width())-1
+					navSwiper.swipeTo(activeNav.index()-thumbsPerNav)
+				}
+				else {
+					navSwiper.swipeTo(activeNav.index())
+				}
+			}
+		}
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/swiper.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/swiper.min.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.life_wrap { position:relative; margin-bottom:10px; padding-bottom:31px; background:#fff; border-bottom:1px solid #d3d7dd; }
+		.life_sdr { transition:background .5s; -webkit-transition:background .5s; }
+		.life_sdr01 { background:#f8fafb url('img/swiper/life_bg01.png') left bottom no-repeat; background-size:100% auto; }
+		.life_sdr02 { background:#f8fafb url('img/swiper/life_bg02.png') left bottom no-repeat; background-size:100% auto; }
+		.life_sdr03 { background:#f8fafb url('img/swiper/life_bg03.png') left bottom no-repeat; background-size:100% auto; }
+		.life_wrap h3 { padding:19px 0 12px; font-size:16px; font-weight:bold; color:#313131; text-align:center; }
+		.life_wrap h3 span { color:#2355c3; }
+		.life_wrap .swiper-container { left:50%; width:200%; margin-left:-100%; overflow:inherit; }
+		.life_wrap .swiper-slide dt { margin-bottom:13px; }
+		.life_wrap .swiper-slide dd { padding-bottom:18px; text-align:center; }
+		.life_wrap .swiper-slide dd p.top { font-size:11px; color:#fff; }
+		.life_wrap .swiper-slide dd p.tit { padding-top:7px; margin:0 auto; width:90%; font-size:12px; font-weight:bold; color:#fff; line-height:14px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; }
+		.life_wrap .swiper-slide dd p.price { padding-top:8px; font-size:13px; font-weight:bold; color:#fff; }
+
+		.life_wrap .swiper-container-horizontal > .swiper-pagination-bullets { bottom:-22px; }
+
+		.life_wrap .swiper-pagination-bullet {
+			position:relative;
+			width:14px;
+			height:8px;
+			background: #dee5ea;
+			opacity:1;
+			border-radius:0;
+		}
+		.life_wrap .swiper-pagination-bullet:before {
+			content: "";
+			position: absolute;
+			top: -4px;
+			left: 0;
+			width: 0;
+			height: 0;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-bottom: 4px solid #dee5ea;
+		}
+		.life_wrap .swiper-pagination-bullet:after { 
+			content: "";
+			position: absolute;
+			bottom: -4px;
+			left: 0;
+			width: 0;
+			height: 0;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-top: 4px solid #dee5ea;
+		}
+
+		.life_wrap .swiper-pagination-bullet-active {
+			position:relative;
+			width:14px;
+			height:8px;
+			background: #0f2e74;
+		}
+		.life_wrap .swiper-pagination-bullet-active:before {
+			content: "";
+			position: absolute;
+			top: -4px;
+			left: 0;
+			width: 0;
+			height: 0;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-bottom: 4px solid #0f2e74;
+		}
+		.life_wrap .swiper-pagination-bullet-active:after { 
+			content: "";
+			position: absolute;
+			bottom: -4px;
+			left: 0;
+			width: 0;
+			height: 0;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-top: 4px solid #0f2e74;
+		}
+
+		.life_wrap .swiper-button-prev, .life_wrap .swiper-button-next { width:28px; height:8px; top:inherit; bottom:13px; }
+		.life_wrap .swiper-button-prev { background:url('img/swiper/pager_prev.png') 0 0 no-repeat; background-size:28px auto; }
+		.life_wrap .swiper-button-next { background:url('img/swiper/pager_next.png') 0 0 no-repeat; background-size:28px auto; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div class="life_wrap">
+			<div class="life_sdr life_sdr01">
+				<h3><span>LIFE</span> STYLE</h3>
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<a href="#">
+								<dl>
+									<dt><img src="img/swiper/life_img01.jpg" alt="" /></dt>
+									<dd>
+										<p class="top">THE RIDGE354</p>
+										<p class="tit">마사지오일 (IOLXF008)</p>
+										<p class="price">34,000원</p>
+									</dd>
+								</dl>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="#">
+								<dl>
+									<dt><img src="img/swiper/life_img02.jpg" alt="" /></dt>
+									<dd>
+										<p class="top">THE RIDGE354</p>
+										<p class="tit">AT YOUR SERVICE BOTTLE STOPPERS  ( ILKXF327 )</p>
+										<p class="price">27,000원</p>
+									</dd>
+								</dl>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="#">
+								<dl>
+									<dt><img src="img/swiper/life_img03.jpg" alt="" /></dt>
+									<dd>
+										<p class="top">THE RIDGE354</p>
+										<p class="tit">Vintage Mini wallet (Blue)  ( ILLXF052 )</p>
+										<p class="price">88,000원</p>
+									</dd>
+								</dl>
+							</a>
+						</div>
+					</div>
+					<!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+			<!-- // life_sdr -->
+			<div class="swiper-button-next"></div>
+			<div class="swiper-button-prev"></div>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		var swiper3 = new Swiper('.life_wrap .swiper-container', {
+			loop: true,
+			pagination: '.life_wrap .swiper-pagination',
+			paginationClickable: true,
+			nextButton: '.life_wrap .swiper-button-next',
+			prevButton: '.life_wrap .swiper-button-prev',
+			slidesPerView: 3,
+			centeredSlides: true,
+			spaceBetween: 10,
+			grabCursor: true,
+			onSlideChangeStart: function(swiper){
+				if($('.life_wrap .swiper-slide-active').attr('data-swiper-slide-index')==0){
+					$('.life_sdr').removeClass('life_sdr01');
+					$('.life_sdr').removeClass('life_sdr02');
+					$('.life_sdr').removeClass('life_sdr03');
+					$('.life_sdr').addClass('life_sdr01');
+				}else if($('.life_wrap .swiper-slide-active').attr('data-swiper-slide-index')==1){
+					$('.life_sdr').removeClass('life_sdr01');
+					$('.life_sdr').removeClass('life_sdr02');
+					$('.life_sdr').removeClass('life_sdr03');
+					$('.life_sdr').addClass('life_sdr02');
+				}else if($('.life_wrap .swiper-slide-active').attr('data-swiper-slide-index')==2){
+					$('.life_sdr').removeClass('life_sdr01');
+					$('.life_sdr').removeClass('life_sdr02');
+					$('.life_sdr').removeClass('life_sdr03');
+					$('.life_sdr').addClass('life_sdr03');
+				}
+			}
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

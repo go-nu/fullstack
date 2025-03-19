@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.carousel.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.theme.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/owl.carousel.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#slider .item img { display: block; width: 100%; height: auto; }
+
+		@media screen and (max-width:950px){
+			#wrap { width:96%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<div id="slider">
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl1.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl2.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl3.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl4.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl5.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl6.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl7.jpg" alt=""></div>
+				<div class="item"><img class="lazyOwl" data-src="img/owl/owl8.jpg" alt=""></div>
+			</div>
+		</div>
+		<!-- // wrap -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$('#slider').owlCarousel({
+			navigation : true, // Show next and prev buttons
+			slideSpeed : 300,
+			paginationSpeed : 400,
+			singleItem:true,
+			lazyLoad : true
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

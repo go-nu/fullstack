@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/jquery.cycle2.js"></script>
+		<script type="text/javascript" src="../common/js/jquery.cycle2.flip.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#wrap { width:600px; }
+		#wrap img { max-width:100%; }
+		.tit { margin:30px 0 10px; font-size:14px; font-weight:bold; }
+		.source { padding-top:10px; }
+		.source a { font-size:13px; font-weight:bold; color:#000; border-bottom:1px solid #000; }
+
+		.cycle-slideshow { 
+			-webkit-perspective: 1000;
+			-webkit-transform-style: preserve-3d;
+			-moz-perspective: 1000;
+			-moz-transform-style: preserve-3d;
+			-o-perspective: 1000;
+			-o-transform-style: preserve-3d;
+			perspective: 1000;
+			transform-style: preserve-3d;  
+		}
+
+		@media screen and (max-width:600px) {
+			#wrap { width:100%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+
+			<p class="tit">Horizontal Flip</p>
+			<div class="cycle-slideshow" 
+				data-cycle-fx="flipHorz"
+				data-cycle-timeout="2000"
+				>
+				<img src="img/bxslider/main_visual01.jpg" alt="" />
+				<img src="img/bxslider/main_visual02.jpg" alt="" />
+				<img src="img/bxslider/main_visual03.jpg" alt="" />
+			</div>
+
+			<p class="tit">Vertical Flip</p>
+			<div class="cycle-slideshow" 
+				data-cycle-fx="flipVert"
+				data-cycle-timeout="2000"
+				>
+				<img src="img/bxslider/main_visual01.jpg" alt="" />
+				<img src="img/bxslider/main_visual02.jpg" alt="" />
+				<img src="img/bxslider/main_visual03.jpg" alt="" />
+			</div>
+
+			<p class="source"><a href="http://jquery.malsup.com/cycle2/demo/" target="_blank">Cycle2 Demos 바로가기</a></p>
+
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>

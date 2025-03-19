@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+
+		<!-- 스타일 -->
+		<link rel="stylesheet" type="text/css" href="../common/css/slick.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/slick-theme.css">
+		<style type="text/css">
+		#wrap { width:500px; }
+		#wrap p.link { margin-top:30px; }
+		#wrap p.link a { font-size:12px; color:#000; }
+
+		/*
+		.slider {
+			width: 50%;
+			margin: 100px auto;
+		}
+		*/
+
+		.slick-slide {
+		  margin: 0px 20px;
+		}
+
+		.slick-slide img {
+		  width: 100%;
+		}
+
+		.slick-prev:before,
+		.slick-next:before {
+			color: black;
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<section class="regular slider">
+				<div>
+					<img src="http://placehold.it/350x300?text=1">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=2">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=3">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=4">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=5">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=6">
+				</div>
+			</section>
+
+			<section class="center slider">
+				<div>
+					<img src="http://placehold.it/350x300?text=1">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=2">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=3">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=4">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=5">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=6">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=7">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=8">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=9">
+				</div>
+			</section>
+
+			<section class="variable slider">
+				<div>
+					<img src="http://placehold.it/350x300?text=1">
+				</div>
+				<div>
+					<img src="http://placehold.it/200x300?text=2">
+				</div>
+				<div>
+					<img src="http://placehold.it/100x300?text=3">
+				</div>
+				<div>
+					<img src="http://placehold.it/200x300?text=4">
+				</div>
+				<div>
+					<img src="http://placehold.it/350x300?text=5">
+				</div>
+				<div>
+					<img src="http://placehold.it/300x300?text=6">
+				</div>
+			</section>
+
+			<section class="lazy slider" data-sizes="50vw">
+				<div>
+					<img data-lazy="http://placehold.it/350x300?text=1-350w" data-srcset="http://placehold.it/650x300?text=1-650w 650w, http://placehold.it/960x300?text=1-960w 960w" data-sizes="100vw">
+				</div>
+				<div>
+					<img data-lazy="http://placehold.it/350x300?text=2-350w" data-srcset="http://placehold.it/650x300?text=2-650w 650w, http://placehold.it/960x300?text=2-960w 960w" data-sizes="100vw">
+				</div>
+				<div>
+					<img data-lazy="http://placehold.it/350x300?text=3-350w"data-srcset="http://placehold.it/650x300?text=3-650w 650w, http://placehold.it/960x300?text=3-960w 960w" data-sizes="100vw">
+				</div>
+				<div>
+					<img data-lazy="http://placehold.it/350x300?text=4-350w"data-srcset="http://placehold.it/650x300?text=4-650w 650w, http://placehold.it/960x300?text=4-960w 960w" data-sizes="100vw">
+				</div>
+				<div>
+					<img data-lazy="http://placehold.it/350x300?text=5-350w"data-srcset="http://placehold.it/650x300?text=5-650w 650w, http://placehold.it/960x300?text=5-960w 960w" data-sizes="100vw">
+				</div>
+				<div>
+					<!-- this slide should inherit the sizes attr from the parent slider -->
+					<img data-lazy="http://placehold.it/350x300?text=6-350w"data-srcset="http://placehold.it/650x300?text=6-650w 650w, http://placehold.it/960x300?text=6-960w 960w">
+				</div>
+			</section>
+
+			<p class="link"><a href="http://kenwheeler.github.io/" target="_blank">http://kenwheeler.github.io</a></p>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/slick.js"></script>
+		<script type="text/javascript">
+		$(".regular").slick({
+			dots: true,
+			infinite: true,
+			slidesToShow: 3,
+			slidesToScroll: 3
+		});
+		$(".center").slick({
+			dots: true,
+			infinite: true,
+			centerMode: true,
+			slidesToShow: 3,
+			slidesToScroll: 3
+		});
+		$(".variable").slick({
+			dots: true,
+			infinite: true,
+			variableWidth: true
+		});
+		$(".lazy").slick({
+			lazyLoad: 'ondemand', // ondemand progressive anticipated
+			infinite: true
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

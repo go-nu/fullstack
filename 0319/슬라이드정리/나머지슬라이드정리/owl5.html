@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.carousel.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.theme.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.transitions.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/owl.carousel.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#wrap { width:1170px; }
+		#slider .item div { padding:5px; }
+		#slider .item img { display: block; width: 100%; height: auto; }
+
+		@media screen and (max-width:1170px){
+			#wrap { width:96%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<div id="slider">
+				<div><img src="http://placehold.it/1170x300/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x400/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x500/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x200/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x500/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x250/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x350/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x300/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x100/42bdc2/fff"></div>
+				<div><img src="http://placehold.it/1170x500/42bdc2/fff"></div>
+			</div>
+		</div>
+		<!-- // wrap -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$('#slider').owlCarousel({
+			autoPlay : 3000,
+			stopOnHover : true,
+			navigation:true,
+			paginationSpeed : 1000,
+			goToFirstSpeed : 2000,
+			singleItem : true,
+			autoHeight : true,
+			transitionStyle: "fade" // Option : "fade", "backSlide", "goDown", "fadeUp"
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

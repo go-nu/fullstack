@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.carousel.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.theme.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/owl.transitions.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/owl.carousel.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.main_visual { position:relative; margin:0 auto; width:1100px; height:470px; overflow:hidden; }
+		.main_visual .owl-pagination { position:absolute; left:0; bottom:15px; width:100%; font-size:0; }
+		.main_visual .owl-theme .owl-controls { margin-top:0; }
+		.main_visual .owl-theme .owl-controls .owl-page span { width:8px; height:8px; margin:0 2px; background:url('img/bxslider/pager_off.png') 0 0 no-repeat; opacity:1; filter:alpha(opacity=100); border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; }
+		.main_visual .owl-theme .owl-controls .owl-page.active span, 
+		.main_visual .owl-theme .owl-controls.clickable .owl-page:hover span { background:url('img/bxslider/pager_on.png') 0 0 no-repeat; }
+		.main_visual a.btn_stop { position:absolute; left:50%; bottom:15px; width:7px; height:8px; background:url('img/bxslider/btn_stop.png') 0 0 no-repeat; }
+		.main_visual a.btn_play { position:absolute; left:50%; bottom:15px; width:7px; height:8px; background:url('img/bxslider/btn_play.png') 0 0 no-repeat; display:none; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div class="main_visual">
+			<div class="mvis_sdr">
+				<div><a href="#"><img src="img/bxslider/mvis1.jpg" alt="" /></a></div>
+				<div><a href="#"><img src="img/bxslider/mvis2.jpg" alt="" /></a></div>
+				<div><a href="#"><img src="img/bxslider/mvis3.jpg" alt="" /></a></div>
+				<div><a href="#"><img src="img/bxslider/mvis4.jpg" alt="" /></a></div>
+			</div>
+			<a href="#" class="btn_stop"></a>
+			<a href="#" class="btn_play"></a>
+			<div class="wing_bnr">
+				<img src="img/bxslider/mbnr.html" alt="" />
+				<a href="#" class="btn"></a>
+			</div>
+		</div>
+		<!-- // main_visual -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		var mvis = $('.mvis_sdr');
+		mvis.owlCarousel({
+			autoPlay : 3000,
+			stopOnHover : true,
+			// navigation:true,
+			paginationSpeed : 1000,
+			goToFirstSpeed : 2000,
+			singleItem : true,
+			// autoHeight : true,
+			responsiveRefreshRate: 0
+			// transitionStyle:"fadeUp" // Option: "fade", "backSlide", "goDown", "fadeUp"
+		});
+		$(".main_visual a.btn_play").click(function(){
+			mvis.trigger('owl.play', 3000);
+			$(".main_visual a.btn_stop").show();
+			$(".main_visual a.btn_play").hide();
+		});
+		$(".main_visual a.btn_stop").click(function(){
+			mvis.trigger('owl.stop');
+			$(".main_visual a.btn_stop").hide();
+			$(".main_visual a.btn_play").show();
+		});
+		var mp_num = $('.mvis_sdr .owl-page').length;
+		var mp_width = $('.mvis_sdr .owl-page').width();
+		$('.main_visual a.btn_play, .main_visual a.btn_stop').css({
+			'margin-left': (mp_num*mp_width)/2 + 3
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

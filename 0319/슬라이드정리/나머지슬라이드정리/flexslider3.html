@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/flexslider.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/jquery.flexslider.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		#wrap .flexslider { border:0; }
+
+		@media screen and (max-width:950px) {
+			#wrap { width:96%; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+			<div class="flexslider">
+				<ul class="slides">
+					<li data-thumb="img/flexslider/kitchen_adventurer_caramel.jpg">
+						<img src="img/flexslider/kitchen_adventurer_caramel.jpg" />
+					</li>
+					<li data-thumb="img/flexslider/kitchen_adventurer_cheesecake_brownie.jpg">
+						<img src="img/flexslider/kitchen_adventurer_cheesecake_brownie.jpg" />
+					</li>
+					<li data-thumb="img/flexslider/kitchen_adventurer_donut.jpg">
+						<img src="img/flexslider/kitchen_adventurer_donut.jpg" />
+					</li>
+					<li data-thumb="img/flexslider/kitchen_adventurer_lemon.jpg">
+						<img src="img/flexslider/kitchen_adventurer_lemon.jpg" />
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		$('.flexslider').flexslider({
+			animation: "slide",
+			controlNav: "thumbnails"
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

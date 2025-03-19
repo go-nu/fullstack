@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+
+		<!-- 스타일 -->
+		<link rel="stylesheet" type="text/css" href="../common/css/slick.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/slick-theme.css">
+		<style type="text/css">
+		#mainVisual{position:relative; width:100%; overflow:hidden;}
+		#mainVisual .visual-item{position:relative; width:100%; overflow:hidden;}
+		#mainVisual .visual-item > img{
+			width:100%;
+			-ms-transform: scale(1.2,1.2); /* IE 9 */
+			-o-transform: scale(1.2,1.2); /* IE 9 */
+			-moz-transform: scale(1.2,1.2); /* IE 9 */
+			-webkit-transform: scale(1.2,1.2); /* Chrome, Safari, Opera */
+			 transform: scale(1.2,1.2);
+			-webkit-transition:transform 5000ms  ease-in-out ; /* Safari */
+			-moz-transition:transform 5000ms ease-in-out ; /* Safari */
+			-o-transition:transform 5000ms ease-in-out ; /* Safari */
+			-ms-transition:transform 5000ms ease-in-out ; /* Safari */
+			transition:transform 5000ms ease-in-out ;
+		}
+		#mainVisual .visual-item:focus{outline:none;}
+		#mainVisual .visual-txt{position:absolute; bottom:10%; left:6%;  }
+		#mainVisual .visual-inner-txt{border-left:1px solid rgba(255,255,255,0.3); 
+		padding-left:22px; color:#fff; padding-bottom:30px;}
+		#mainVisual .visual-inner-txt h2,#mainVisual .visual-inner-txt strong,
+		#mainVisual .visual-inner-txt span,#mainVisual .visual-inner-txt  p{
+			display:block;
+			opacity:0;filter:Alpha(opacity=0);
+			-moz-transform:translateX(10%);  
+			-ms-transform:translateX(10%);  
+			transform:translateX(10%);  
+			-moz-transition:all 0.5s;
+			-ms-transition:all 0.5s;
+			transition:all 0.5s;
+		}
+		#mainVisual .visual-inner-txt strong{padding:40px 0 15px; font-size:20px;
+		font-weight:300; transition-delay:0.2s; line-height:25px}
+		#mainVisual .visual-inner-txt span{font-size:13px; font-weight:300; 
+		transition-delay:0.4s}
+		#mainVisual .visual-inner-txt p{padding-top:15px; line-height:24px;  
+		transition-delay:0.6s}
+		#mainVisual .visual-txt a{margin-left:23px; color:#fff; 
+		padding:0 42px 5px 0; 
+		background:url(../../../images/icon/more_btn_bg.html) no-repeat 0 100%; 
+			opacity:0;filter:Alpha(opacity=0);
+			transition:all 0.5s 0.8s;
+		}
+		/* active */
+		#mainVisual .visual-item.active > img{
+			-ms-transform: scale(1,1); /* IE 9 */
+			-o-transform: scale(1,1); /* IE 9 */
+			-moz-transform: scale(1,1); /* IE 9 */
+			-webkit-transform: scale(1,1); /* Chrome, Safari, Opera */
+			transform: scale(1,1);
+		}
+		#mainVisual .active .visual-inner-txt h2,
+		#mainVisual .active .visual-inner-txt strong,
+		#mainVisual .active .visual-inner-txt span,
+		#mainVisual .active .visual-inner-txt  p{
+			-moz-transform:translateX(0);  
+			-ms-transform:translateX(0);  
+			transform:translateX(0);  
+		}
+		#mainVisual .active .visual-inner-txt h2,
+		#mainVisual .active .visual-inner-txt strong,
+		#mainVisual .active .visual-txt a{
+			opacity:1.0;filter:Alpha(opacity=100);
+		}
+		#mainVisual .active .visual-inner-txt span{
+			opacity:0.73;filter:Alpha(opacity=73); 
+		}
+		#mainVisual .active .visual-inner-txt  p{
+			opacity:0.54;filter:Alpha(opacity=54);
+		}
+
+
+		#mainVisual .slick-arrow{
+			position:absolute; bottom:10%; margin-bottom:270px;width:63px; height:59px; left:6%; background:none; border:0; cursor:pointer; z-index:99; font-size:0; 
+			-webkit-transition:all 300ms;-moz-transition:all 300ms;-o-transition:all 300ms;-ms-transition:all 300ms;transition:all 300ms
+		}
+		#mainVisual .slick-arrow.slick-prev{background:url(img/slick/main_visual_prev_btn.png) no-repeat}
+		#mainVisual .slick-arrow.slick-next{margin-left:70px; background:url(img/slick/main_visual_next_btn.png) no-repeat}
+		#mainVisual .scroll-icon{position:absolute; bottom:32px; left:50%; width:72px; margin-left:-36px; text-align:center;}
+		#mainVisual .scroll-icon span{display:block; color:#fff; font-weight:300; font-size:10px; opacity:0.75;filter:Alpha(opacity=75); margin-bottom:15px;}
+		#mainVisual .slick-prev:before,
+		#mainVisual .slick-next:before { opacity:0; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		
+		<!-- visual -->
+		<section id="mainVisual">
+			<div class="visual-img">
+				<div class="visual-item">
+					<img src="img/slick/main_visual_03.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt3.png" alt="고객과 함께 성장하는 동반자" /></h2>
+							<strong>항상 고객을 생각하고, 고객과 같이 발전하고 동행할 수 있는<br/>기업이 되도록 최선을 다하고있습니다. </strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_02_2.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt2.png" alt="품질안전 우선주의 기업" /></h2>
+							<strong>반도체, LCD설비, 생산장비사업 및 PLANT사업에 진출하여 우수한 기술력과<br/>
+							경험으로 성공적인 사업을 진행하고 있습니다</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_01.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt1.png" alt="미래를 선도하는 기업" /></h2>
+							<strong>미래를 선도하는 기업이라는 이념 아래 차별화된<br/>고객가치를 창조하기 위해 끊임없이 노력하고 있습니다.</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+				<div class="visual-item">
+					<img src="img/slick/main_visual_01_2.jpg" alt="" />
+					<div class="visual-txt">
+						<div class="visual-inner-txt">
+							<h2><img src="http://www.sungdokorea.com/images/main/main_visual_txt1.png" alt="미래를 선도하는 기업" /></h2>
+							<strong>미래를 선도하는 기업이라는 이념 아래 차별화된<br/>고객가치를 창조하기 위해 끊임없이 노력하고 있습니다.</strong>
+						</div>
+						<a href="http://www.sungdokorea.com/kr/business/building.php">MORE View</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- //visual -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/slick.js"></script>
+		<script type="text/javascript">
+		$(window).load(function  () {
+			var $slick_carousel = $(".visual-img");
+
+			$slick_carousel.on('init', function(event, slick) {
+				/*$slick_carousel.find('.slick-current').removeClass('slick-active').addClass('reset-animation');
+				setTimeout( function() {
+					$slick_carousel.find('.slick-current').removeClass('reset-animation').addClass('slick-active');
+				}, 2);*/
+				$(".visual-item").eq(0).addClass("active");
+			});
+			$slick_carousel.on('afterChange', function(event, slick, currentSlide){
+				$(".visual-item").removeClass("active");
+				$(this).find(".visual-item").eq(currentSlide).addClass("active")
+			});
+			// 메인 비주얼 롤링
+			$slick_carousel.slick({
+				dots: false,
+				infinite: true,
+				arrows:true,
+				pauseOnHover:false,
+				autoplay:true,
+				fade:true,
+				autoplaySpeed: 5000,
+				slidesToShow: 1,
+				slidesToScroll: 1
+			});
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

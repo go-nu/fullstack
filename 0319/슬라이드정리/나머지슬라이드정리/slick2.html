@@ -1,0 +1,417 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+
+		<!-- 스타일 -->
+		<link rel="stylesheet" type="text/css" href="../common/css/slick.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/slick-theme.css">
+		<style type="text/css">
+		body { background:#3498db; color:#fff; }
+
+		#wrap { width:600px; padding:20px; }
+		#wrap p.link { padding-top:10px; font-size:12px; }
+		#wrap p.link a { color:#fff; }
+		#wrap h2{font-size:26px;margin:60px auto 10px;text-align:center;}
+		#wrap h3{background:#fff;color:#3498db;font-size:36px;line-height:100px;margin:10px;padding:2%;position:relative;text-align:center;}
+		#wrap div.variable-width p { background: #fff; height: 100px; color:#3498db; margin: 5px; line-height: 100px; font-size:16px; text-align:center; }
+		#wrap .slick-slide img{border:5px solid #FFF;display:block;width:100%;}
+		#wrap .slick-slide img.slick-loading{border:0 }
+		#wrap .slick-slide .image { padding:10px; }
+		#wrap .button{background:#3498db;color:#fff;display:inline-block;font-size:16px;margin:10px auto;padding:20px 2%;text-align:center;text-decoration:none;width:44%;background:#FFF;color:#3498db; margin-bottom: 40px;}
+		#wrap .center .slick-center h3{-moz-transform:scale(1.08);-ms-transform:scale(1.08);-o-transform:scale(1.08);-webkit-transform:scale(1.08);color:#e67e22;opacity:1;transform:scale(1.08);}
+		#wrap .center h3{opacity:0.8;transition:all 300ms ease;}
+
+		@media screen and (max-width:640px) {
+			#wrap { width:100%; padding:20px 0; }
+		}
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		<div id="wrap">
+
+			<h2>Single Item</h2>
+			<div class="slider single-item">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+			</div>
+
+			<h2>Multiple Items</h2>
+			<div class="slider multiple-items">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+				<div><h3>7</h3></div>
+				<div><h3>8</h3></div>
+				<div><h3>9</h3></div>
+			</div>
+
+			<h2>Responsive Display</h2>
+			<div class="slider responsive">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+				<div><h3>7</h3></div>
+				<div><h3>8</h3></div>
+			</div>
+
+			<h2>Variable Width</h2>
+			<div class="slider variable-width">
+				<div style="width: 200px;"><p>200</p></div>
+				<div style="width: 175px;"><p>175</p></div>
+				<div style="width: 150px;"><p>150</p></div>
+				<div style="width: 300px;"><p>300</p></div>
+				<div style="width: 225px;"><p>225</p></div>
+				<div style="width: 125px;"><p>125</p></div>
+			</div>
+
+			<h2>Adaptive Height</h2>
+			<div class="slider one-time">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3><p>Look ma!</p></div>
+				<div><h3>3</h3><p>Check<br/>this out!</p></div>
+				<div><h3>4</h3><p>Woo!</p></div>
+			</div>
+
+			<h2>Data Attribute Settings</h2>
+			<div class="data" data-slick='{"slidesToShow": 4, "slidesToScroll": 4}'>
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+			</div>
+
+			<h2>Center Mode</h2>
+			<div class="slider center">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+			</div>
+
+			<h2>Lazy Loading</h2>
+			<div class="slider lazy">
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz1.png"/></div></div>
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz2.png"/></div></div>
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz3.png"/></div></div>
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz4.png"/></div></div>
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz5.png"/></div></div>
+				<div><div class="image"><img data-lazy="../../../../kenwheeler.github.io/slick/img/lazyfonz6.png"/></div></div>
+			</div>
+
+			<h2>Autoplay</h2>
+			<div class="slider autoplay">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+			</div>
+
+			<h2>Fade</h2>
+			<div class="slider fade">
+				<div><div class="image"><img src="../../../../kenwheeler.github.io/slick/img/fonz1.png"/></div></div>
+				<div><div class="image"><img src="../../../../kenwheeler.github.io/slick/img/fonz2.png"/></div></div>
+				<div><div class="image"><img src="../../../../kenwheeler.github.io/slick/img/fonz3.png"/></div></div>
+			</div>
+
+			<h2>Add & Remove</h2>
+			<div class="slider add-remove">
+				<div><h3>1</h3></div>
+			</div>
+			<div class="buttons">
+				<a href="javascript:void(0)" class="button js-add-slide">Add Slide</a>
+				<a href="javascript:void(0)" class="button js-remove-slide">Remove Slide</a>
+			</div>
+
+			<h2>Filtering</h2>
+			<div class="slider filtering">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+				<div><h3>7</h3></div>
+				<div><h3>8</h3></div>
+				<div><h3>9</h3></div>
+				<div><h3>10</h3></div>
+				<div><h3>11</h3></div>
+				<div><h3>12</h3></div>
+			</div>
+			<div class="filter">
+				<a href="javascript:void(0)" class="button js-filter">Filter Slides</a>
+			</div>
+
+			<h2>Slider Syncing</h2>
+			<div class="slider slider-for">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+			</div>
+			<div class="slider slider-nav">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+			</div>
+
+			<h2>Right to Left</h2>
+			<div dir="rtl" class="slider single-item-rtl">
+				<div><h3>1</h3></div>
+				<div><h3>2</h3></div>
+				<div><h3>3</h3></div>
+				<div><h3>4</h3></div>
+				<div><h3>5</h3></div>
+				<div><h3>6</h3></div>
+			</div>
+
+			<p class="link"><a href="http://kenwheeler.github.io/slick" target="_blank">http://kenwheeler.github.io/slick</a></p>
+			<p class="link"><a href="https://github.com/kenwheeler/slick/#events" target="_blank">https://github.com/kenwheeler/slick/#events</a></p>
+		</div>
+
+		<!-- 스크립트 -->
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/slick.js"></script>
+		<!-- <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
+		<script type="text/javascript">
+		$('.single-item').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 1,
+			slidesToScroll: 1
+		});
+		$('.multiple-items').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 3,
+			slidesToScroll: 3
+		});
+		$('.variable-width').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 1,
+			centerMode: true,
+			variableWidth: true
+		});
+		$('.data').slick();
+		$('.one-time').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 1,
+			adaptiveHeight: true
+		});
+		$('.uneven').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 4,
+			slidesToScroll: 4
+		});
+		$('.responsive').slick({
+			dots: true,
+			infinite: false,
+			speed: 500,
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			responsive: [{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 3,
+					infinite: true,
+					dots: true
+				}
+			}, {
+				breakpoint: 600,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 2
+				}
+			}, {
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1
+				}
+			}]
+		});
+
+		$('.center').slick({
+			centerMode: true,
+			infinite: true,
+			centerPadding: '60px',
+			slidesToShow: 3,
+			speed: 500,
+			responsive: [{
+				breakpoint: 768,
+				settings: {
+					arrows: false,
+					centerMode: true,
+					centerPadding: '40px',
+					slidesToShow: 3
+				}
+			}, {
+				breakpoint: 480,
+				settings: {
+					arrows: false,
+					centerMode: true,
+					centerPadding: '40px',
+					slidesToShow: 1
+				}
+			}]
+		});
+		$('.lazy').slick({
+			lazyLoad: 'ondemand',
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			speed: 500
+		});
+		$('.autoplay').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			autoplay: true,
+			autoplaySpeed: 2000
+		});
+
+		$('.fade').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			fade: true,
+			slide: 'div',
+			cssEase: 'linear'
+		});
+
+		$('.add-remove').slick({
+			dots: true,
+			slidesToShow: 3,
+			speed: 500,
+			slidesToScroll: 3
+		});
+		var slideIndex = 1;
+		$('.js-add-slide').on('click', function() {
+			slideIndex++;
+			$('.add-remove').slick('slickAdd','<div><h3>' + slideIndex + '</h3></div>');
+		});
+
+		$('.js-remove-slide').on('click', function() {
+			$('.add-remove').slick('slickRemove',slideIndex - 1);
+			if (slideIndex !== 0){
+				slideIndex--;
+			}
+		});
+
+		$('.filtering').slick({
+			dots: true,
+			speed: 500,
+			slidesToShow: 4,
+			slidesToScroll: 4
+		});
+		var filtered = false;
+		$('.js-filter').on('click', function() {
+			if (filtered === false) {
+				$('.filtering').slick('slickFilter',':even');
+				$(this).text('Unfilter Slides');
+				filtered = true;
+			} else {
+				$('.filtering').slick('slickUnfilter');
+				$(this).text('Filter Slides');
+				filtered = false;
+			}
+		});
+
+		$('.slider-for').slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			speed: 500,
+			arrows: false,
+			fade: true,
+			asNavFor: '.slider-nav'
+		});
+		$('.slider-nav').slick({
+			slidesToShow: 3,
+			slidesToScroll: 1,
+			speed: 500,
+			asNavFor: '.slider-for',
+			dots: true,
+			centerMode: true,
+			focusOnSelect: true,
+			slide: 'div'
+		});
+
+		$(window).on('scroll', function() {
+			if ($(window).scrollTop() > 166) {
+				$('.fixed-header').show();
+			} else {
+				$('.fixed-header').hide();
+			}
+		});
+
+		$('ul.nav a').on('click', function(event) {
+		  if ($(this).attr('href')[0] === "#") { 
+			event.preventDefault();
+			  var targetID = $(this).attr('href');
+			  var targetST = $(targetID).offset().top - 48;
+			  $('body, html').animate({
+				  scrollTop: targetST + 'px'
+			  }, 300);
+		  }
+		});
+
+		$('.single-item-rtl').slick({
+			dots: true,
+			infinite: true,
+			speed: 500,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			rtl: true
+		});
+		$('.multiple-items-rtl').slick({
+			dots: true,
+			infinite: true,
+			slidesToShow: 3,
+			speed: 500,
+			slidesToScroll: 3,
+			rtl: true
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+</html>

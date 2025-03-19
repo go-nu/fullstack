@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title> jQuery </title>
+		<link rel="stylesheet" type="text/css" href="../common/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="../common/css/swiper.css">
+		<script type="text/javascript" src="../common/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../common/js/swiper.min.js"></script>
+
+		<!-- 스타일 -->
+		<style type="text/css">
+		.main_visual { background:#eee; }
+		.main_visual .swiper-container { width: 100%; padding-bottom:30px; }
+		.main_visual .swiper-container img { width:100%; }
+
+		.main_visual .swiper-container-horizontal > .swiper-pagination-bullets { bottom:0; }
+		.main_visual .swiper-pagination-bullet { position:relative; top:-2px; width:4px; height:4px; background:url('img/swiper/pager_off.png') 0 0 no-repeat; opacity:1; }
+		.main_visual .swiper-pagination-bullet-active { top:0; width:10px; height:10px; background:url('img/swiper/pager_on.png') 0 0 no-repeat; }
+
+		.main_visual .swiper-button-prev.swiper-button-disabled, 
+		.main_visual .swiper-button-next.swiper-button-disabled { opacity:1; }
+		.main_visual .swiper-button-prev { top:100%; margin-top:-17px; width:20px; height:16px; background:url('img/swiper/btn_prev.png') 0 0 no-repeat; }
+		.main_visual .swiper-button-next { top:100%; margin-top:-17px; width:20px; height:16px; background:url('img/swiper/btn_next.png') 0 0 no-repeat; }
+		</style>
+		<!-- // 스타일 -->
+
+	</head>
+	<body>
+
+		
+		<div class="main_visual">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide"><img src="img/swiper/main_visual.jpg" alt="" /></div>
+					<div class="swiper-slide"><img src="img/swiper/main_visual.jpg" alt="" /></div>
+					<div class="swiper-slide"><img src="img/swiper/main_visual.jpg" alt="" /></div>
+					<div class="swiper-slide"><img src="img/swiper/main_visual.jpg" alt="" /></div>
+				</div>
+				<!-- Add Pagination -->
+				<div class="swiper-pagination"></div>
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+			</div>
+		</div>
+		<!-- // main_visual -->
+
+		<!-- 스크립트 -->
+		<script type="text/javascript">
+		var swiper = new Swiper('.swiper-container', {
+			pagination: '.swiper-pagination',
+			paginationClickable: true,
+			nextButton: '.swiper-button-next',
+			prevButton: '.swiper-button-prev',
+			effect: 'coverflow',
+			grabCursor: true,
+			centeredSlides: true,
+			slidesPerView: 'auto',
+			coverflow: {
+				rotate: 50,
+				stretch: 0,
+				depth: 100,
+				modifier: 1,
+				slideShadows : true
+			}
+		});
+		</script>
+		<!-- // 스크립트 -->
+
+	</body>
+
+
+</html>
