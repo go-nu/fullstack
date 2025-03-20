@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="js/jquery.mousewheel.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/init.js"></script>
+</head>
+<body>
+    <!-- 배경이미지삽입 -->
+  <div class="bg"></div>
+
+  <!-- 로고 -->
+  <h1><img src="images/logo.png" alt=""></h1>
+  <!-- 메인 내비게이션 gnb -->
+  <!-- ul.gnb>(li>a[href=#])*5 -->
+  <ul class="gnb">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Info</a></li>
+    <li><a href="#">Community</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+<!-- sns 영역 -->
+  <!-- ul.sns>(li>a[href=#]>i.fa.fa-)*3 -->
+  <ul class="sns">
+    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+  </ul>
+  <!-- 서브 내비게이션(원페이지 스크롤) -->
+  <!-- ul.scrollNav>(li>span+em{position $})*5 -->
+  <ul class="scrollNav">
+    <li class='on'><span></span><em>position 1</em></li>
+    <li><span></span><em>position 2</em></li>
+    <li><span></span><em>position 3</em></li>
+    <li><span></span><em>position 4</em></li>
+    <li><span></span><em>position 5</em></li>
+  </ul>
+  <section>
+    <!-- 1페이지  -->
+    <!-- article.on>(img.obj$$[src=images/effect$$.png])*3+(p>span+em) -->
+    <article class="on">
+        <img src="images/effect11.png" alt="" class="obj11">
+        <img src="images/effect12.png" alt="" class="obj12">
+        <img src="images/player1.png" alt="" class="obj13">
+        <p class="on">
+          <span>Position 1</span>
+          <em>
+            Lorme ipsum dolor sit amet, consetetur adipisicing elit.
+          </em>
+        </p>
+      </article>
+<!-- 2페이지 -->
+    <article>
+        <img src="images/effect21.png" alt="" class="obj21">
+        <img src="images/player2.png" alt="" class="obj22">
+        <p>
+        <span>Position 2</span>
+        <em>
+            Lorme ipsum dolor sit amet, consetetur adipisicing elit.
+        </em>
+        </p>
+    </article>
+    <!-- 3페이지 -->
+    <article>
+        <img src="images/effect31.png" alt="" class="obj31">
+        <img src="images/player3.png" alt="" class="obj32">
+        <p>
+        <span>Position 3</span>
+        <em>
+            Lorme ipsum dolor sit amet, consetetur adipisicing elit.
+        </em>
+        </p>
+    </article>
+    <!-- 4페이지 -->
+    <article>
+        <img src="images/effect41.png" alt="" class="obj41">
+        <img src="images/effect42.png" alt="" class="obj42">
+        <img src="images/player4.png" alt="" class="obj43">
+        <p>
+          <span>Position 4</span>
+          <em>
+            Lorme ipsum dolor sit amet, consetetur adipisicing elit.
+          </em>
+        </p>
+      </article>
+    </article>
+    <!-- 5페이지 -->
+    <article>
+     <img src="images/effect51.png" alt="" class="obj51">
+     <img src="images/effect52.png" alt="" class="obj52">
+     <img src="images/player5.png" alt="" class="obj53">
+     <p>
+       <span>Position 5</span>
+       <em>
+         Lorme ipsum dolor sit amet, consetetur adipisicing elit.
+       </em>
+     </p>
+   </article>
+  </section>
+   <!-- 푸터 영역  -->
+   <span class='copyright'>
+    Copyright(c) 2021 JUNSUK FC, JUNSUKWEB ALL Right Reserved.
+  </span>
+</body>
+</html>
