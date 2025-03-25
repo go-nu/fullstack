@@ -41,21 +41,43 @@ public class Search {
                     break;
                 case 4:
                     System.out.println("숙소 추가하기> ");
-                    System.out.println("추가할 숙소 명 : ");
+                    System.out.print("추가할 숙소 명 : ");
                     String addName = s.nextLine();
-                    System.out.println("추가할 숙소 위치 : ");
+                    System.out.print("추가할 숙소 위치 : ");
                     String addLocation = s.nextLine();
-                    System.out.println("추가할 숙소 가격 : ");
+                    System.out.print("추가할 숙소 가격 : ");
                     double addPrice = s.nextDouble();
                     s.nextLine();
                     m.addAccommodation(addName, addLocation, addPrice);
                     System.out.println("숙소가 추가되었습니다.");
+                    break;
+                case 5:
+                    System.out.println("숙소 제거하기>");
+                    System.out.print("제거할 숙소 명 : ");
+                    String delName = s.nextLine();
+                    s.nextLine();
+                    m.delAccommodation(delName);
+                    break;
+                case 6:
+                    System.out.println("숙소 정보 수정> ");
+                    System.out.print("수정할 숙소 명 : ");
+                    String fixName = s.nextLine();
+                    s.nextLine();
+                    m.fixInfo(fixName);
+                    System.out.println("수정 완료.");
+                    break;
+                case 7:
+                    System.out.println("숙소 정보 조회> ");
+                    System.out.print("조회할 숙소명 : ");
+                    String checkName = s.nextLine();
+                    m.checkAccommodation(checkName);
                     break;
                 case 8:
                     flag = false;
                     break;
             
                 default:
+                    System.out.println("올바른 번호를 입력하세요");
                     break;
             }
 

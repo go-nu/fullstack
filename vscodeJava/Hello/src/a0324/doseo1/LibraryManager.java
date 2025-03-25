@@ -1,6 +1,7 @@
 package a0324.doseo1;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LibraryManager {
     private ArrayList<Library> librarys; // Library 객체를 리스트(묶음으로 저장할 수 있는 배열종류)
@@ -54,6 +55,86 @@ public class LibraryManager {
         // Library abc = new Library(newTitle, newAuthor, newLocation, newISBN)
         // librarys.add(abc);
         librarys.add(new Library(newTitle, newAuthor, newLocation, newISBN));
+    }
+
+    public void delLibrary(String dname) {
+        boolean result = false;
+        for(Library library : librarys) {
+            if (library.getTitle().equalsIgnoreCase(dname)) {
+                if (library.isAvaiable()) {
+                    librarys.remove(library);
+                    result = true;
+                    break;
+                } else {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        if(result) System.out.println("삭제됨");
+        else System.out.println("삭제 안됨");
+    }
+
+    public void updateLibrary(String uname) {
+        int i = 0;
+        int index = -1;
+        int menu = -1;
+        boolean flag = true;
+        Scanner sc = new Scanner(System.in);
+        Library newA = new Library(); // 빈 라이브러리 객체 생성
+        System.out.println(uname);
+        for(Library a : librarys) { // librarys 리스트를 돌며 이름이 같은 객체 찾기
+            i++;
+            if(a.getTitle().equalsIgnoreCase(uname)) {
+                index = i - 1;
+                newA = a; // 이름이 같은 객체를 newA로 초기화
+            }
+            System.out.println(a.getTitle().equals(uname) + " " + a.getTitle() + " " + uname);
+        }
+        if (index != -1) { // index가 -1이 아니면 = 같은 이름의 객체를 찾으면
+            System.out.print("뭘 수정할건데?\n 1.도서 이름 \t 2.도서 저자 \t 3.도서 위치 \t 4.도서ISBN \n >>");
+            menu = sc.nextInt();
+            sc.nextLine();
+            while (flag) {
+                switch (menu) {
+                    case 1:
+                        System.out.println("수정할 도서 이름 : ");
+                        newA.setTitle(sc.nextLine()); // 키보드 입력으로 받은 문자열을 newA의 제목으로 변경
+                        librarys.set(index, newA); // librarys(ArrayList)에 index자리에 newA를 초기화
+                        flag = false;
+                        break;
+                    case 2:
+                        System.out.println("수정할 도서 저자 : ");
+                        newA.setAuthor(sc.nextLine());
+                        librarys.set(index, newA);
+                        flag = false;
+                        break;
+                    case 3:
+                        System.out.println("수정할 도서 위치 : ");
+                        newA.setLocation(sc.nextLine());
+                        librarys.set(index, newA);
+                        flag = false;
+                        break;
+                    case 4:
+                        System.out.println("수정할 도서 ISBN : ");
+                        newA.setIsbn(sc.nextLine());
+                        librarys.set(index, newA);
+                        flag = false;
+                        break;
+                    default:
+                        System.out.println("올바른 번호를 입력하세요");
+                        break;
+                }
+            }
+        } else System.out.println("찾는 도서가 없습니다.");
+    }
+
+    public void showLibrary(String sname) {
+        for(Library a : librarys) {
+            if (a.getTitle().equalsIgnoreCase(sname)) {
+                System.out.println(a.toString());
+            }
+        }
     }
 
 }
