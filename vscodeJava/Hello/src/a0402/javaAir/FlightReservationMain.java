@@ -38,15 +38,15 @@ public class FlightReservationMain {
                     fm.checkReservation();
                     break;
                 case 4:
-                    
+                    fm.ticketSave();
                     break;
                 case 5:
-                    
+                    fc.upload();
                     break;
                 case 0:
-                    
-                    break;
-            
+                    System.out.println("프로그램을 종료합니다.");
+                    sc.close();
+                    break Outter;            
                 default:
                     break;
             }

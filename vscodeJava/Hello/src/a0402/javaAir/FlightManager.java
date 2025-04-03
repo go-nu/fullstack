@@ -196,6 +196,19 @@ public class FlightManager {
         return index;
     }
 
-    
+    public void ticketSave() {
+        int index = search("티켓 조회");
+        checkPassword(index);
+        fc.ticketSaveFile(reservationMap, passengers.get(index).getName());
+    }
 
+    public static ArrayList<Flight> getFlights() {
+        return flights;
+    }
+    // 항공편 목록(flights)을 외부에서 접근하는 getter method
+    
+    public static Map<String, Flight> getReservationMap() {
+        return reservationMap;
+    }
+    // 예약정보(reservationMap)를 외부에서 접근하는 getter method   
 }
