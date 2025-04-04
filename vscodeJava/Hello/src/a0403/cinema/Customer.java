@@ -32,10 +32,10 @@ public class Customer {
     public void setBirthYear(int birthYear) {
         this.birthYear = birthYear;
     }
-    public String getReservationNum() {
+    public String getPw() {
         return pw;
     }
-    public void setReservationNum(String pw) {
+    public void setPw(String pw) {
         this.pw = pw;
     }
     public String getSeat() {

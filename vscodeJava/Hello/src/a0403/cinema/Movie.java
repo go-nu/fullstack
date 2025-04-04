@@ -1,6 +1,5 @@
 package a0403.cinema;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Movie {
@@ -58,7 +57,7 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "[제목 : " + title + ", 시작시간 : " + time + ", 가격 : " + price + "]";
+        return "[제목 : " + title + ", 시작시간 : " + time + ", 가격 : " + price + "원]";
     }
 
     // 좌석 표시
