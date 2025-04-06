@@ -7,8 +7,9 @@ import java.util.Scanner;
 
 
 public class CinemaManager {
-    private static ArrayList<Movie> movies; // 영화 목록을 저장하는 ArrayList
+    private static ArrayList<Movie> movies =new ArrayList<>(); // 영화 목록을 저장하는 ArrayList
     private static ArrayList<Customer> customers; // 예매한 손님 목록을 저장하는 ArrayList
+    
     Customer admin = new Customer("Admin", 1980, "*123"); // 관리자 계정
 
     // K : 손님 이름, V : 영화를 가지는 Map
@@ -19,16 +20,11 @@ public class CinemaManager {
 
     public CinemaManager() {
         movies = new ArrayList<>();
+        // fc.defaultMovie();
         movies.add(new Movie("재밌는 영화", "11:00", 12000 ,false));
         movies.add(new Movie("슬픈 영화", "13:00", 12000 ,false));
         movies.add(new Movie("3D 영화", "14:00", 30000 ,false));
         movies.add(new Movie("잔인한 영화", "19:00", 12000 ,true));
-        // try {
-        //     fc.defaultMovie();
-        // } catch (IOException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
         customers = new ArrayList<>();
         Movie tm = movies.get(0);
         reservationMap.put("테스트", tm);
@@ -187,6 +183,10 @@ public class CinemaManager {
                 break;
             }
         }
+        if(index == -1) {
+            System.out.println("예매자를 찾을 수 없습니다. 다시 입력해주세요");
+            return;
+        }
         System.out.print("비밀번호를 입력해주세요 : ");
         String mPw = sc.nextLine();
         if (mPw.equals(customers.get(index).getPw())) {
@@ -212,6 +212,9 @@ public class CinemaManager {
     public void cancleTicket() {
         int index = -1;
         System.out.println("==================== 예매 취소 ====================");
+        if(customers == null || customers.isEmpty()) {
+            System.out.println("예매자가 없읍니다. 예매를 먼저 진행해주세요.");
+        }
         System.out.print("예매자 성함을 입력해주세요 : ");
         String mName = sc.nextLine();
         for(int i = 0; i < customers.size(); i++) {
@@ -219,6 +222,10 @@ public class CinemaManager {
                 index = i;
                 break;
             }
+        }
+        if(index == -1) {
+            System.out.println("예매자를 찾을 수 없습니다. 다시 입력해주세요");
+            return;
         }
         System.out.print("비밀번호를 입력해주세요 : ");
         String mPw = sc.nextLine();
@@ -279,6 +286,9 @@ public class CinemaManager {
     public void printTicket() {
         int index = -1;
         System.out.println("==================== 티켓 출력 ====================");
+        if(customers == null || customers.isEmpty()) {
+            System.out.println("예매자가 없읍니다. 예매를 먼저 진행해주세요.");
+        }
         System.out.print("예매자 성함을 입력해주세요 : ");
         String mName = sc.nextLine();
         for(int i = 0; i < customers.size(); i++) {
@@ -286,6 +296,10 @@ public class CinemaManager {
                 index = i;
                 break;
             }
+        }
+        if(index == -1) {
+            System.out.println("예매자를 찾을 수 없습니다. 다시 입력해주세요");
+            return;
         }
         System.out.print("비밀번호를 입력해주세요 : ");
         String mPw = sc.nextLine();
@@ -324,6 +338,7 @@ public class CinemaManager {
     }
 
     public void delMovies() {
+        displayMovies();
         if(ruAdmin()) {
             System.out.print("삭제할 영화의 번호를 입력해주세요 : ");
             int delM = sc.nextInt()-1;
@@ -333,6 +348,29 @@ public class CinemaManager {
             } else {
                 movies.remove(delM);
                 System.out.println("영화가 삭제되었습니다.");
+            }
+        }
+    }
+
+    public void sortMovie() {
+        for(int i = 0; i < movies.size(); i++) {
+            for(int j = i + 1; j < movies.size(); j++) {
+                int h1 = Integer.parseInt(movies.get(i).getTime().split(":")[0]);
+                int h2 = Integer.parseInt(movies.get(j).getTime().split(":")[0]);
+                int m1 = Integer.parseInt(movies.get(i).getTime().split(":")[1]);
+                int m2 = Integer.parseInt(movies.get(i).getTime().split(":")[1]);
+
+                if (h1 > h2) {
+                    Movie temp = movies.get(i);
+                    movies.set(i, movies.get(j));
+                    movies.set(j, temp);
+                } else if (h1 == h2) {
+                    if (m1 > m2) {
+                        Movie temp = movies.get(i);
+                        movies.set(i, movies.get(j));
+                        movies.set(j, temp);
+                    }
+                }
             }
         }
     }
