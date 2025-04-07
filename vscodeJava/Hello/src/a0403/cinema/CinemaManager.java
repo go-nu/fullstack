@@ -210,6 +210,9 @@ public class CinemaManager {
     }
 
     public void cancleTicket() {
+        String seatInfo="";
+        String seatN;
+        int seatIndex;
         int index = -1;
         System.out.println("==================== 예매 취소 ====================");
         if(customers == null || customers.isEmpty()) {
@@ -234,6 +237,10 @@ public class CinemaManager {
             if (customers != null) {
                 for(int j = 0; j < customers.size(); j++) {
                     if(mName.equals(customers.get(j).getName())) {
+                        seatIndex = Integer.parseInt(customers.get(j).getSeat());
+                        index2Seat(j);
+                        System.out.println(seatIndex + "," + seatInfo);
+                        returnSeat(index, seatIndex, seatInfo);
                         customers.remove(j);
                         break;
                     }
@@ -241,6 +248,45 @@ public class CinemaManager {
             }
         }
         System.out.println("예매가 취소되었습니다. ");
+
+    }
+
+    public String index2Seat(int index) {
+        int cal = Integer.parseInt(customers.get(index).getSeat());
+        String seatN = String.valueOf((cal % 6) + 1);
+        String seatInfo;
+
+        System.out.println(cal + ", " + seatN);
+    
+        if (cal / 6 == 0) {
+            seatInfo = "A" + seatN;
+        } else if (cal / 6 == 1) {
+            seatInfo = "B" + seatN;
+        } else if (cal / 6 == 2) {
+            seatInfo = "C" + seatN;
+        } else if (cal / 6 == 3) {
+            seatInfo = "D" + seatN;
+        } else if (cal / 6 == 4) {
+            seatInfo = "E" + seatN;
+        } else if (cal / 6 == 5) {
+            seatInfo = "F" + seatN;
+        } else {
+            seatInfo = "";
+        }
+    
+        return seatInfo;
+    }
+
+    private void returnSeat(int index, int seatIndex, String seatInfo) {
+        Movie returnMovie = reservationMap.get(customers.get(index).getName());
+        int movieIndex = -1;
+        for(int i = 0; i < movies.size(); i++) {
+            if (movies.get(i).equals(returnMovie)) {
+                movieIndex = i;
+                break;
+            }
+        }
+        movies.get(movieIndex).getSeats().set(seatIndex, seatInfo);
     }
 
     public void checkCustomers() {
@@ -258,7 +304,7 @@ public class CinemaManager {
                     for(int j = 0; j < customers.size(); j++) {
                         if(movies.get(i).getTitle().equals(reservationMap.get(customers.get(j).getName()).getTitle())) {
                             // arr.add(reservationMap.get(customers.get(j).getName()));
-                            arr.add(customers.get(j).getName() + "(" + customers.get(j).getPw() + ")");
+                            arr.add(customers.get(j).getName() + "(" + customers.get(j).getPw() + "), " + index2Seat(j));
                         }
                     }
                 }
