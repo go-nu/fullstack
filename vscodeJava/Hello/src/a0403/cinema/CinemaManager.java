@@ -19,15 +19,15 @@ public class CinemaManager {
     Scanner sc = new Scanner(System.in);
 
     public CinemaManager() {
-        movies = new ArrayList<>();
+        movies = new ArrayList<>(); // 영화 목록이 들어갈 ArrayList
+        customers = new ArrayList<>(); // 예매자 정보가 들어갈 ArrayList
+        // movies.add(new Movie("재밌는 영화", "11:00", 12000 ,false));
+        // movies.add(new Movie("슬픈 영화", "13:00", 12000 ,false));
+        // movies.add(new Movie("3D 영화", "14:00", 30000 ,false));
+        // movies.add(new Movie("잔인한 영화", "19:00", 12000 ,true));
         // fc.defaultMovie();
-        movies.add(new Movie("재밌는 영화", "11:00", 12000 ,false));
-        movies.add(new Movie("슬픈 영화", "13:00", 12000 ,false));
-        movies.add(new Movie("3D 영화", "14:00", 30000 ,false));
-        movies.add(new Movie("잔인한 영화", "19:00", 12000 ,true));
-        customers = new ArrayList<>();
-        Movie tm = movies.get(0);
-        reservationMap.put("테스트", tm);
+        // Movie tm = movies.get(0);
+        // reservationMap.put("테스트", tm);
     }
 
     public void displayMovies() {
@@ -358,7 +358,7 @@ public class CinemaManager {
                 int h1 = Integer.parseInt(movies.get(i).getTime().split(":")[0]);
                 int h2 = Integer.parseInt(movies.get(j).getTime().split(":")[0]);
                 int m1 = Integer.parseInt(movies.get(i).getTime().split(":")[1]);
-                int m2 = Integer.parseInt(movies.get(i).getTime().split(":")[1]);
+                int m2 = Integer.parseInt(movies.get(j).getTime().split(":")[1]);
 
                 if (h1 > h2) {
                     Movie temp = movies.get(i);

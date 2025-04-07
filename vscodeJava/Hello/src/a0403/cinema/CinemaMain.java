@@ -4,8 +4,10 @@ import java.util.Scanner;
 
 public class CinemaMain {
     public static void main(String[] args) {
+        FileC fc = new FileC();
         CinemaManager cm = new CinemaManager();
         Scanner sc = new Scanner(System.in);
+        fc.defaultMovie();
 
         System.out.println("==================== 영화표 예매 프로그램 ====================");
 
