@@ -210,8 +210,7 @@ public class CinemaManager {
     }
 
     public void cancleTicket() {
-        String seatInfo="";
-        String seatN;
+        String seatInfo;
         int seatIndex;
         int index = -1;
         System.out.println("==================== 예매 취소 ====================");
@@ -238,9 +237,8 @@ public class CinemaManager {
                 for(int j = 0; j < customers.size(); j++) {
                     if(mName.equals(customers.get(j).getName())) {
                         seatIndex = Integer.parseInt(customers.get(j).getSeat());
-                        index2Seat(j);
-                        System.out.println(seatIndex + "," + seatInfo);
-                        returnSeat(index, seatIndex, seatInfo);
+                        System.out.println(seatIndex + "," + index2Seat(j));
+                        returnSeat(index, seatIndex, index2Seat(j));
                         customers.remove(j);
                         break;
                     }

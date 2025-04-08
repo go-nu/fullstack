@@ -12,6 +12,7 @@ public class MainApp {
         System.out.println("프로그램이 종료됩니다."); //프로그램 종료 문구
     }
 }
+
 interface Menu{
     void print(); //메뉴 출력
     Menu next(); //다음 메뉴로 이동

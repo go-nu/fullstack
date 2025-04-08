@@ -29,7 +29,7 @@ public class Reservation {
         return seatName;
     }
 
-     private static final File file = new File("D:\\junsuk\\reservation.txt");
+    private static final File file = new File("e:\\gonu\\vscodejava\\Hello\\src\\a0404\\movie\\reservation.txt");
     public Reservation(long id, long movieId, String movieTitle, String seatName) {
         this.id = id;
         this.movieId = movieId;
@@ -48,6 +48,7 @@ public class Reservation {
     public String toString() {
         return String.format("영화: %s, 좌석: %s", movieTitle, seatName);
     }
+
     public static ArrayList<Reservation> findByMovieId(String movieIdStr) throws IOException {
         ArrayList<Reservation> reservations = new ArrayList<Reservation>();
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -55,25 +56,28 @@ public class Reservation {
         while((line = br.readLine())!=null){
             String [] temp = line.split(",");
             if(movieIdStr.equals(temp[1])){ //대표값이 같은 예매된 영화만 조회
-              long id = Long.parseLong(temp[0]); //예매 발급번호
-              long movieId = Long.parseLong(temp[1]);//예매 영화 대표값
-              String movieTitle = temp[2]; //영화 제목
-              String seatName = temp[3]; // 예매 영화의 좌석명
-              Reservation r = new Reservation(id, movieId, movieTitle, seatName);
-              reservations.add(r); //생성 객체를 ArrayList에 추가
+                long id = Long.parseLong(temp[0]); //예매 발급번호
+                long movieId = Long.parseLong(temp[1]);//예매 영화 대표값
+                String movieTitle = temp[2]; //영화 제목
+                String seatName = temp[3]; // 예매 영화의 좌석명
+                Reservation r = new Reservation(id, movieId, movieTitle, seatName);
+                reservations.add(r); //생성 객체를 ArrayList에 추가
             }
-          }
-          br.close(); // 입력 흐름 해제
-         return reservations; // 예매 객체를 담은 ArrayList 반환
         }
+        br.close(); // 입력 흐름 해제
+        return reservations; // 예매 객체를 담은 ArrayList 반환
+    }
+
     public void save() throws IOException {
         FileWriter fw = new FileWriter(file, true); // 이어쓰기(append) 모드 설정(true)
         fw.write(this.toFileString() + "\n");
         fw.close();
     }
+
     private String toFileString() {
         return String.format("%d,%d,%s,%s",id, movieId, movieTitle,seatName);
     }
+    
     public static Reservation cancel(String reservationId) throws IOException {
         Reservation canceled  = null;
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -97,8 +101,8 @@ public class Reservation {
         fw.write(text); // 파일 출력
         fw.close(); // 출력 흐름 해제
         return canceled; // 삭제된 예매를 객체로 반환
-
     }
+
     public static Reservation findById(String reservationId) throws IOException {
         Reservation r  = null;
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -121,6 +125,6 @@ public class Reservation {
     }
 
 
-    }
+}
 
 

@@ -8,7 +8,7 @@ public class Seats {
     public static final int MAX_COL = 5;//최대열의수
     private String[][] map = new String[MAX_ROW][MAX_COL]; // 좌석의 예매 현황
 
- public Seats(ArrayList<Reservation> reservations) throws Exception {
+    public Seats(ArrayList<Reservation> reservations) throws Exception {
         for(int i=0; i < MAX_ROW; i++){
             for (int j = 0; j < MAX_COL; j++) {
                 map[i][j] = "o"; // 초기 좌석 상태 설정(좌석 예매 가능) - 전좌석에 'O'입력
@@ -18,9 +18,9 @@ public class Seats {
             Reservation r = reservations.get(i);
             String seatName = r.getSeatName();
             mark(seatName); // 예매 좌석임을 표기
-            }  
-    
         }
+    
+    }
             
         public void mark(String seatName) throws Exception{
             char[] temp = seatName.toCharArray(); // 좌석명을 문자 배열로 변환

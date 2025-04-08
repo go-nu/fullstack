@@ -10,7 +10,8 @@ class MainMenu extends AbstractMenu {
     private static final MainMenu instance = new MainMenu(null);
     public static MainMenu getInstance() {
         return instance;
-    }  //메인메뉴에 대한 싱글톤패턴 -
+    }  //메인메뉴에 대한 싱글톤패턴
+    
     private static final String MAIN_MENU_TEXT =  
     "1. 영화 예매하기 \n" +
     "2. 예매 확인하기\n" +
