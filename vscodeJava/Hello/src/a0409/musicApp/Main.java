@@ -1,15 +1,19 @@
 package a0409.musicApp;
 
 public class Main {
-        public static void main(String[] args) {
-            LoginMenu lm = new LoginMenu();
-            MainMenu m2 = new MainMenu();
-            UserMenu um = new UserMenu();
-            AdminMenu am = new AdminMenu();
+    public static void main(String[] args) {
+        System.out.println("MusicApp 실행");
+        Menu menu = LoginMenu.getInstance();
 
-
-
-            System.out.println("MusicApp 실행");
-            lm.loginMenu();
+        while (menu != null) {
+            menu.print();
+            menu = menu.next();
         }
+        System.out.println("MusicApp 종료");
+    }
+}
+
+interface Menu{
+    void print();
+    Menu next();    
 }
