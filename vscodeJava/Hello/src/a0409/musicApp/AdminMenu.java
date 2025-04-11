@@ -1,6 +1,7 @@
 package a0409.musicApp;
 
 class AdminMenu extends AbstractMenu{
+    FileC fc = new FileC();
     private static final AdminMenu instance = new AdminMenu(null);
     public static AdminMenu getInstance() {
         return instance;
@@ -43,23 +44,45 @@ class AdminMenu extends AbstractMenu{
     }
 
     private void addNewSong() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addNewSong'");
+        System.out.println("-----------------------------------");
+        System.out.println("노래 추가하기");
+        fc.add();
     }
 
     private void delSong() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delSong'");
+        int dNum;
+        System.out.println("-----------------------------------");
+        System.out.println("노래 제거하기");
+        System.out.println("*  *  *  *  *  *  *  *  *  *");
+        System.out.println("전체 노래 목록");
+        for(int i = 0; i < aPlayList.size(); i++) {
+            System.out.println((i+1) + ". " + aPlayList.get(i) + "\n");
+        }
+        System.out.println("*  *  *  *  *  *  *  *  *  *");
+        Outter:while (true) {
+            System.out.print("제거할 노래 번호 선택 >> ");
+            dNum = sc.nextInt();
+            sc.nextLine();
+            if (dNum < 1 || dNum > aPlayList.size()) {
+                System.out.println("잘못된 입력입니다.");
+                continue;
+            } else {
+                break Outter;
+            }
+        }
+
+        fc.del(dNum);
     }
 
     private void updateSong() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateSong'");
+        System.out.println("-----------------------------------");
+        System.out.println("노래 정보 수정하기");
+        fc.update();
     }
 
     private void showUser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showUser'");
+        System.out.println("-----------------------------------");
+        System.out.println("사용자 모두 보기");
     }
 
 }

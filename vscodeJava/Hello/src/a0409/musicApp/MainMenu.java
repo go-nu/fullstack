@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class MainMenu extends AbstractMenu {
+    FileC fc = new FileC();
+    String userID = "user0";
+    ArrayList<Song> uPlayList = playListMap.get(userID);
+
     private static final MainMenu instance = new MainMenu(null);
     public static MainMenu getInstance() {
         return instance;
@@ -40,6 +44,9 @@ class MainMenu extends AbstractMenu {
                 return this;
             case 5:
                 recommendSong();
+                return this;
+            case 6:
+                // fc.sharePL();
                 return this;
             case 0:
                 return null;
@@ -112,12 +119,12 @@ class MainMenu extends AbstractMenu {
         System.out.println("*  *  *  *  *  *  *  *  *  *");
         for (int i = 0; i < findSong(uPlayList).size(); i++) {
             System.out.println(findSong(uPlayList).get(i));
-        }
+        }   
         System.out.println("*  *  *  *  *  *  *  *  *  *");
         System.out.print("어느 노래를 플레이리스트에서 삭제하시겠습니까? : ");
-        int sNum = sc.nextInt();
+        int sNum = sc.nextInt();    
         sc.nextLine();
-        uPlayList.remove(sNum);
+        uPlayList.remove(findSong(aPlayList).get(sNum));
         System.out.println("삭제 완료.");
     }
 
