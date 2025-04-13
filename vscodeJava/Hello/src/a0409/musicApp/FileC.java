@@ -3,21 +3,28 @@ package a0409.musicApp;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileC {
     private File file;
-    String userID = "user0";
-    // aPlayList에 접근해야함
+
+    private AbstractMenu menu;
+
+    public FileC() {};
+
+    public FileC(AbstractMenu menu) {
+        this.menu = menu;
+    }
 
     public void create() throws IOException {
         if(file.exists()) {
             file.delete();
             file.createNewFile();
         } else {
-            file = new File(".\\" + userID + ".txt");
+            file = new File(".\\" + menu.user + ".txt");
             file.createNewFile();
         }
     }
@@ -52,8 +59,8 @@ public class FileC {
             System.out.println("*  *  *  *  *  *  *  *  *  *");
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
-                String[] s = line.split("/");
-                // aPlayList.add(new Song(s[0], s[1], s[2])); aPlayList에 접근해야함
+                String[] s = line.split(",");
+                menu.aPlayList.add(new Song(s[0], s[1], s[2]));
                 bw.write("\n" + line);
                 bw.flush();
             }
@@ -69,7 +76,7 @@ public class FileC {
     public void del(int dNum) { // .txt 파일에서 dNum번째 line 제거
         int lineIndex = 1;
         try {
-            File file = new File(".\\" + userID + ".txt");
+            File file = new File(".\\" + menu.user + ".txt");
             BufferedReader br = new BufferedReader(new FileReader(file));
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             String line;
@@ -80,8 +87,8 @@ public class FileC {
                     continue;
                 }
                 System.out.println(line);
-                String[] s = line.split("/");
-                // aPlayList.add(new Song(s[0], s[1], s[2])); aPlayList에 접근해야함
+                String[] s = line.split(",");
+                menu.aPlayList.add(new Song(s[0], s[1], s[2]));
                 bw.write("\n" + line);
                 bw.flush();
             }
@@ -96,5 +103,26 @@ public class FileC {
     public void update() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
+
+    public void defaultSong() {
+        try {
+            File file = new File(".\\defaultPlayList.txt");
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            System.out.println("========================================");
+    
+            while ((line = br.readLine()) != null) {
+                String[] s = line.split(",");
+                menu.aPlayList.add(new Song(s[0], s[1], s[2]));
+            }
+            br.close();
+    
+        } catch (FileNotFoundException e) {
+            System.out.println("파일을 찾을 수 없습니다.");
+        } catch (IOException e) {
+            System.out.println("파일을 읽을 수 없습니다 ");
+        }
     }
 }

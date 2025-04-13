@@ -1,12 +1,17 @@
 package a0409.musicApp;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class MainMenu extends AbstractMenu {
-    FileC fc = new FileC();
-    String userID = "user0";
-    ArrayList<Song> uPlayList = playListMap.get(userID);
+    File file = new File("C:\\Users\\admin\\Desktop\\webHome\\vscodeJava\\Hello\\src\\a0409\\musicApp\\" + user + ".txt");
+    ArrayList<Song> uPlayList = playListMap.get(user);
 
     private static final MainMenu instance = new MainMenu(null);
     public static MainMenu getInstance() {
@@ -46,12 +51,39 @@ class MainMenu extends AbstractMenu {
                 recommendSong();
                 return this;
             case 6:
-                // fc.sharePL();
+                sharePL();
                 return this;
             case 0:
                 return null;
             default:
                 return this;
+        }
+    }
+
+    public void create() throws IOException {
+        if(file.exists()) {
+            file.delete();
+            file.createNewFile();
+        } else {
+            file = new File(".\\" + user + ".txt");
+            file.createNewFile();
+        }
+    }
+
+    public void sharePL() {
+        try {
+            create();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            if(file.isFile() && file.canWrite()) {
+                bw.write("");
+                bw.flush();
+                System.out.println("공유할 플레이리스트 파일 생성 완료");
+                System.out.println();
+                bw.close();
+            }
+        } catch (IOException e) {
+            System.out.println("파일 생성 실패");
+            System.out.println();
         }
     }
 
@@ -65,6 +97,7 @@ class MainMenu extends AbstractMenu {
     }
 
     private List<Song> findSong(ArrayList<Song> pL) {
+        showAll();
         System.out.print("검색어를 입력해주세요 : ");
         String sWord = sc.nextLine();
         
@@ -129,7 +162,68 @@ class MainMenu extends AbstractMenu {
     }
 
     private void recommendSong() {
+        System.out.println("1. 많은 아티스트 / 2. 비슷한 장르");
+        int select = sc.nextInt();
+        sc.nextLine();
+        switch (select) {
+            case 1:
+                recommendArtist();
+                break;
+            case 2:
+                recommendGenre();
+                break;
         
+            default:
+                break;
+        }
+    }
+
+    private void recommendGenre() {
+        System.out.println("-----------------------------------");
+        System.out.println("장르 추천(장르)");
+
+        Map<String, Integer> genreCount = new HashMap<>();
+        for (Song song : uPlayList) {
+            String genre = song.getGenre();
+            genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
+        }
+
+        String mostGenre = null;
+        int maxCount = 0;
+        for (Map.Entry<String, Integer> entry : genreCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                mostGenre = entry.getKey();
+                maxCount = entry.getValue();
+            }
+        }
+
+        System.out.println("추천 장르: " + mostGenre);
+        System.out.println("해당 장르의 추천 곡:");
+        System.out.println("-----------------------------------");
+    }
+
+    private void recommendArtist() {
+        System.out.println("-----------------------------------");
+        System.out.println("장르 추천(아티스트)");
+
+        Map<String, Integer> artistCount = new HashMap<>();
+        for (Song song : uPlayList) {
+            String artist = song.getArtist();
+            artistCount.put(artist, artistCount.getOrDefault(artist, 0) + 1);
+        }
+
+        String mostArtist = null;
+        int maxCount = 0;
+        for (Map.Entry<String, Integer> entry : artistCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                mostArtist = entry.getKey();
+                maxCount = entry.getValue();
+            }
+        }
+
+        System.out.println("추천 아티스트: " + mostArtist);
+        System.out.println("해당 아티스트의 추천 곡:");
+        System.out.println("-----------------------------------");
     }
 
 }
