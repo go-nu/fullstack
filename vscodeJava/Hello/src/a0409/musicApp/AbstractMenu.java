@@ -12,9 +12,10 @@ abstract class AbstractMenu implements Menu {
     protected Menu prevMenu;
     protected String user;
 
-    protected ArrayList<User> accounts = new ArrayList<>(); // 사용자 목록
-    protected ArrayList<Song> aPlayList = new ArrayList<>(); // 전체 플레이리스트
-    protected Map<String, ArrayList<Song>> playListMap = new HashMap<>(); // 사용자 id, 사용자의 플레이리스트
+    // 얘네들이 메뉴마다 개별로 존재함, 공유가 안됨
+    protected static ArrayList<User> accounts = new ArrayList<>(); // 사용자 목록
+    protected static ArrayList<Song> aPlayList = new ArrayList<>(); // 전체 플레이리스트
+    protected static Map<String, ArrayList<Song>> playListMap = new HashMap<>(); // 사용자 id, 사용자의 플레이리스트
 
     protected static final Scanner sc = new Scanner(System.in);
 
@@ -34,11 +35,7 @@ abstract class AbstractMenu implements Menu {
     public void setUser(String user) {
         this.user = user;
         ArrayList<Song> uPlayList = playListMap.get(user);
-        if (uPlayList == null) {
-            uPlayList = new ArrayList<>();
-            playListMap.put(user, uPlayList);
-        }
-
+        playListMap.put(user, uPlayList);
     }
 
     public void showAll() {
@@ -49,5 +46,5 @@ abstract class AbstractMenu implements Menu {
         }
         System.out.println("*  *  *  *  *  *  *  *  *  *");
     }
-
+ 
 }

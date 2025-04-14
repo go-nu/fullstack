@@ -24,6 +24,7 @@ class LoginMenu extends AbstractMenu {
     @Override
     public Menu next() {
         defaultSong();
+        System.out.println("현재 사용자 수: " + accounts.size());
         int ls = sc.nextInt();
         sc.nextLine();
 
@@ -55,20 +56,23 @@ class LoginMenu extends AbstractMenu {
     }
 
     public void defaultSong() {
+        if (accounts.size() < 1) {
+            accounts.add(new User("기본계정", 20000101, "abc", "123"));
+        }
         try {
-            File file = new File("C:\\Users\\admin\\Desktop\\webHome\\vscodeJava\\Hello\\src\\a0409\\musicApp\\defaultPlayList.txt");
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            File addfile = new File(".\\src\\a0409\\musicApp\\defaultPlayList.txt");
+            BufferedReader br = new BufferedReader(new FileReader(addfile));
             String line;
-    
             while ((line = br.readLine()) != null) {
                 String[] s = line.split(",");
-                aPlayList.add(new Song(s[2], s[1], s[0]));
+                aPlayList.add(new Song(s[0], s[1], s[2]));
             }
             br.close();
-    
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        showAll();
     }
 
     User admin = new User("관리자", 950509, "admin123", "123*");

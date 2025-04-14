@@ -1,11 +1,7 @@
-빅뱅,루저,발라드
-빅뱅,BLUE,발라드
-빅뱅,TONIGHT,댄스
-트와이스,LIKEY,댄스
-트와이스,YES OR YES,댄스
-BTS,DNA,댄스
-BTS,IDOL,댄스
-BTS,FAKE LOVE,발라드
-에스파,DRAMA,댄스
-에스파,SAVAGE,댄스
-에스파,THIRSTY,댄스
+빅뱅,하루하루,발라드
+빅뱅,붉은노을,발라드
+트와이스,우아하게,댄스
+트와이스,KNOCK KNOCK,댄스
+BTS,불타오르네,댄스
+BTS,FIRE,댄스
+에스파,BLACKMAMBA,댄스
