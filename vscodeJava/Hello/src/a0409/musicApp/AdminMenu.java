@@ -16,7 +16,7 @@ class AdminMenu extends AbstractMenu{
     private static final String Admin_Menu_Text = 
     "===================================\n" + 
     "관리자 화면입니다. 메뉴를 선택해주세요\n" + 
-    "1. 노래 추가\t2. 노래 제거\t3. 사용자 정보 출력\t4.전체보기\t9.이전메뉴\t0.종료\n" + 
+    "1.전체보기\t2. 노래 추가\t3. 노래 제거\t4. 사용자 정보 출력\t9.이전메뉴\t0.종료\n" + 
     "===================================\n" +
     "선택 >>";
 
@@ -31,16 +31,16 @@ class AdminMenu extends AbstractMenu{
 
         switch (as) {
             case 1:
-                addNewSong();
+                showAll();
                 return this;
             case 2:
-                delSong();
+                addNewSong();
                 return this;
             case 3:
-                showUser();
+                delSong();
                 return this;
             case 4:
-                showAll();
+                showUser();
                 return this;
             case 9:
                 return prevMenu;
@@ -66,7 +66,7 @@ class AdminMenu extends AbstractMenu{
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
                 String[] s = line.split(",");
-                aPlayList.add(new Song(s[0], s[1], s[2]));
+                aPlayList.add(new Song(s[1], s[2], s[0]));
                 bw.write("\n" + line);
                 bw.flush();
             }
@@ -110,7 +110,7 @@ class AdminMenu extends AbstractMenu{
                 }
                 System.out.println(line);
                 String[] s = line.split(",");
-                aPlayList.add(new Song(s[0], s[1], s[2]));
+                aPlayList.add(new Song(s[1], s[2], s[0]));
                 bw.write("\n" + line);
                 bw.flush();
             }

@@ -35,8 +35,12 @@ abstract class AbstractMenu implements Menu {
     public void setUser(String user) {
         this.user = user;
         ArrayList<Song> uPlayList = playListMap.get(user);
-        playListMap.put(user, uPlayList);
+        if (uPlayList == null) {
+            uPlayList = new ArrayList<>();
+            playListMap.put(user, uPlayList); // 새로 만든 리스트 등록
+        }
     }
+    
 
     public void showAll() {
         System.out.println("*  *  *  *  *  *  *  *  *  *");
