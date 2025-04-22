@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <style>
+        .card-header{background-color: #f4511e; color: white;}
+        .card {border: 1px solid #f4511e;}
+        .mybtn{background-color: #f4511e; color: white;}
+        .navbar{background-color: #f4511e; color: #fff;}
+        .nav-link.active{background-color: #fff; color: #f4511e}
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Logo</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ms-auto"> <!-- 왼쪽 여백 자동으로 설정하면 메뉴는 오른쪽으로 이동 -->
+                    <a class="nav-link active" aria-current="page" href="#">ABOUT</a>
+                    <a class="nav-link text-white" href="#">SERVICES</a>
+                    <a class="nav-link text-white" href="#">PORTFOLIO</a>
+                    <a class="nav-link text-white" href="#">PRICING</a>
+                    <a class="nav-link text-white" href="#">CONTACT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="pricing" class="container py-5">
+        <div class="text-center mb-5">
+            <h2>Pricing</h2>
+            <h4>Choose a payment plan that works for you</h4>
+        </div>
+      
+        <div class="row justify-content-center gy-4">
+            <div class="col-12 col-md-4">
+                <div class  ="card text-center shadow-sm h-100">
+                    <div class="card-header">
+                       <h1 class="my-0">Basic</h1>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>20</strong> Lorem</p>
+                        <p><strong>15</strong> Ipsum</p>
+                        <p><strong>5</strong> Dolor</p>
+                        <p><strong>2</strong> Sit</p>
+                        <p><strong>Endless</strong> Amet</p>
+                    </div>
+                    <div class="card-footer">
+                        <h3>$19</h3>
+                        <h4>per month</h4>
+                      <button class="btn mybtn btn-lg">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+      
+            <div class="col-12 col-md-4">
+                <div class="card text-center shadow-sm h-100">
+                    <div class="card-header">
+                        <h1 class="my-0">Pro</h1>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>50</strong> Lorem</p>
+                        <p><strong>25</strong> Ipsum</p>
+                        <p><strong>10</strong> Dolor</p>
+                        <p><strong>5</strong> Sit</p>
+                        <p><strong>Endless</strong> Amet</p>
+                    </div>
+                    <div class="card-footer">
+                        <h3>$29</h3>
+                        <h4>per month</h4>
+                        <button class="btn mybtn btn-lg">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-12 col-md-4">
+                <div class="card text-center shadow-sm h-100">
+                    <div class="card-header">
+                        <h1 class="my-0">Premium</h1>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>100</strong> Lorem</p>
+                        <p><strong>50</strong> Ipsum</p>
+                        <p><strong>25</strong> Dolor</p>
+                        <p><strong>10</strong> Sit</p>
+                        <p><strong>Endless</strong> Amet</p>
+                    </div>
+                    <div class="card-footer">
+                        <h3>$49</h3>
+                        <h4>per month</h4>
+                        <button class="btn mybtn btn-lg">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>    
+</body>
+</html>
