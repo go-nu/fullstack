@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Food Guide - 한국 음식의 세계</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #fafafa;
+            color: #333;
+        }
+        
+        header {
+            background-color: #fff;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e63946;
+        }
+        
+        .logo span {
+            color: #1d3557;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #e63946;
+        }
+        
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-top: 80px;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-content p {
+            font-size: 20px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #e63946;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c1121f;
+        }
+        
+        .featured-section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: #1d3557;
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .food-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .food-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .food-info {
+            padding: 20px;
+        }
+        
+        .food-info h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .food-info p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .star {
+            color: #FFD700;
+            margin-right: 2px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: #f1faee;
+            color: #1d3557;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .about-section {
+            padding: 80px 0;
+            background-color: #f1faee;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h2 {
+            font-size: 36px;
+            color: #1d3557;
+            margin-bottom: 20px;
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .about-image {
+            flex: 1;
+            height: 400px;
+            background-image: url('/api/placeholder/600/400');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+        
+        .community-section {
+            padding: 80px 0;
+        }
+        
+        .community-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .community-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .community-icon {
+            font-size: 40px;
+            color: #e63946;
+            margin-bottom: 20px;
+        }
+        
+        .community-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .community-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        footer {
+            background-color: #1d3557;
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 50px;
+            height: 2px;
+            background-color: #e63946;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #a8dadc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 992px) {
+            .food-grid, .community-cards, .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .food-grid, .community-cards, .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">K-<span>FOOD</span> GUIDE</div>
+                <nav>
+                    <ul>
+                        <li><a href="#">홈</a></li>
+                        <li><a href="#">대표 음식</a></li>
+                        <li><a href="#">지역별</a></li>
+                        <li><a href="#">레스토랑</a></li>
+                        <li><a href="#">커뮤니티</a></li>
+                        <li><a href="#">소개</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>한국 음식의 진정한 맛을 경험하세요</h1>
+                <p>최고의 한국 음식과 레스토랑을 발견하고, 맛의 여정을 시작하세요. K-FOOD GUIDE와 함께 전통과 현대가 만나는 한식의 세계로 초대합니다.</p>
+                <a href="#" class="btn">탐색 시작하기</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>추천 한국 음식</h2>
+                <p>전문가들이 선정한 최고의 한국 음식을 만나보세요. 전통의 맛부터 현대적 해석까지, 다양한 한식의 세계를 경험하세요.</p>
+            </div>
+            <div class="food-grid">
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('/api/placeholder/400/300');"></div>
+                    <div class="food-info">
+                        <h3>비빔밥</h3>
+                        <p>다양한 나물과 고기, 계란이 어우러진 한국의 대표 영양식</p>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span>(127 리뷰)</span>
+                        </div>
+                        <div>
+                            <span class="tag">전통 음식</span>
+                            <span class="tag">영양식</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('/api/placeholder/400/300');"></div>
+                    <div class="food-info">
+                        <h3>김치찌개</h3>
+                        <p>한국의 대표 발효 식품인 김치로 만든 얼큰한 국물 요리</p>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span>(98 리뷰)</span>
+                        </div>
+                        <div>
+                            <span class="tag">찌개</span>
+                            <span class="tag">매운맛</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-card">
+                    <div class="food-image" style="background-image: url('/api/placeholder/400/300');"></div>
+                    <div class="food-info">
+                        <h3>불고기</h3>
+                        <p>달콤한 양념에 재운 쇠고기를 구워 먹는 한국의 대표 요리</p>
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span>(145 리뷰)</span>
+                        </div>
+                        <div>
+                            <span class="tag">구이</span>
+                            <span class="tag">달콤한 맛</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>K-FOOD GUIDE 소개</h2>
+                    <p>K-FOOD GUIDE는 한국 음식의 우수성과 다양성을 세계에 알리기 위한 커뮤니티입니다. 우리는 한식의 역사와 문화적 가치를 존중하며, 전통적인 레시피부터 현대적으로 재해석된 요리까지, 다양한 한국 음식을 소개합니다.</p>
+                    <p>전문가들의 심사를 통해 선정된 최고의 한식 레스토랑과 함께, 한국 음식에 관심 있는 모든 이들이 지식과 경험을 나눌 수 있는 열린 플랫폼을 제공합니다.</p>
+                    <p>K-FOOD GUIDE와 함께 한국 음식의 진정한 맛과 가치를 발견하세요.</p>
+                </div>
+                <div class="about-image"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="community-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>K-FOOD 커뮤니티</h2>
+                <p>한국 음식을 사랑하는 사람들과 함께 지식과 경험을 나누고, 새로운 맛의 세계를 탐험하세요.</p>
+            </div>
+            <div class="community-cards">
+                <div class="community-card">
+                    <div class="community-icon">🍽️</div>
+                    <h3>레시피 공유</h3>
+                    <p>자신만의 특별한 레시피를 공유하고, 다른 회원들의 노하우를 배워보세요.</p>
+                </div>
+                <div class="community-card">
+                    <div class="community-icon">📸</div>
+                    <h3>맛집 리뷰</h3>
+                    <p>방문한 한식당의 리뷰를 남기고, 다른 회원들의 추천 맛집을 찾아보세요.</p>
+                </div>
+                <div class="community-card">
+                    <div class="community-icon">👨‍🍳</div>
+                    <h3>쿠킹 클래스</h3>
+                    <p>전문 셰프들이 진행하는 온/오프라인 쿠킹 클래스에 참여해보세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>K-FOOD GUIDE</h3>
+                    <ul>
+                        <li><a href="#">소개</a></li>
+                        <li><a href="#">팀 소개</a></li>
+                        <li><a href="#">채용 정보</a></li>
+                        <li><a href="#">언론 보도</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>가이드</h3>
+                    <ul>
+                        <li><a href="#">음식 카테고리</a></li>
+                        <li><a href="#">지역별 맛집</a></li>
+                        <li><a href="#">추천 레스토랑</a></li>
+                        <li><a href="#">시즌 스페셜</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>커뮤니티</h3>
+                    <ul>
+                        <li><a href="#">포럼</a></li>
+                        <li><a href="#">이벤트</a></li>
+                        <li><a href="#">쿠킹 클래스</a></li>
+                        <li><a href="#">회원 혜택</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>문의하기</h3>
+                    <ul>
+                        <li><a href="#">고객 지원</a></li>
+                        <li><a href="#">제휴 문의</a></li>
+                        <li><a href="#">레스토랑 등록</a></li>
+                        <li><a href="#">피드백</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 K-FOOD GUIDE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
