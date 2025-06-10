@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>회원정보</h3>
+    <p>아이디: <span th:text="${member.id}"/>
+    <p>비밀번호: <span th:text="${member.passwd}"/>
+    <p>거주지: <span th:text="${member.city}"/>
+    <p>성 별: <span th:text="${member.sex}"/>
+    <p>취 미: <span th:each="hobby : ${member.hobby}" th:text="${hobby}+'  '"/>
+    <p>가입인사: <span th:text="${member.greetings}"/>
+</body>
+</html>

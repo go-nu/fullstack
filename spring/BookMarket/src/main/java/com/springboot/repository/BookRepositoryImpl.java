@@ -4,8 +4,7 @@ import com.springboot.domain.Book;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
@@ -57,5 +56,65 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> getAllBookList() {
         return listOfBooks;
+    }
+
+    @Override
+    public Book getBookById(String bookId) {
+        Book bookInfo = null;
+        for(int i=0; i<listOfBooks.size(); i++) {
+            Book book = listOfBooks.get(i);
+            if((book != null) && (book.getBookId() != null) && (book.getBookId().equals(bookId))) {
+                bookInfo = book;
+                break;
+            }
+        }
+        if(bookInfo == null) throw new IllegalArgumentException("도서ID가 " + bookId + "인 도서를 찾을 수 없음.");
+        return bookInfo;
+    }
+
+    @Override
+    public List<Book> getBookListByCategory(String category) {
+        List<Book> booksByCategory = new ArrayList<Book>();
+        for(int i=0; i< listOfBooks.size(); i++) {
+            Book book = listOfBooks.get(i);
+            if(category.equalsIgnoreCase(book.getCategory())) booksByCategory.add(book);
+        }
+        return booksByCategory;
+    }
+
+    @Override
+    public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+        Set<Book> booksByPublisher = new HashSet<Book>();
+        Set<Book> booksByCategory = new HashSet<Book>();
+        Set<String> booksByFilter = filter.keySet(); // Key 값들의 집합
+        // bookByFilter = {"publisher", "category"}
+        if (booksByFilter.contains("publisher")) {
+            for (int j = 0; j < filter.get("publisher").size(); j++) {
+                String pubisherName = filter.get("publisher").get(j);
+                for (int i = 0; i < listOfBooks.size(); i++) {
+                    Book book = listOfBooks.get(i);
+                    if (pubisherName.equalsIgnoreCase(book.getPublisher()))
+                        booksByPublisher.add(book);
+                }
+            }
+        }
+
+        if (booksByFilter.contains("category")) {
+            for (int i = 0; i < filter.get("category").size(); i++) {
+                String category = filter.get("category").get(i);
+                List<Book> list = getBookListByCategory(category);
+                booksByCategory.addAll(list);
+            }
+        }
+        booksByCategory.retainAll(booksByPublisher);
+        // retainAll(Collection<?> c) 자바 set의 교집합을 구하는 로직
+        // publisher와 category의 교집합을 구함
+        // -> category 조건을 만족하는 책 중, publisher 조건도 만족하는 책을 추출
+        return booksByCategory;
+    }
+
+    @Override
+    public void setNewBook(Book book) {
+        listOfBooks.add(book);
     }
 }
