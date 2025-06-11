@@ -1,10 +1,26 @@
 package com.springboot.domain;
 
+import com.springboot.validator.BookId;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+import org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 
+@Data
 public class Book {
+
+    @BookId
+    @Pattern(regexp = "ISBN[1-9]+", message = "{Pattern.bookId}")
     private String bookId;
+
+    @Size(min=4, max=50, message = "{Size.book.name}")
     private String name;
+
+    @Min(value = 0)
+    @Digits(integer = 8, fraction = 2, message = "{Digits.book.unitPrice}")
+    @NotNull(message = "{NotNull.book.unitPrice}")
     private BigDecimal unitPrice;
     private String author;
     private String description;
@@ -13,7 +29,9 @@ public class Book {
     private long unitsInStock;
     private String releaseDate;
     private String condition;
-
+    private String fileName; // 도서 이미지 파일
+    private MultipartFile bookImage; // 도서 이미지 업로드를 위한 필드 선언
+/*
     public Book() {
         super();
     }
@@ -97,4 +115,5 @@ public class Book {
     public void setCondition(String condition) {
         this.condition = condition;
     }
+*/
 }
