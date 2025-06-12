@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>도서 목록</title>
-    <link rel="stylesheet" href="/BookMarket/css/bootstrap.min.css">
+    <link href="/BookMarket/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="/BookMarket/js/controllers.js"></script>
 </head>
 <body>
 <div class="container py-4">
@@ -43,10 +44,13 @@
             <p><b>재고수 : </b><span th:text="${book.unitsInStock}"></span></p>
             <h4 th:text="${book.unitPrice} + '원'"></h4>
             <br/>
-            <p><a href="#" class="btn btn-primary">도서주문 &raquo;</a>
-                <a href="/BookMarket/books" class="btn btn-secondary"
-                >도서목록 &raquo;</a>
-            </p>
+            <form  name="addForm"  id="addForm"  method="post" >
+                <input type="hidden" name="_method" value="put"/>
+                <!--     <p><a href="#" class="btn btn-primary">도서주문 &raquo;</a>-->
+                <p><a th:href="'javascript:addToCart(\''+${book.bookId}+'\')'" class="btn btn-primary">도서주문 &raquo;</a>
+                    <a href="/BookMarket/cart" class="btn btn-warning">장바구니 &raquo;</a>
+                    <a href="/BookMarket/books" class="btn btn-secondary">도서 목록 &raquo;</a>
+            </form>
         </div>
     </div>
 
