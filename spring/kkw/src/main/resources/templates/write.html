@@ -1,21 +1,23 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="/BookMarket/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="/css/bootstrap.min.css" rel="stylesheet" >
 </head>
 <body>
     <div>
         <h2>게시글 작성</h2>
     </div>
     <div>
-        <form action="" method="post">
-            제목 : <input type="text" name="title">
-            작성자 : <input type="text" name="writer">
-            내용 : <textarea name="content" cols="30" rows="3"></textarea>
+        <form action="/boards/write" method="post" enctype="multipart/form-data">
+            제목 : <input type="text" name="title"><br/>
+            작성자 : <input type="text" name="writer"><br/>
+            내용 : <textarea name="content" cols="30" rows="3"></textarea><br/>
+            이미지 : <input type="file" name="img">
             <!--첨부 파일-->
-            <button type="submit">작성하기</button>
-            <a class="btn btn-secondary" href="#">목록으로</a>
+            <button type="submit" class="btn btn-primary">작성하기</button>
+            <a class="btn btn-secondary" th:href="@{/boards}">목록으로</a>
         </form>
     </div>
 </body>

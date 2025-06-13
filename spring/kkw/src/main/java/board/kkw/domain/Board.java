@@ -11,15 +11,17 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int num;
+    private Long num;
 
     private String title;
     private String writer;
     private String content;
+    private String imgPath;
 }

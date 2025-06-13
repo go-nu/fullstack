@@ -24,7 +24,7 @@ public class SecurityConfig{
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
+/*	@Bean
 	protected UserDetailsService users() {
 		UserDetails admin = User.builder()
 				.username("Admin")
@@ -32,7 +32,7 @@ public class SecurityConfig{
 				.roles("ADMIN")
 				.build();
 		return new InMemoryUserDetailsManager(admin);
-	}
+	}*/
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -52,7 +52,7 @@ public class SecurityConfig{
 
 								.loginPage("/login") // 사용자 정의 로그인 페이지
 								.loginProcessingUrl("/login")
-								.defaultSuccessUrl("/books/add")// 로그인 성공 후 이동 페이지
+								.defaultSuccessUrl("/")// 로그인 성공 후 이동 페이지
 								.failureUrl("/loginfailed") // 로그인 실패 후 이동 페이지
 								.usernameParameter("username")
 								.passwordParameter("password")

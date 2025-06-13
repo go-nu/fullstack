@@ -1,4 +1,8 @@
 package board.kkw.repository;
 
-public interface BoardRepository {
+import board.kkw.domain.Board;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+
 }
