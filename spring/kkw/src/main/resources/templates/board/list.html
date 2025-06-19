@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" >
+</head>
+<body>
+<div>
+    <h2>게시판</h2>
+    <a th:if="${loginUser.userId == null}" th:href="@{/member/login}" class="btn btn-secondary">로그인</a>
+    <a th:if="${loginUser.userId != null}" th:href="@{/boards/write}" class="btn btn-primary">글 쓰기</a>
+</div>
+<div>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${boards}">
+            <td th:text="${board.num}"></td>
+            <td><a th:href="@{'boards/'+${board.num}}" th:text="${board.title}"> </a></td>
+            <td th:text="${board.writer}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

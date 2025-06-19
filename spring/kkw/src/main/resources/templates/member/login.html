@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <h2>로그인</h2>
+</div>
+<div>
+    <form action="/member/login" method="post">
+        아이디: <input type="text" name="userId"> <br/>
+        비밀번호: <input type="password" name="password"> <br/>
+        <button type="submit">로그인</button>
+        <a th:href="@{/member/signin}" class="btn btn-secondary">회원가입</a>
+    </form>
+</div>
+</body>
+</html>

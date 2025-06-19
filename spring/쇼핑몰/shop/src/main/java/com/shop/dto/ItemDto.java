@@ -14,4 +14,6 @@ public class ItemDto {
     private ItemSellStatus itemSellStatus;
     private LocalDateTime regTime;
     private LocalDateTime updateTime;
+
+
 }

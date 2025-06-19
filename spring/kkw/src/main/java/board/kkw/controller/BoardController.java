@@ -1,8 +1,10 @@
 package board.kkw.controller;
 
 import board.kkw.domain.Board;
+import board.kkw.domain.Member;
 import board.kkw.dto.BoardDTO;
 import board.kkw.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ public class BoardController {
 
     @GetMapping("/write")
     public String writeView() {
-        return "write";
+        return "/board/write";
     }
 
     @PostMapping("/write")
@@ -29,26 +31,29 @@ public class BoardController {
     }
 
     @GetMapping()
-    public String listView(Model model) {
+    public String listView(Model model, HttpSession session) {
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        model.addAttribute("loginUser", loginUser);
         model.addAttribute("boards", boardService.list());
-        return "list";
+        return "/board/list";
     }
 
     @GetMapping("/{num}")
     public String boardView(@PathVariable Long num, Model model) {
         model.addAttribute("board", boardService.findById(num));
-        return "detail";
+        return "/board/detail";
     }
 
     @GetMapping("/update/{num}")
     public String updateForm(@PathVariable Long num, Model model) {
         model.addAttribute("board", boardService.findById(num));
-        return "update";
+        return "/board/update";
     }
 
     @PostMapping("/update/{num}")
-    public String update(@PathVariable Long num, @ModelAttribute Board board) {
-        boardService.update(boardService.findById(num));
+    public String update(@PathVariable Long num, BoardDTO dto) throws IOException {
+        Board board = boardService.findById(num);
+        boardService.update(num, dto);
         return "redirect:/boards";
     }
 

@@ -12,41 +12,38 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // 로그인 설정
-                .formLogin(form -> form
+        http.formLogin(form -> form
                         .loginPage("/members/login")
-                        .defaultSuccessUrl("/")
-                        .usernameParameter("email")
-                        .failureUrl("/members/login/error")
+                        .loginProcessingUrl("/members/login")    // POST 요청 처리 URL
+                        .defaultSuccessUrl("/", true)            // 항상 이곳으로
+                        .usernameParameter("email")              // 아이디 파라미터명
+                        .failureUrl("/members/login/error")      // 로그인 실패 시
                         .permitAll()
                 )
-                // 로그아웃 설정
+
+                // 3) 로그아웃 설정
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                         .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)             // 세션 무효화
+                        .deleteCookies("JSESSIONID")             // 쿠키 삭제
                         .permitAll()
-                )
-                // 권한 설정: authorizeHttpRequests만 사용!
-                .authorizeHttpRequests(authorize -> authorize
-                        // 정적 자원 접근 허용
-                        .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
-                        // 회원, 상품, 홈 등 공용 페이지
-                        .requestMatchers("/", "/members/**", "/item/**").permitAll()
-                        // 관리자 페이지
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // 그 외 모든 요청은 인증 필요
-                        .anyRequest().authenticated()
-                )
-//                // 예외처리: 로그인 필요 시 커스텀 핸들러
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//                )
-                // CSRF, CORS 등 기타 설정 유지
-                .csrf().disable();
+                );
 
+        http.authorizeRequests()
+                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                .requestMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+        ;
+
+        //예외처리
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        );
         return http.build();
     }
 

@@ -209,13 +209,13 @@ class ItemRepositoryTest {
         String itemSellStat = "SOLD_OUT"; // 원하는 상태를 넣어보세요
 
         // 상세 설명 조건
-        if (StringUtils.isNotBlank(itemDetail)) {
+        if (itemDetail != null && !itemDetail.isBlank()) {
             booleanBuilder.and(item.itemDetail.contains(itemDetail));
         }
         // 가격 조건
         booleanBuilder.and(item.price.gt(price));
         // 판매 상태 조건(SELL, SOLD_OUT 등 동적 처리)
-        if (StringUtils.isNotBlank(itemSellStat)) {
+        if (itemSellStat != null && !itemSellStat.isBlank()) {
             ItemSellStatus status = ItemSellStatus.valueOf(itemSellStat);
             booleanBuilder.and(item.itemSellStatus.eq(status));
         }
