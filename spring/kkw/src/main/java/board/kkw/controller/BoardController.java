@@ -20,18 +20,22 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping("/write")
-    public String writeView() {
+    public String writeView(HttpSession session, Model model) {
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        model.addAttribute("loginUser", loginUser);
         return "/board/write";
     }
 
+
     @PostMapping("/write")
-    public String write(@ModelAttribute BoardDTO dto) throws IOException {
-        boardService.create(dto);
+    public String write(@ModelAttribute BoardDTO dto, HttpSession session) throws IOException {
+        Member writer = (Member) session.getAttribute("loginUser");
+        boardService.create(dto, writer);
         return "redirect:/boards";
     }
 
     @GetMapping()
-    public String listView(Model model, HttpSession session) {
+    public String list(Model model, HttpSession session){
         Member loginUser = (Member) session.getAttribute("loginUser");
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("boards", boardService.list());
@@ -39,10 +43,13 @@ public class BoardController {
     }
 
     @GetMapping("/{num}")
-    public String boardView(@PathVariable Long num, Model model) {
+    public String boardView(@PathVariable Long num, Model model, HttpSession session) {
+        Member writer = (Member) session.getAttribute("loginUser");
         model.addAttribute("board", boardService.findById(num));
+        model.addAttribute("loginUser", writer);
         return "/board/detail";
     }
+
 
     @GetMapping("/update/{num}")
     public String updateForm(@PathVariable Long num, Model model) {

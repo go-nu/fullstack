@@ -2,24 +2,51 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet" >
+    <title>게시글 수정</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div>
-        <h2>게시글 수정</h2>
+
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-4">
+        <h2 class="display-6 fw-bold">게시글 수정</h2>
     </div>
-    <div>
-        <form th:action="'/boards/update/'+${board.num}" method="post" enctype="multipart/form-data">
-            제목 : <input type="text" name="title" th:value="${board.title}"><br/>
-            작성자 : <input type="text" name="writer" th:value="${board.writer}"><br/>
-            내용 : <textarea name="content" cols="30" rows="3" th:text="${board.content}"></textarea><br/>
-            이미지 : <input type="file" name="img"><br/>
-            <img th:if="${board.imgPath}" th:src="@{${board.imgPath}}" width="200">
-            <!--첨부 파일-->
-            <button type="submit">수정하기</button>
+</div>
+
+<div class="container col-md-6">
+    <form th:action="@{'/boards/update/' + ${board.num}}" method="post" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
+
+        <div class="mb-3">
+            <label class="form-label">제목</label>
+            <input type="text" name="title" th:value="${board.title}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">작성자</label>
+            <input type="text" name="writer" th:value="${board.writer}" readonly class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">내용</label>
+            <textarea name="content" cols="30" rows="5" th:text="${board.content}" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">이미지 첨부</label>
+            <input type="file" name="img" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">현재 이미지</label><br>
+            <img th:if="${board.imgPath}" th:src="@{${board.imgPath}}" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">수정하기</button>
             <a class="btn btn-secondary" th:href="@{/boards}">목록으로</a>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>

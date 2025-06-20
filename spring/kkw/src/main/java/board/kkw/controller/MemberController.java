@@ -3,6 +3,7 @@ package board.kkw.controller;
 import board.kkw.domain.Member;
 import board.kkw.dto.MemberDto;
 import board.kkw.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +34,20 @@ public class MemberController {
         return "/member/login";
     }
 
-    @PostMapping("login")
-    public String login(MemberDto dto){
-        memberService.login(dto);
+    @PostMapping("/login")
+    public String login(MemberDto dto, HttpSession session){
+        Member member = memberService.login(dto);
+        if (member == null) {
+            // 로그인 실패 처리 (예: 다시 로그인 페이지로 이동)
+            return "redirect:/member/login?error";
+        }
+        session.setAttribute("loginUser", member);
+        return "redirect:/boards";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
         return "redirect:/boards";
     }
 }

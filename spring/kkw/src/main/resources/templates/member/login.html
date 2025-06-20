@@ -6,16 +6,21 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <h2>로그인</h2>
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">로그인</h1>
+    </div>
 </div>
-<div>
-    <form action="/member/login" method="post">
-        아이디: <input type="text" name="userId"> <br/>
-        비밀번호: <input type="password" name="password"> <br/>
-        <button type="submit">로그인</button>
-        <a th:href="@{/member/signin}" class="btn btn-secondary">회원가입</a>
-    </form>
+
+<div class="row align-items-md-stretch text-center">
+    <div class="container col-md-5">
+        <form action="/member/login" method="post">
+            아이디: <input type="text" name="userId"> <br/>
+            비밀번호: <input type="password" name="password"> <br/>
+            <button type="submit" class="btn btn-success">로그인</button>
+            <a th:href="@{/member/signUp}" class="btn btn-secondary">회원가입</a>
+        </form>
+    </div>
 </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package board.kkw.service;
 
 import board.kkw.domain.Board;
+import board.kkw.domain.Member;
 import board.kkw.dto.BoardDTO;
 import board.kkw.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class BoardService {
     @Value("${upload.dir}")
     private String uploadDir;
 
-    public void create(BoardDTO dto) throws IOException {
+    public void create(BoardDTO dto, Member writer) throws IOException {
         Board board = new Board();
         board.setTitle(dto.getTitle());
-        board.setWriter(dto.getWriter());
+        board.setWriter(writer.getUserId());
         board.setContent(dto.getContent());
         if (!dto.getImg().isEmpty()) {
             // 파일 이름 생성 (UUID를 이용하여 랜덤한 파일명 생성)
@@ -53,7 +54,6 @@ public class BoardService {
     public void update(Long num, BoardDTO dto) throws IOException  {
         Board board = findById(num);
         board.setTitle(dto.getTitle());
-        board.setWriter(dto.getWriter());
         board.setContent(dto.getContent());
         if (!dto.getImg().isEmpty()) {
             // 파일 이름 생성 (UUID를 이용하여 랜덤한 파일명 생성)

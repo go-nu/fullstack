@@ -3,22 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div>
-        <h2>게시글 작성</h2>
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">게시글 작성</h1>
     </div>
-    <div>
+</div>
+
+<div class="row align-items-md-stretch text-center">
+    <div class="container col-md-5">
         <form action="/boards/write" method="post" enctype="multipart/form-data">
-            제목 : <input type="text" name="title"><br/>
-            작성자 : <input type="text" name="writer"><br/>
-            내용 : <textarea name="content" cols="30" rows="3"></textarea><br/>
-            이미지 : <input type="file" name="img">
-            <!--첨부 파일-->
-            <button type="submit" class="btn btn-primary">작성하기</button>
-            <a class="btn btn-secondary" th:href="@{/boards}">목록으로</a>
+            <div class="mb-3 row">
+                제목 : <input type="text" name="title"></div>
+            <div class="mb-3 row">
+                작성자 : <input type="text" name="writer" th:value="${loginUser.userId}" readonly>
+            </div>
+            <div class="mb-3 row">
+                내용 : <textarea name="content" cols="30" rows="3"></textarea>
+            </div>
+            <div class="mb-3 row">
+                이미지 : <input type="file" name="img">
+            </div>
+            <div class="mb-3 row">
+                <button type="submit" class="btn btn-primary">작성하기</button>
+                <a class="btn btn-secondary" th:href="@{/boards}">목록으로</a>
+            </div>
         </form>
     </div>
+</div>
 </body>
 </html>

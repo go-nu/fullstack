@@ -2,24 +2,54 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet" >
+    <title>게시글 상세</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <h2>게시글</h2>
+
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">게시글</h1>
+    </div>
 </div>
-<div>
-    제목 : <p th:text="${board.title}"></p>
-    작성자 : <p th:text="${board.writer}"></p>
-    내용 : <p th:text="${board.content}"></p>
-    이미지 :
-    <img th:if="${board.imgPath}" th:src="${board.imgPath}" width="200" />
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-3" th:text="${board.title}">제목</h3>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    작성자: <span th:text="${board.writer}"></span>
+                </h6>
+                <hr>
+
+                <!-- 내용 영역 -->
+                <p class="card-text mb-4" th:text="${board.content}"></p>
+
+                <!-- 이미지 영역 (아래쪽, 중앙정렬) -->
+                <div class="my-4">
+                    <h6>이미지</h6>
+                    <div class="text-center">
+                        <img th:if="${board.imgPath}"
+                             th:src="${board.imgPath}"
+                             class="img-fluid img-thumbnail"
+                             style="max-width: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a th:if="${loginUser != null and loginUser.userId == board.writer}"
+               th:href="@{'/boards/update/' + ${board.num}}" class="btn btn-success">수정하기</a>
+
+            <a th:if="${loginUser != null and loginUser.userId == board.writer}"
+               th:href="@{'/boards/delete/' + ${board.num}}" class="btn btn-danger">삭제하기</a>
+
+            <a th:href="@{/boards}" class="btn btn-secondary">목록으로</a>
+        </div>
+    </div>
 </div>
-<div>
-    <a th:href="@{'/boards/update/' + ${board.num}}" class="btn btn-success">수정하기</a>
-    <a th:href="@{'/boards/delete/' + ${board.num}}" class="btn btn-danger">삭제하기</a>
-    <a th:href="@{/boards}" class="btn btn-secondary">목록으로</a>
-</div>
+
 </body>
 </html>
