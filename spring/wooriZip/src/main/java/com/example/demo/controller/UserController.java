@@ -41,14 +41,16 @@ public class UserController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editInfo(@PathVariable("id") Long id, @ModelAttribute UserDto dto){
-        userService.edit(dto, id);
+    public String editInfo(@PathVariable("id") Long id, @ModelAttribute UserDto dto, HttpSession session){
+        Users updateUser = userService.edit(dto, id);
+        session.setAttribute("loginUser", updateUser);
         return "redirect:/user/mypage";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id, HttpSession session) {
         userService.delete(id);
+        session.invalidate();
         return "redirect:/";
     }
 
