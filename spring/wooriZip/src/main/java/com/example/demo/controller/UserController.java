@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.Users;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,30 +30,29 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(HttpSession session, Model model){
-        Users loginUser = (Users) session.getAttribute("loginUser");
-        model.addAttribute("loginUser", loginUser);
+    public String myPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        model.addAttribute("loginUser", userDetails.getUser()); // Users 엔티티 전달
         return "/user/mypage";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable("id") Long id, Model model){
-        model.addAttribute("loginUser", userService.findById(id));
+    @GetMapping("/edit")
+    public String editForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        Users user = userService.findById(userDetails.getId());
+        model.addAttribute("loginUser", user);
         return "/user/edit";
     }
 
-    @PostMapping("/edit/{id}")
-    public String editInfo(@PathVariable("id") Long id, @ModelAttribute UserDto dto, HttpSession session){
-        Users updateUser = userService.edit(dto, id);
-        session.setAttribute("loginUser", updateUser);
-        return "redirect:/user/mypage";
+    @PostMapping("/edit")
+    public String editInfo(@ModelAttribute UserDto dto,
+                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.edit(dto, userDetails.getId());
+        return "redirect:/mypage";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id, HttpSession session) {
-        userService.delete(id);
-        session.invalidate();
-        return "redirect:/";
+    @PostMapping("/delete")
+    public String delete(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.delete(userDetails.getId());
+        return "redirect:/logout";
     }
 
 }
