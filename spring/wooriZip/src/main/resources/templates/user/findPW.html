@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
 <head>
     <meta charset="UTF-8">
-    <title>ID 찾기</title>
+    <title>비밀번호 찾기</title>
 </head>
 <body>
 <!--<div th:replace="~{index/header :: header}"></div>-->
 <h2>아이디 찾기</h2>
-<form id="findIdForm" action="/user/findId" method="post" onsubmit="return validatePhoneNumber();">
-    <label for="name">이름</label>
-    <input type="text" name="name" id="name" required>
+<form id="findPwForm" action="/user/findPw" method="post" onsubmit="return validatePhoneNumber();">
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" required>
     <br/><br/>
     <label for="phone1">휴대전화</label>
     <div class="flex-group">
@@ -19,7 +19,7 @@
         <input id="phone3" name="phone3" maxlength="4" type="tel" required>
     </div>
 
-    <button type="submit" id="findId">아이디 찾기</button>
+    <button type="submit" id="findId">비밀번호 찾기</button>
 </form>
 
 <div id="resultModal" style="display: none; position: fixed; z-index: 9999;
@@ -27,23 +27,23 @@
      background-color: white; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
     <p id="resultMessage"></p>
     <a href="/user/login" class="btn btn-primary">로그인</a>
-    <a href="/user/findPw" class="btn btn-success">비밀번호 찾기</a>
+    <a href="/" class="btn btn-success">홈</a>
     <button onclick="closeModal()">닫기</button>
 </div>
 
 <div th:replace="~{index/footer :: footer}"></div>
 
 <script th:inline="javascript">
-    const email = /*[[${email}]]*/ null;
-    const error = /*[[${error}]]*/ null;
+    const resetMailSent = [[${resetMailSent != null}]] ? [[${resetMailSent}]] : null;
+    const error = [[${error != null}]] ? [[${error}]] : null;
 
     window.onload = function () {
-       if (email) {
-           showModal("회원님의 이메일은 " + email + " 입니다.");
-       } else if (error) {
-           showModal(error);
-       }
-    }
+        if (resetMailSent !== "null") {
+            showModal(resetMailSent);
+        } else if (error !== "null") {
+            showModal(error);
+        }
+    };
 
     function showModal(message) {
        document.getElementById("resultMessage").innerText = message;
