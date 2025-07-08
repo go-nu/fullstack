@@ -1,19 +1,169 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" th:inline="javascript">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
-    <!-- ... [생략: 기존 스타일, 폰트 등은 그대로 유지] ... -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F9F7F0;
+            color: #4A4947;
+        }
+        main {
+            max-width: 900px;
+            margin: 120px auto 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        main > h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 32px;
+        }
+        .form-group-left, .form-group-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="button"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            background-color: #F9F7F0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .flex-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .flex-group input {
+            flex: 1;
+        }
+        .flex-group button {
+            padding: 10px 14px;
+            font-size: 13px;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .flex-group button:hover {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+
+        .select-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .select-buttons label {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+        .select-buttons label:hover {
+            background-color: #ddd;
+        }
+        .select-buttons input:checked + label,
+        .select-buttons label.active {
+            background-color: #B17457;
+            color: #fff;
+            border-color: #B17457;
+        }
+
+        input[type="submit"] {
+            grid-column: 1 / 3;
+            width: 100%;
+            padding: 14px;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+
+        .success {
+            color: green;
+            font-size: 14px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            input[type="submit"] {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
 
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
-<main>
-    <h2>회원 정보 수정</h2>
+<main><h1>회원 정보 수정</h1>
     <form th:action="@{/user/edit}" method="post" th:object="${loginUser}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
+    <!-- 좌측 컬럼 -->
         <div class="form-group-left">
             <label for="email">이메일</label>
             <input type="email" th:field="*{email}" readonly />
@@ -32,22 +182,26 @@
             </div>
 
             <input type="text" th:field="*{loadAddr}" id="sample4_roadAddress" placeholder="도로명주소" required />
+            <input type="text" th:field="*{lotAddr}" id="sample4_jibunAddress" placeholder="지번주소" required />
             <input type="text" th:field="*{detailAddr}" id="sample4_detailAddress" placeholder="상세주소" required />
+            <input type="text" th:field="*{extraAddr}" id="sample4_extraAddress" placeholder="참고항목" hidden />
         </div>
 
+        <!-- 우측 컬럼 -->
         <div class="form-group-right">
             <label>닉네임</label>
             <input type="text" th:field="*{nickname}" />
 
             <label for="birth">생년월일</label>
-            <input type="date" th:field="*{birth}" />
+            <input type="date" th:value="${#temporals.format(loginUser.birth, 'yyyy-MM-dd')}" name="birth" />
 
             <label for="phone">휴대전화</label>
             <div class="flex-group">
-                <input id="phone" name="phone" type="hidden" th:field="*{phone}" />
-                <input id="phone1" maxlength="3" type="tel" required />
-                <input id="phone2" maxlength="4" type="tel" required />
-                <input id="phone3" maxlength="4" type="tel" required />
+                <input id="phone" name="phone" type="hidden" th:value="*{phone}" />
+                <input id="phone1" name="phone1" maxlength="3" type="tel" th:value="${loginUser.phone.substring(0,3)}" required />
+                <input id="phone2" name="phone2" maxlength="4" type="tel" th:value="${loginUser.phone.substring(3,7)}" required />
+                <input id="phone3" name="phone3" maxlength="4" type="tel" th:value="${loginUser.phone.substring(7)}" required />
+                <span id="guide" style="color:#999;display:none"></span>
             </div>
 
             <label>성별</label>
@@ -59,6 +213,7 @@
             </div>
 
             <label>가구 유형</label>
+            <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
             <div class="select-buttons">
                 <input type="radio" th:field="*{residenceType}" value="1" id="res1" hidden />
                 <label for="res1">1인가구</label>
@@ -73,7 +228,6 @@
     </form>
 </main>
 
-<!-- ✅ SCRIPT ZONE -->
 <script>
     // 비밀번호 확인
     document.addEventListener('DOMContentLoaded', function () {
@@ -91,7 +245,7 @@
                 pwCheckResult.textContent = '비밀번호가 일치합니다.';
                 pwCheckResult.className = 'success';
             } else {
-                pwCheckResult.textContent = '비밀번호가 일치하지 않습니다.';
+                pwCheckResult.textContent = '비밀번호가 일치하지 않습니다. 다시 입력해 주세요.';
                 pwCheckResult.className = 'error';
             }
         }
@@ -100,9 +254,9 @@
         checkPwInput.addEventListener('input', checkPasswordsMatch);
     });
 
-    // 전화번호 초기화 및 업데이트
-    document.addEventListener("DOMContentLoaded", function () {
-        const fullPhone = [[${loginUser.phone}]];
+    // 전화번호 합치기
+    window.addEventListener("DOMContentLoaded", function () {
+        const fullPhone = /*[[${loginUser.phone}]]*/ '';
         if (fullPhone && fullPhone.length === 11) {
             document.getElementById("phone1").value = fullPhone.substring(0, 3);
             document.getElementById("phone2").value = fullPhone.substring(3, 7);
@@ -122,7 +276,7 @@
         document.getElementById("phone3").addEventListener("input", updatePhoneValue);
     });
 
-    // 성별/가구 유형 버튼 토글
+    // 성별, 가구유형 토글 스타일 적용
     document.addEventListener("DOMContentLoaded", function () {
         const selectGroups = document.querySelectorAll(".select-buttons");
         selectGroups.forEach(group => {
@@ -141,25 +295,61 @@
         });
     });
 
-    // 주소 API
-    function sample4_execDaumPostcode() {
-        new daum.Postcode({
-            oncomplete: function (data) {
-                let extraRoadAddr = '';
-                if (data.bname && /[동|로|가]$/g.test(data.bname)) {
-                    extraRoadAddr += data.bname;
-                }
-                if (data.buildingName && data.apartment === 'Y') {
-                    extraRoadAddr += (extraRoadAddr ? ', ' + data.buildingName : data.buildingName);
-                }
-                if (extraRoadAddr) extraRoadAddr = ' (' + extraRoadAddr + ')';
+    // 주소 API 함수
+            function sample4_execDaumPostcode() {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
-                document.getElementById("sample4_postcode").value = data.zonecode;
-                document.getElementById("sample4_roadAddress").value = data.roadAddress;
-                document.getElementById("sample4_detailAddress").value = '';
+                        // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var roadAddr = data.roadAddress; // 도로명 주소 변수
+                        var extraRoadAddr = ''; // 참고 항목 변수
+
+                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                        if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                            extraRoadAddr += data.bname;
+                        }
+                        // 건물명이 있고, 공동주택일 경우 추가한다.
+                        if(data.buildingName !== '' && data.apartment === 'Y'){
+                            extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                        if(extraRoadAddr !== ''){
+                            extraRoadAddr = ' (' + extraRoadAddr + ')';
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        document.getElementById("sample4_postcode").value = data.zonecode;
+                        document.getElementById("sample4_roadAddress").value = roadAddr;
+                        document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+
+                        // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                        if(roadAddr !== ''){
+                            document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+                        } else {
+                            document.getElementById("sample4_extraAddress").value = '';
+                        }
+
+                        var guideTextBox = document.getElementById("guide");
+                        // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                        if(data.autoRoadAddress) {
+                            var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                            guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                            guideTextBox.style.display = 'block';
+
+                        } else if(data.autoJibunAddress) {
+                            var expJibunAddr = data.autoJibunAddress;
+                            guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                            guideTextBox.style.display = 'block';
+                        } else {
+                            guideTextBox.innerHTML = '';
+                            guideTextBox.style.display = 'none';
+                        }
+                    }
+                }).open();
             }
-        }).open();
-    }
 </script>
 
 <div th:replace="~{index/footer :: footer}"></div>
