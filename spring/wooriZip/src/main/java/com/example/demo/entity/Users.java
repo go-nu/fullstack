@@ -87,7 +87,6 @@ public class Users {
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .userPw(encodedPassword)
-                //.userPw(dto.getUserPw())
                 .phone(dto.getPhone())
                 .nickname(dto.getNickname())
                 .gender(dto.getGender())
@@ -98,7 +97,7 @@ public class Users {
                 .detailAddr(dto.getDetailAddr())
                 .extraAddr(dto.getExtraAddr())
                 .residenceType(dto.getResidenceType())
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .build();
     }
 

@@ -3,6 +3,7 @@
     <!--변수 설정-->
     <Properties>
         <Property name="LOG_FORMAT">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
+        <Property name="REC_FORMAT">%m%n</Property>
         <Property name="BASE_DIR">C:/log</Property> <!--로그 파일 경로-->
     </Properties>
     <Appenders>
@@ -11,7 +12,7 @@
             <PatternLayout pattern="${LOG_FORMAT}"/>
         </Console>
 
-        <RollingFile name="File-Appender" fileName="${BASE_DIR}/woorizip.log" filePattern="${BASE_DIR}/%d{yyyy-MM-dd}.log.zip">
+        <RollingFile name="Monitoring-Appender" fileName="${BASE_DIR}/woorizip.log" filePattern="${BASE_DIR}/%d{yyyy-MM-dd}.log.zip">
             <PatternLayout pattern="${LOG_FORMAT}"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10KB"/>                  <!-- 15MB 용량이 초과시 DefaultRolloverStrategy 정책만큼 넘버링 -->
@@ -25,16 +26,34 @@
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
+
+        <RollingFile name="Recommend-Appender" fileName="${BASE_DIR}/recommend.log" filePattern="${BASE_DIR}/recommend-%d{yyyy-MM-dd}.log.zip">
+            <PatternLayout pattern="${REC_FORMAT}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10KB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${BASE_DIR}">
+                    <IfAccumulatedFileCount exceeds="4"/>
+                    <IfFileName glob="recommend-*.log"/>
+                    <IfLastModified age="3d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
     </Appenders>
 
     <Loggers name="com.springboot">
         <Root level="INFO">
             <AppenderRef ref="Console-Appender"/>
-            <AppenderRef ref="File-Appender"/>
         </Root>
 
-        <Logger name="com.example.demo.interceptor.MonitoringInterceptor" level="INFO" additivity="true">
-            <AppenderRef ref="File-Appender"/>
+        <Logger name="com.example.demo.interceptor.MonitoringInterceptor" level="INFO" additivity="false">
+            <AppenderRef ref="Monitoring-Appender"/>
+        </Logger>
+
+        <Logger name="com.example.demo.interceptor.RecommendInterceptor" level="INFO" additivity="false">
+            <AppenderRef ref="Recommend-Appender"/>
         </Logger>
     </Loggers>
 </Configuration>

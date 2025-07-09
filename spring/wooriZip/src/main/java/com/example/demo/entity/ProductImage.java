@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "product_image")
 public class ProductImage { // 상품 이미지
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String imageUrl;

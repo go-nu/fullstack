@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Wishlist { // 찜
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
