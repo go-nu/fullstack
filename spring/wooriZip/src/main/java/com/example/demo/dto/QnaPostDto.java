@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.ReviewPost;
+import com.example.demo.entity.QnaPost;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,14 +14,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReviewPostDto {
+public class QnaPostDto {
 
     private Long id;
     private String title;
     private String content;
-    private int rating;
 
-    // 파일 업로드 관련
+    // 파일 첨부 관련
     private List<MultipartFile> files;
     private String fileNames;
     private String filePaths;
@@ -29,13 +28,15 @@ public class ReviewPostDto {
 
     private String email;
     private String nickname;
-
     private Long productId;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static ReviewPostDto fromEntity(ReviewPost post) {
+    // 답변 포함 (DTO로)
+    private QnaAnswerDto answer;
+
+    public static QnaPostDto fromEntity(QnaPost post) {
         List<String> filePathList = null;
         if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {
             filePathList = Arrays.stream(post.getFilePaths().split(","))
@@ -43,11 +44,10 @@ public class ReviewPostDto {
                     .collect(Collectors.toList());
         }
 
-        return ReviewPostDto.builder()
+        return QnaPostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .rating(post.getRating())
                 .fileNames(post.getFileNames())
                 .filePaths(post.getFilePaths())
                 .filePathList(filePathList)

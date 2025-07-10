@@ -154,6 +154,26 @@
   </div>
 </main>
 
+
+<!-- detail.html 내 리뷰/QnA 탭 삽입 영역 -->
+<div class="mt-5">
+  <!-- 탭 메뉴 -->
+  <div class="tab-menu d-flex mb-3 border-bottom">
+    <button class="btn btn-link me-3 tab-button active" data-target="review-section">리뷰</button>
+    <button class="btn btn-link tab-button" data-target="qna-section">Q&A</button>
+  </div>
+
+  <!-- 리뷰 영역 -->
+  <div id="review-section" class="tab-content-section">
+    <div th:replace="~{review/review :: reviewboard}"></div>
+  </div>
+
+  <!-- Qna 영역 -->
+  <div id="qna-section" class="tab-content-section" style="display: none;">
+    <div th:replace="~{qna/qna :: qnaboard}"></div>
+  </div>
+</div>
+
 <div th:replace="~{index/footer :: footer}"></div>
 
 </body>

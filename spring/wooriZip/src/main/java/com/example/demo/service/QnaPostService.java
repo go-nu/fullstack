@@ -1,15 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ReviewPostDto;
+import com.example.demo.dto.QnaAnswerDto;
+import com.example.demo.dto.QnaPostDto;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.ReviewPost;
+import com.example.demo.entity.QnaPost;
 import com.example.demo.repository.ProductRepository;
-import com.example.demo.repository.ReviewPostRepository;
+import com.example.demo.repository.QnaAnswerRepository;
+import com.example.demo.repository.QnaPostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,15 +19,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewPostService {
+public class QnaPostService {
 
-    private final ReviewPostRepository reviewPostRepository;
+    private final QnaPostRepository qnaPostRepository;
+    private final QnaAnswerRepository qnaAnswerRepository;
     private final ProductRepository productRepository;
+
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
-
-    // 🔹 리뷰 등록
-    public void saveReview(ReviewPostDto dto) throws IOException {
+    // Q 등록
+    public void saveQna(QnaPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
@@ -39,10 +38,9 @@ public class ReviewPostService {
                 .map(MultipartFile::getOriginalFilename)
                 .collect(Collectors.joining(","));
 
-        ReviewPost post = ReviewPost.builder()
+        QnaPost post = QnaPost.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .rating(dto.getRating())
                 .fileNames(joinedNames)
                 .filePaths(joinedPaths)
                 .email(dto.getEmail())
@@ -50,15 +48,20 @@ public class ReviewPostService {
                 .product(product)
                 .build();
 
-        reviewPostRepository.save(post);
+        qnaPostRepository.save(post);
     }
 
-    // 🔹 리뷰 수정
-    public void updateReview(Long id, ReviewPostDto dto) throws IOException {
-        ReviewPost post = reviewPostRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+    // Q 수정
+    public void updateQna(Long id, QnaPostDto dto) throws IOException {
+        QnaPost post = qnaPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("질문이 존재하지 않습니다."));
+
+        if (!post.getEmail().equals(dto.getEmail())) {
+            throw new SecurityException("작성자만 수정할 수 있습니다.");
+        }
 
         deleteFiles(post.getFilePaths());
+
         List<String> storedPaths = handleMultipleFiles(dto.getFiles());
         String joinedPaths = String.join(",", storedPaths);
         String joinedNames = dto.getFiles().stream()
@@ -67,23 +70,27 @@ public class ReviewPostService {
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
-        post.setRating(dto.getRating());
         post.setFilePaths(joinedPaths);
         post.setFileNames(joinedNames);
         post.setUpdatedAt(LocalDateTime.now());
 
-        reviewPostRepository.save(post);
+        qnaPostRepository.save(post);
     }
 
-    // 🔹 리뷰 삭제
-    public void deleteReview(Long id) {
-        ReviewPost post = reviewPostRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+    // Q 삭제
+    public void deleteQna(Long id, String email) {
+        QnaPost post = qnaPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("질문이 존재하지 않습니다."));
+
+        if (!post.getEmail().equals(email)) {
+            throw new SecurityException("작성자만 삭제할 수 있습니다.");
+        }
+
         deleteFiles(post.getFilePaths());
-        reviewPostRepository.delete(post);
+        qnaPostRepository.delete(post);
     }
 
-    // 🔹 파일 저장
+    // 파일 저장
     private List<String> handleMultipleFiles(List<MultipartFile> files) throws IOException {
         List<String> filePathList = new ArrayList<>();
         if (files != null) {
@@ -99,7 +106,7 @@ public class ReviewPostService {
         return filePathList;
     }
 
-    // 🔹 파일 삭제
+    // 파일 삭제
     private void deleteFiles(String filePaths) {
         if (filePaths != null && !filePaths.isEmpty()) {
             String[] paths = filePaths.split(",");
@@ -110,27 +117,45 @@ public class ReviewPostService {
         }
     }
 
-    // 🔹 평균 평점
-    public double getAverageRating(Long productId) {
-        List<ReviewPost> list = reviewPostRepository.findByProductId(productId);
-        return list.isEmpty() ? 0.0 : list.stream().mapToInt(ReviewPost::getRating).average().orElse(0.0);
+    // Q 단건 조회
+    public QnaPost findById(Long id) {
+        return qnaPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("질문 없음"));
     }
 
-    // 🔹 별점 분포 (1~5점 카운트)
-    public Map<Integer, Long> getRatingDistribution(Long productId) {
-        List<ReviewPost> list = reviewPostRepository.findByProductId(productId);
-        return list.stream().collect(Collectors.groupingBy(ReviewPost::getRating, Collectors.counting()));
+    // QnA DTO 리스트 (답변 포함)
+    public List<QnaPostDto> getQnaPostDtoList(Long productId, int page) {
+        int offset = page * 5;
+
+        List<QnaPost> posts = qnaPostRepository.findByProductIdWithPaging(productId, offset, 5);
+        if (posts == null) {
+            posts = new ArrayList<>();
+        }
+
+        List<QnaPostDto> result = new ArrayList<>();
+
+        for (QnaPost post : posts) {
+            QnaPostDto dto = QnaPostDto.fromEntity(post);
+            qnaAnswerRepository.findByQnaPost(post).ifPresent(answer ->
+                    dto.setAnswer(QnaAnswerDto.fromEntity(answer))
+            );
+            result.add(dto);
+        }
+
+        return result;
     }
 
-    // 🔹 최신순 / 평점순 정렬 + 페이지네이션
-    public Page<ReviewPost> getReviews(Long productId, int page, String sortBy) {
-        Sort sort = sortBy.equals("rating") ? Sort.by(Sort.Direction.DESC, "rating") : Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = PageRequest.of(page, 5, sort);
-        return reviewPostRepository.findByProductId(productId, pageable);
+
+    // 총 질문 수
+    public long countByProduct(Long productId) {
+        return qnaPostRepository.countByProductId(productId);
     }
 
-    // 🔹 1인 1리뷰 제한 확인
-    public boolean hasWrittenReview(Long productId, String email) {
-        return reviewPostRepository.existsByProductIdAndEmail(productId, email);
+    // QnA 답변 후 상품상세로 리다이렉트용
+    public Long getProductIdByQnaPostId(Long postId) {
+        return qnaPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("QnA 게시글이 존재하지 않습니다."))
+                .getProduct().getId();
     }
+
 }

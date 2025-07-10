@@ -1,7 +1,8 @@
 package com.example.demo.config;
 
-import com.example.demo.security.CustomUserDetailsService;
 import com.example.demo.oauth2.CustomOAuth2UserService;
+import com.example.demo.security.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -24,12 +32,44 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
+
+        // 1. 기본 OAuth2 요청 리졸버 생성
+        DefaultOAuth2AuthorizationRequestResolver defaultResolver =
+                new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, "/oauth2/authorization");
+
+        // 2. 모든 로그인 요청에 prompt=select_account 추가하는 커스텀 리졸버
+        OAuth2AuthorizationRequestResolver customResolver = new OAuth2AuthorizationRequestResolver() {
+            @Override
+            public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
+                OAuth2AuthorizationRequest originalRequest = defaultResolver.resolve(request);
+                if (originalRequest == null) return null;
+
+                Map<String, Object> additionalParams = new HashMap<>(originalRequest.getAdditionalParameters());
+                additionalParams.put("prompt", "select_account");
+
+                return OAuth2AuthorizationRequest.from(originalRequest)
+                        .additionalParameters(additionalParams)
+                        .build();
+            }
+
+            @Override
+            public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
+                OAuth2AuthorizationRequest originalRequest = defaultResolver.resolve(request, clientRegistrationId);
+                if (originalRequest == null) return null;
+
+                Map<String, Object> additionalParams = new HashMap<>(originalRequest.getAdditionalParameters());
+                additionalParams.put("prompt", "select_account");
+
+                return OAuth2AuthorizationRequest.from(originalRequest)
+                        .additionalParameters(additionalParams)
+                        .build();
+            }
+        };
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
@@ -38,31 +78,34 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)      // 세션 무효화
+                        .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/user/login")
                         .failureUrl("/user/login?error")
+                        .authorizationEndpoint(endpoint -> endpoint
+                                .authorizationRequestResolver(customResolver) // ✅ 커스텀 리졸버 적용
+                        )
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService))
+                                .userService(customOAuth2UserService)
+                        )
                         .defaultSuccessUrl("/", false)
                 );
 
         return http.build();
     }
 
-    // AuthenticationManager 등록
+    // 사용자 인증 관리 빈 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // DaoAuthenticationProvider 등록
+    // Dao 기반 사용자 인증 공급자 등록
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -71,7 +114,7 @@ public class SecurityConfig {
         return provider;
     }
 
-    // 비밀번호 암호화
+    // 비밀번호 암호화 전략
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

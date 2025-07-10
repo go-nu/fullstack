@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ProductDetailDto;
-import com.example.demo.dto.ProductForm;
-import com.example.demo.dto.ProductModelDto;
-import com.example.demo.dto.ReviewPostDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.ProductService;
+import com.example.demo.service.QnaPostService;
 import com.example.demo.service.ReviewPostService;
 import com.example.demo.service.WishlistService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +27,7 @@ public class ProductController {
     private final ProductService productService;
     private final WishlistService wishlistService;
     private final ReviewPostService reviewPostService;
+    private final QnaPostService qnaPostService;
     private final CategoryRepository categoryRepository;
 
     @GetMapping("/admin/products")
@@ -63,39 +61,48 @@ public class ProductController {
         return "product/list"; // 실제 Thymeleaf 템플릿 경로에 맞게 조정
     }
 
-    // ✅ ProductController.java
+    // 상품상세
     @GetMapping("/products/{id}")
     public String viewProduct(@PathVariable Long id,
                               @RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "latest") String sort,
+                              @RequestParam(name = "qnaPage", defaultValue = "1") int qnaPage,
                               Model model,
                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         Users user = customUserDetails != null ? customUserDetails.getUser() : null;
 
-        // 상품 정보
+        // ───────────── 상품 상세 정보 ─────────────
         ProductDetailDto dto = productService.getProductDetail(id, user);
         model.addAttribute("product", dto);
         model.addAttribute("loginUser", user);
 
-        // 리뷰 페이지네이션 + 정렬
-        int pageSize = 5;
-        Page<ReviewPostDto> reviewPage = reviewPostService.findPagedByProductSorted(id, page, pageSize, sort);
+        // ───────────── 리뷰 데이터 ─────────────
+        int reviewPageNum = Math.max(page - 1, 0);
+        if (!sort.equals("latest") && !sort.equals("rating")) {
+            sort = "latest";
+        }
 
-        model.addAttribute("reviews", reviewPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", reviewPage.getTotalPages());
+        Page<ReviewPost> reviewPage = reviewPostService.getReviews(id, reviewPageNum, sort);
+        Map<Integer, Long> ratingSummary = reviewPostService.getRatingDistribution(id);
+        Double averageRating = reviewPostService.getAverageRating(id);
+        boolean hasWritten = (user != null && user.getEmail() != null)
+                && reviewPostService.hasWrittenReview(id, user.getEmail());
+
+        model.addAttribute("reviewPage", reviewPage != null ? reviewPage : Page.empty());
+        model.addAttribute("ratingSummary", ratingSummary != null ? ratingSummary : new HashMap<>());
+        model.addAttribute("averageRating", averageRating != null ? averageRating : 0.0);
+        model.addAttribute("hasWritten", hasWritten);
         model.addAttribute("sort", sort);
 
-        // 리뷰 통계 (평균 별점, 개수, 점수 분포)
-        model.addAttribute("reviewCount", reviewPostService.getReviewCount(id));
-        model.addAttribute("averageRating", reviewPostService.getAverageRating(id));
-        model.addAttribute("ratingCounts", reviewPostService.getRatingDistribution(id));
+        // ───────────── QnA 데이터 ─────────────
+        int qnaPageNum = Math.max(qnaPage - 1, 0);
+        List<QnaPostDto> qnaList = qnaPostService.getQnaPostDtoList(id, qnaPageNum);
+        long qnaTotal = qnaPostService.countByProduct(id);
 
-        // 리뷰 작성 여부 & 로그인 상태
-        boolean hasWrittenReview = (user != null) && reviewPostService.hasUserReviewedProduct(user, id);
-        model.addAttribute("hasWrittenReview", hasWrittenReview);
-        model.addAttribute("isLoggedIn", user != null);
+        model.addAttribute("qnaList", qnaList != null ? qnaList : new ArrayList<>());
+        model.addAttribute("qnaTotal", qnaTotal);
+        model.addAttribute("qnaPage", qnaPage);
 
         return "product/detail";
     }

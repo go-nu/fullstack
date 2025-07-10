@@ -6,22 +6,19 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
-public class ReviewPost {
+public class QnaPost {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
     private String content;
-    private int rating;
 
-    private String fileNames; // 파일 이름 목록 (image1.jpg, image2.png)
-    private String filePaths; // 경로 목록 (/uploads/image1.jpg,...)
+    private String fileNames;
+    private String filePaths;
 
     private String email;
     private String nickname;
