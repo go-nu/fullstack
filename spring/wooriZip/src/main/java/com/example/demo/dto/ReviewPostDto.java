@@ -40,6 +40,7 @@ public class ReviewPostDto {
         if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {
             filePathList = Arrays.stream(post.getFilePaths().split(","))
                     .map(String::trim)
+                    .filter(path -> !path.isEmpty())
                     .collect(Collectors.toList());
         }
 

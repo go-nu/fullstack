@@ -37,7 +37,7 @@ public class RecommendInterceptor  implements HandlerInterceptor {
 
         if (principal instanceof CustomUserDetails userDetails) {
             Users user = userDetails.getUser();
-            nickname = user.getNickname();
+            nickname = user.getEmail();
             gender = user.getGender();
             residence = user.getResidenceType();
             ageGroup = getAgeGroup(user.getBirth());

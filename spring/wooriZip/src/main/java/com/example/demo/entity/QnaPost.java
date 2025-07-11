@@ -30,6 +30,9 @@ public class QnaPost {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @OneToOne(mappedBy = "qnaPost", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private QnaAnswer answer;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

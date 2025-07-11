@@ -28,16 +28,22 @@ public class ReviewPostService {
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
 
-    // 🔹 리뷰 등록
+    // 리뷰 등록
     public void saveReview(ReviewPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
-        List<String> storedPaths = handleMultipleFiles(dto.getFiles());
-        String joinedPaths = String.join(",", storedPaths);
-        String joinedNames = dto.getFiles().stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.joining(","));
+        List<String> storedPaths = new ArrayList<>();
+        String joinedPaths = "";
+        String joinedNames = "";
+
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            storedPaths = handleMultipleFiles(dto.getFiles());
+            joinedPaths = String.join(",", storedPaths);
+            joinedNames = dto.getFiles().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .collect(Collectors.joining(","));
+        }
 
         ReviewPost post = ReviewPost.builder()
                 .title(dto.getTitle())
@@ -53,7 +59,7 @@ public class ReviewPostService {
         reviewPostRepository.save(post);
     }
 
-    // 🔹 리뷰 수정
+    // 리뷰 수정
     public void updateReview(Long id, ReviewPostDto dto) throws IOException {
         ReviewPost post = reviewPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
@@ -75,7 +81,7 @@ public class ReviewPostService {
         reviewPostRepository.save(post);
     }
 
-    // 🔹 리뷰 삭제
+    // 리뷰 삭제
     public void deleteReview(Long id) {
         ReviewPost post = reviewPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
@@ -83,12 +89,12 @@ public class ReviewPostService {
         reviewPostRepository.delete(post);
     }
 
-    // 🔹 파일 저장
+    // 파일 저장
     private List<String> handleMultipleFiles(List<MultipartFile> files) throws IOException {
         List<String> filePathList = new ArrayList<>();
-        if (files != null) {
+        if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
+                if (file != null && !file.isEmpty()) {
                     String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
                     File dest = new File(uploadDir + fileName);
                     file.transferTo(dest);
@@ -99,7 +105,7 @@ public class ReviewPostService {
         return filePathList;
     }
 
-    // 🔹 파일 삭제
+    // 파일 삭제
     private void deleteFiles(String filePaths) {
         if (filePaths != null && !filePaths.isEmpty()) {
             String[] paths = filePaths.split(",");
@@ -110,26 +116,26 @@ public class ReviewPostService {
         }
     }
 
-    // 🔹 평균 평점
+    // 평균 평점
     public double getAverageRating(Long productId) {
         List<ReviewPost> list = reviewPostRepository.findByProductId(productId);
         return list.isEmpty() ? 0.0 : list.stream().mapToInt(ReviewPost::getRating).average().orElse(0.0);
     }
 
-    // 🔹 별점 분포 (1~5점 카운트)
+    // 별점 분포 (1~5점 카운트)
     public Map<Integer, Long> getRatingDistribution(Long productId) {
         List<ReviewPost> list = reviewPostRepository.findByProductId(productId);
         return list.stream().collect(Collectors.groupingBy(ReviewPost::getRating, Collectors.counting()));
     }
 
-    // 🔹 최신순 / 평점순 정렬 + 페이지네이션
+    // 최신순 / 평점순 정렬 + 페이지네이션
     public Page<ReviewPost> getReviews(Long productId, int page, String sortBy) {
         Sort sort = sortBy.equals("rating") ? Sort.by(Sort.Direction.DESC, "rating") : Sort.by(Sort.Direction.DESC, "createdAt");
         Pageable pageable = PageRequest.of(page, 5, sort);
         return reviewPostRepository.findByProductId(productId, pageable);
     }
 
-    // 🔹 1인 1리뷰 제한 확인
+    // 1인 1리뷰 제한 확인
     public boolean hasWrittenReview(Long productId, String email) {
         return reviewPostRepository.existsByProductIdAndEmail(productId, email);
     }

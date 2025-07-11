@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,10 +18,13 @@ public class ProductDetailDto {
     private List<Review> reviews;
     private boolean liked;
 
+    private List<ProductModelDto> productModels;  // 각 모델 (옵션) 정보
+
     public ProductDetailDto(Product product, boolean liked) {
         this.product = product;
         this.liked = liked;
     }
+
 
     public String getName() {
         return product.getName();

@@ -41,13 +41,34 @@
         </select>
     </label><br/>
 
+    <label>모델 및 재고:</label><br/>
+    <div th:each="model, i : ${productForm.productModelDtoList}">
+        <!-- 모델명 -->
+        <label>모델명:</label>
+        <select th:field="*{productModelDtoList[__${i.index}__].productModelSelect}" required>
+            <option value="">옵션을 선택하세요</option>
+            <option th:value="'SUPER_SINGLE'" th:text="'슈퍼싱글'"></option>
+            <option th:value="'QUEEN'" th:text="'퀸'"></option>
+            <option th:value="'KING'" th:text="'킹'"></option>
+            <option th:value="'DEFAULT_MODEL'" th:text="'기본'"></option>
+        </select><br/>
+
+        <!-- 재고 -->
+        <label>재고:</label>
+        <input type="number" th:field="*{productModelDtoList[__${i.index}__].prStock}" placeholder="재고 입력"/><br/>
+
+        <!-- 가격 -->
+        <label>가격:</label>
+        <input type="number" th:field="*{productModelDtoList[__${i.index}__].price}" placeholder="가격 입력"/><br/>
+
+        <hr />
+    </div>
+
+
+
+
     <label>설명: <textarea th:field="*{description}"></textarea></label><br/>
 
-    <label>모델 및 재고:</label><br/>
-    <div th:each="model, i : *{productModelDtoList}">
-        모델명: <input type="text" th:field="*{productModelDtoList[__${i.index}__].productModelSelect}" />
-        재고: <input type="number" th:field="*{productModelDtoList[__${i.index}__].prStock}" /><br/>
-    </div>
 
     <label>이미지 업로드 (최대 4장):</label><br/>
     <input type="file" id="imageInput" accept="image/*" multiple /><br/><br/>

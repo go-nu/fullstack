@@ -1,10 +1,8 @@
 package com.example.demo.dto;
 
 
-import com.example.demo.entity.Category;
-import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductImage;
-import com.example.demo.entity.Users;
+import com.example.demo.constant.ProductModelSelect;
+import com.example.demo.entity.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +16,7 @@ public class ProductForm {
     private String name;
     private String description;
     private int price;
-    private String category;
+    private Category category;
     private int stockQuantity;
 
     private Long categoryId;
@@ -36,9 +34,24 @@ public class ProductForm {
         product.setCategory(category); // 엔티티 기준
         product.setUser(user);
         product.setAverageRating(0.0);
-        product.setStockQuantity(0);
+        product.setStockQuantity(0);  // 초기 재고 수량 설정
+
+        // 모델 정보 추가 (productModelDtoList)
+        if (this.productModelDtoList != null && !this.productModelDtoList.isEmpty()) {
+            for (ProductModelDto dto : this.productModelDtoList) {
+                ProductModel model = new ProductModel();
+                model.setProductModelSelect(dto.getProductModelSelect());    // 모델 선택
+                model.setPrStock(dto.getPrStock());  // 재고 설정
+                model.setPrice(dto.getPrice());  // 가격 설정
+                model.setProduct(product);  // 상품에 모델 연결
+                product.addProductModel(model);  // 상품에 모델 추가
+                product.setStockQuantity(product.getStockQuantity() + dto.getPrStock());  // 재고 업데이트
+            }
+        }
+
         return product;
     }
+
 
     public static ProductForm from(Product product) {
         ProductForm form = new ProductForm();

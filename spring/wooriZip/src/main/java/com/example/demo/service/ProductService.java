@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.constant.ProductModelSelect;
 import com.example.demo.dto.ProductDetailDto;
 import com.example.demo.dto.ProductForm;
 import com.example.demo.dto.ProductModelDto;
@@ -33,7 +32,7 @@ public class ProductService {
 
     // ✅ 상품 등록
     public Long createProduct(ProductForm form,
-                              List<MultipartFile> productImgFileList,
+                              List<MultipartFile> productImgFileList,  // List<MultipartFile>로 수정
                               Users loginUser) throws Exception {
         log.info("상품 등록 시작: {}", form);
 
@@ -43,22 +42,24 @@ public class ProductService {
 
         // 2. Product 생성
         Product product = form.createProduct(category, loginUser);
-        product = productRepository.save(product);
+        product = productRepository.save(product);  // 상품 저장
 
         // 3. 모델 생성 및 재고 계산
         int totalStock = 0;
         for (ProductModelDto dto : form.getProductModelDtoList()) {
             ProductModel model = new ProductModel();
-            model.setProductModelSelect(
-                    dto.getProductModelSelect() != null ? dto.getProductModelSelect() : ProductModelSelect.DEFAULT_MODEL);
-            model.setPrStock(dto.getPrStock() != null ? dto.getPrStock() : 0);
-            model.setProduct(product);
-            product.addProductModel(model);
+            model.setProductModelSelect(dto.getProductModelSelect());  // 모델 선택 (예: SUPER_SINGLE, QUEEN, KING)
+            model.setPrice(dto.getPrice());  // 가격 설정
+            model.setPrStock(dto.getPrStock());  // 재고 설정
+            model.setProduct(product);  // 상품에 모델 연결
+            product.addProductModel(model);  // 상품에 모델 추가
             totalStock += model.getPrStock();
         }
-        product.setStockQuantity(totalStock);
 
-        // 4. 이미지 업로드
+        product.setStockQuantity(totalStock); // 총 재고량 업데이트
+        productRepository.save(product);  // 상품 저장
+
+        // 4. 이미지 업로드 처리
         if (productImgFileList != null && !productImgFileList.isEmpty()) {
             List<String> imagePaths = handleAndReturnFiles(productImgFileList.toArray(new MultipartFile[0]));
             for (String path : imagePaths) {
@@ -69,8 +70,12 @@ public class ProductService {
             }
         }
 
-        return product.getId();
+        return product.getId();  // 상품 ID만 반환
     }
+
+
+
+
 
     // 이미지 저장 유틸 (변경 없음)
     private List<String> handleAndReturnFiles(MultipartFile[] files) {
@@ -97,7 +102,6 @@ public class ProductService {
 
         return filePaths;
     }
-
 
     // ✅ 상품 목록 조회
     public List<Product> findProducts(Long categoryId) {
@@ -126,15 +130,33 @@ public class ProductService {
         return result;
     }
 
-
-
     // ✅ 상품 상세 조회 (찜 여부 포함)
     public ProductDetailDto getProductDetail(Long productId, Users user) {
+        // 1. 상품 조회
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+
+        // 2. 사용자가 찜한 상품 여부 체크
         boolean liked = user != null && wishlistRepository.existsByUserAndProduct(user, product);
-        return new ProductDetailDto(product, liked);
+
+        // 3. 모델 정보와 가격, 재고 등을 포함한 상세 정보를 DTO로 반환
+        List<ProductModelDto> modelDtos = product.getProductModels().stream()
+                .map(model -> {
+                    ProductModelDto dto = new ProductModelDto();
+                    dto.setProductModelSelect(model.getProductModelSelect()); // 모델명
+                    dto.setPrice(model.getPrice()); // 가격
+                    dto.setPrStock(model.getPrStock()); // 재고
+                    return dto;
+                }).collect(Collectors.toList());
+
+        // 4. ProductDetailDto 생성 후 모델 정보 설정
+        ProductDetailDto detailDto = new ProductDetailDto(product, liked);
+        detailDto.setProductModels(modelDtos);  // 모델 정보 추가
+
+        // 5. 반환
+        return detailDto;
     }
+
 
     // ✅ 상품 수정
     @Transactional
@@ -175,38 +197,9 @@ public class ProductService {
         // 상품 정보 업데이트
         product.setName(form.getName());
         product.setPrice(form.getPrice());
-     //   product.setCategory(form.getCategory());
         product.setDescription(form.getDescription());
 
         productRepository.save(product);
-    }
-
-    // ✅ 파일 업로드 처리 및 경로 반환
-    private List<String>[] handleAndReturnFilesWithNames(MultipartFile[] files) {
-        List<String> filePaths = new ArrayList<>();
-        List<String> fileNames = new ArrayList<>();
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                try {
-                    String originalName = file.getOriginalFilename();
-                    String uniqueName = System.currentTimeMillis() + "_" + originalName;
-                    File dest = new File(uploadDir + uniqueName);
-                    file.transferTo(dest);
-
-                    filePaths.add("/uploads/" + uniqueName);
-                    fileNames.add(uniqueName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return new List[]{filePaths, fileNames};
     }
 
     // ✅ 파일 삭제 유틸
@@ -216,8 +209,6 @@ public class ProductService {
         File file = new File(absolutePath);
         if (file.exists()) file.delete();
     }
-
-
 
     public Product findById(Long id) {
         return productRepository.findById(id)

@@ -41,7 +41,18 @@ public class QnaPostDto {
         if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {
             filePathList = Arrays.stream(post.getFilePaths().split(","))
                     .map(String::trim)
+                    .filter(path -> !path.isEmpty())
                     .collect(Collectors.toList());
+        }
+
+        // 답변 정보 설정
+        QnaAnswerDto answerDto = null;
+        if (post.getAnswer() != null) {
+            answerDto = QnaAnswerDto.builder()
+                    .id(post.getAnswer().getId())
+                    .content(post.getAnswer().getContent())
+                    .createdAt(post.getAnswer().getCreatedAt())
+                    .build();
         }
 
         return QnaPostDto.builder()
@@ -56,6 +67,7 @@ public class QnaPostDto {
                 .productId(post.getProduct().getId())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
+                .answer(answerDto)
                 .build();
     }
 }

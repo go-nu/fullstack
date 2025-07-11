@@ -32,11 +32,17 @@ public class QnaPostService {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
-        List<String> storedPaths = handleMultipleFiles(dto.getFiles());
-        String joinedPaths = String.join(",", storedPaths);
-        String joinedNames = dto.getFiles().stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.joining(","));
+        List<String> storedPaths = new ArrayList<>();
+        String joinedPaths = "";
+        String joinedNames = "";
+
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            storedPaths = handleMultipleFiles(dto.getFiles());
+            joinedPaths = String.join(",", storedPaths);
+            joinedNames = dto.getFiles().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .collect(Collectors.joining(","));
+        }
 
         QnaPost post = QnaPost.builder()
                 .title(dto.getTitle())
@@ -62,11 +68,17 @@ public class QnaPostService {
 
         deleteFiles(post.getFilePaths());
 
-        List<String> storedPaths = handleMultipleFiles(dto.getFiles());
-        String joinedPaths = String.join(",", storedPaths);
-        String joinedNames = dto.getFiles().stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.joining(","));
+        List<String> storedPaths = new ArrayList<>();
+        String joinedPaths = "";
+        String joinedNames = "";
+
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            storedPaths = handleMultipleFiles(dto.getFiles());
+            joinedPaths = String.join(",", storedPaths);
+            joinedNames = dto.getFiles().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .collect(Collectors.joining(","));
+        }
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());

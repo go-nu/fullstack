@@ -32,31 +32,52 @@ public class ProductController {
 
     @GetMapping("/admin/products")
     public String showProductForm(Model model) {
-        model.addAttribute("productForm", new ProductForm());
-        return "product/products";
+        ProductForm productForm = new ProductForm();
+
+        // 기본적으로 하나의 모델을 추가
+        ProductModelDto defaultModel = new ProductModelDto();
+        productForm.getProductModelDtoList().add(defaultModel);  // 기본 모델 추가
+
+        model.addAttribute("productForm", productForm);  // 상품 폼 전달
+        return "product/products";  // 상품 등록 페이지로 리턴
     }
 
+
+    // 상품등록
     // 상품등록
     @PostMapping("/admin/products")
     public String createProduct(@ModelAttribute ProductForm form,
                                 @RequestParam("images") MultipartFile[] images,
-                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                Model model) {
         try {
+            // customUserDetails가 null인 경우 예외 처리 또는 로그인 페이지로 리다이렉트
+            if (customUserDetails == null) {
+                return "redirect:/login";  // 로그인 페이지로 리다이렉트
+            }
+
             Users loginUser = customUserDetails.getUser();
-            productService.createProduct(form, Arrays.asList(images), loginUser);
+
+            // 상품 등록 처리
+            Long productId = productService.createProduct(form, Arrays.asList(images), loginUser);
+
+            // 모델에 등록된 상품 정보를 전달
+            model.addAttribute("productForm", form);  // 상품 등록 폼을 뷰로 전달
+
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error";
         }
-        return "redirect:/products";
+        return "redirect:/products";  // 상품 목록 페이지로 리다이렉트
     }
 
 
 
-
     @GetMapping("/products")
-    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId, Model model) {
+    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
         List<Product> productList = productService.findProducts(categoryId);
+        model.addAttribute("loginUser", user);
         model.addAttribute("products", productList);
         return "product/list"; // 실제 Thymeleaf 템플릿 경로에 맞게 조정
     }
@@ -89,11 +110,15 @@ public class ProductController {
         boolean hasWritten = (user != null && user.getEmail() != null)
                 && reviewPostService.hasWrittenReview(id, user.getEmail());
 
-        model.addAttribute("reviewPage", reviewPage != null ? reviewPage : Page.empty());
+        // ReviewPost를 ReviewPostDto로 변환
+        Page<ReviewPostDto> reviewDtoPage = reviewPage.map(ReviewPostDto::fromEntity);
+
+        model.addAttribute("reviewPage", reviewDtoPage != null ? reviewDtoPage : Page.empty());
         model.addAttribute("ratingSummary", ratingSummary != null ? ratingSummary : new HashMap<>());
         model.addAttribute("averageRating", averageRating != null ? averageRating : 0.0);
         model.addAttribute("hasWritten", hasWritten);
         model.addAttribute("sort", sort);
+        model.addAttribute("productId", id);
 
         // ───────────── QnA 데이터 ─────────────
         int qnaPageNum = Math.max(qnaPage - 1, 0);
@@ -106,9 +131,6 @@ public class ProductController {
 
         return "product/detail";
     }
-
-
-
 
     @PostMapping("/wishlist/toggle")
     public String toggleWishlist(@RequestParam Long productId,
