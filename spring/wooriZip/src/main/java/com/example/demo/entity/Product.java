@@ -36,9 +36,18 @@ public class Product { // 상품
     @JoinColumn(name = "category_id")
     private Category category;
 
+    // 상품(Product)에 모델(ProductModel)을 추가하는 메서드
     public void addProductModel(ProductModel model) {
-        this.productModels.add(model);
-        model.setProduct(this);
+        // 현재 리스트에 동일한 모델이 이미 존재하는지 확인
+        // equals() 메서드 기준으로 비교 (모델명, 가격, 재고가 같은 경우 동일 객체로 판단)
+        if (!this.productModels.contains(model)) {
+            // 중복되지 않은 경우에만 리스트에 추가
+            this.productModels.add(model);
+
+            // 양방향 연관관계를 위해 모델에도 이 상품을 설정
+            // → JPA가 두 객체 간의 관계를 정확하게 인식하도록 도와줌
+            model.setProduct(this);
+        }
     }
 
     public String getThumbnailUrl() {

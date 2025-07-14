@@ -42,8 +42,6 @@ public class ProductController {
         return "product/products";  // 상품 등록 페이지로 리턴
     }
 
-
-    // 상품등록
     // 상품등록
     @PostMapping("/admin/products")
     public String createProduct(@ModelAttribute ProductForm form,

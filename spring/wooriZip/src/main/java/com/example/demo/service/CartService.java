@@ -34,53 +34,51 @@ public class CartService {
         return cart != null ? new CartDto(cart) : null;
     }
 
-    // 장바구니에 추가
     public void addItemToCart(CartDto cartDto, String email, Long productId) {
+        // 1. 유저 및 상품 확인
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("제품을 찾을 수 없습니다"));
 
-        // 이용 회원과 해당 상품이 DB에 있는지 확인
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("제품을 찾을수 없습니다"));
-
-        // 카트 객체 생성
+        // 2. 카트 확인 또는 생성
         Cart cart = cartRepository.findByUser(user);
         if (cart == null) {
-            cart = Cart.createCart(user); // 기존에 없다면 새로 생성
+            cart = Cart.createCart(user);
+            cartRepository.save(cart);
         }
 
-//        if (cartDto.getItems() == null || cartDto.getItems().isEmpty()) {
-//            throw new IllegalArgumentException("장바구니에 추가할 아이템이 없습니다.");
-//        }
-
-        // 상품 옵션별로 처리
+        // 4. 각 아이템 처리
         for (CartItemDto itemDto : cartDto.getItems()) {
+
             ProductModel productModel = product.getProductModels().stream()
                     .filter(findModel -> findModel.getId().equals(itemDto.getModelId()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("해당 상품을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new IllegalArgumentException("해당 상품 옵션을 찾을 수 없습니다."));
 
-            // 기존 카트 아이템 찾기
+            // 기존 아이템 여부 확인
             CartItem findItem = cart.getCartItems().stream()
-                    .filter(cartItem -> cartItem.getProduct().equals(product) && cartItem.getProductModel().equals(productModel))
+                    .filter(cartItem -> cartItem.getProduct().equals(product)
+                            && cartItem.getProductModel().equals(productModel))
                     .findFirst()
                     .orElse(null);
 
             if (findItem != null) {
-                // 기존 아이템이 있으면 수량 업데이트
-                log.info("Updating existing cart item: cartItemId={}, newCount={}", findItem.getId(), findItem.getCount() + itemDto.getCount());
                 findItem.addCount(itemDto.getCount());
             } else {
-                // 새로운 아이템 추가
-                CartItem cartItem = CartItem.createCartItem(product, productModel, itemDto.getCount());
+                CartItem cartItem = CartItem.createCartItem(product, productModel, itemDto.getCount(), cart);
                 cart.addCartItems(cartItem);
-                log.info("Adding new cart item: cartItemId={}, count={}", cartItem.getId(), cartItem.getCount());
 
-                // 새로운 CartItem을 DB에 저장
-                cartItemRepository.save(cartItem);  // 여기에 CartItem 저장
+                // insert 유도
+                cartItemRepository.save(cartItem);
+                cartItemRepository.flush();
             }
         }
 
-        cartRepository.save(cart); // 최종적으로 카트에 저장
+        // 카트 저장
+        cartRepository.save(cart);
         cartRepository.flush();
+
     }
 
     // 비우기 메소드

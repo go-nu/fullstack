@@ -23,7 +23,7 @@ public class UserDto {
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Length(min = 6, max = 16, message = "6~16자리 비밀번호를 입력해주세요.")
+    @Length(min = 3, max = 16, message = "6~16자리 비밀번호를 입력해주세요.")
     private String userPw;
 
     @NotBlank(message = "전화번호를 입력해주세요.")

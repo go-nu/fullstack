@@ -51,7 +51,7 @@ public class ProductService {
             model.setProductModelSelect(dto.getProductModelSelect());  // 모델 선택 (예: SUPER_SINGLE, QUEEN, KING)
             model.setPrice(dto.getPrice());  // 가격 설정
             model.setPrStock(dto.getPrStock());  // 재고 설정
-            model.setProduct(product);  // 상품에 모델 연결
+            //model.setProduct(product);  // 상품에 모델 연결
             product.addProductModel(model);  // 상품에 모델 추가
             totalStock += model.getPrStock();
         }
@@ -72,10 +72,6 @@ public class ProductService {
 
         return product.getId();  // 상품 ID만 반환
     }
-
-
-
-
 
     // 이미지 저장 유틸 (변경 없음)
     private List<String> handleAndReturnFiles(MultipartFile[] files) {

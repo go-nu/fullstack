@@ -18,23 +18,25 @@ public class CartItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @ManyToOne
+    @JoinColumn(name = "product_model_id", nullable = false)
     private ProductModel productModel;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
     private int count;
 
-    public static CartItem createCartItem(Product product, ProductModel productModel, int count) {
+    public static CartItem createCartItem(Product product, ProductModel productModel, int count, Cart cart) {
         CartItem cartItem = new CartItem();
         cartItem.setProduct(product);
         cartItem.setProductModel(productModel);
         cartItem.setCount(count);
+        cartItem.setCart(cart);
         return cartItem;
     }
 

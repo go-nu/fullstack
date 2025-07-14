@@ -5,7 +5,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
-<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -19,28 +18,33 @@
         <img th:src="${img.imageUrl}" alt="상품 이미지" width="300"/>
     </div>
 
+    <!-- 모델/옵션 선택 -->
     <h4>모델/옵션</h4>
     <ul>
-        <li th:each="model : ${product.productModels}">
-            모델: <span th:text="${model.productModelSelect}"></span>,
-            재고: <span th:text="${model.prStock}"></span>
+        <li th:each="model, iterStat : ${product.productModels}">
+            <label>
+                <input type="radio" name="modelId" th:value="${model.id}" th:checked="${iterStat.index == 0}" />
+                <span th:text="${model.productModelSelect}">옵션</span> - 재고: <span th:text="${model.prStock}">0</span>
+            </label>
         </li>
     </ul>
 
-    <!-- 찜하기 버튼 -->
+    <!-- 찜/장바구니/구매 Form -->
     <form th:action="@{/wishlist/toggle}" method="post" id="productForm">
         <input type="hidden" id="productId" name="productId" th:value="${product.id}" />
         <input type="hidden" id="actionType" name="actionType" value="cart" />
         <button type="submit" th:text="${product.liked} ? '찜 취소' : '찜하기'"></button>
+
+        <div>
+            <div>수량</div>
+            <input type="number" name="count" id="count" value="1" min="1"/>
+        </div>
+
         <div>
             <button type="button" onclick="submitForm('cart')">장바구니 추가</button>
             <button type="button" onclick="submitForm('buy')">구매하기</button>
         </div>
     </form>
-
-    <!-- 디버깅용 -->
-<!--    <p>작성자 ID: <span th:text="${product.writerId}">작성자 ID</span></p>
-    <p>로그인 유저 ID: <span th:text="${loginUser?.id}">로그인 ID</span></p>-->
 
     <div>
         <div>
@@ -48,17 +52,12 @@
             <span th:text="${product.price}"></span>원
         </div>
         <div>
-            <div>수량</div>
-            <input type="number" name="count" id="count" value="1" min="1"/>
+            <h5>결제 금액</h5>
+            <h3 name="totalPrice" id="totalPrice"></h3>
         </div>
     </div>
-    <div>
-        <h5>결제 금액</h5>
-        <h3 name="totalPrice" id="totalPrice"></h3>
-    </div>
 
-
-    <!-- 수정/삭제 버튼: 작성자만 보이게 -->
+    <!-- 작성자에게만 보이는 수정/삭제 -->
     <div th:if="${loginUser != null and product.writerId == loginUser.id}">
         <form th:action="@{'/products/' + ${product.id} + '/edit'}" method="get" style="display:inline;">
             <button type="submit">수정</button>
@@ -68,7 +67,6 @@
         </form>
     </div>
 
-    <!-- 🔙 목록으로 돌아가기 (항상 표시) -->
     <div style="margin-top: 20px;">
         <a th:href="@{/products}">
             <button type="button">목록으로 돌아가기</button>
@@ -76,29 +74,24 @@
     </div>
 </div>
 
-<!-- 리뷰/QnA 탭 삽입 영역 -->
+<!-- 리뷰/QnA 탭 -->
 <div class="mt-5">
-    <!-- 탭 메뉴 -->
     <div class="tab-menu d-flex mb-3 border-bottom">
         <button class="btn btn-link me-3 tab-button active" data-target="review-section">리뷰</button>
         <button class="btn btn-link tab-button" data-target="qna-section">Q&A</button>
     </div>
-
-    <!-- 리뷰 영역 -->
     <div id="review-section" class="tab-content-section">
         <div th:replace="~{review/review :: reviewboard}"></div>
     </div>
-
-    <!-- Qna 영역 -->
     <div id="qna-section" class="tab-content-section" style="display: none;">
         <div th:replace="~{qna/qna :: qnaboard}"></div>
     </div>
 </div>
 
+<!-- 가격 계산 스크립트 -->
 <script>
     $(function() {
         calculateTotalPrice();
-        // count가 변경될 때마다 함수 실행
         $('#count').change(function(){
             calculateTotalPrice();
         });
@@ -115,23 +108,54 @@
         }
     }
 </script>
+
+<!-- 장바구니/구매 전송 스크립트 -->
 <script>
-    // DOM이 로드되면 submitForm 함수 정의
     document.addEventListener("DOMContentLoaded", function() {
         window.submitForm = function(action) {
             const form = document.getElementById('productForm');
-            const productId = document.getElementById('productId').value;
-            if(action === 'cart') {
-                form.action = "/cart/add";  // 장바구니 추가 URL
-                document.getElementById('actionType').value = 'cart';  // actionType 값을 cart로 설정
-            } else if(action === 'buy') {
-                form.action = "/order/now";  // 구매하기 URL
-                document.getElementById('actionType').value = 'buy';  // actionType 값을 buy로 설정
+
+            // 기존 items 필드 제거
+            ['items[0].modelId', 'items[0].count'].forEach(name => {
+                const old = form.querySelector(`input[name="${name}"]`);
+                if (old) old.remove();
+            });
+
+            const selectedModelId = document.querySelector('input[name="modelId"]:checked')?.value;
+            const count = document.getElementById('count').value;
+
+            if (!selectedModelId || !count) {
+                alert("옵션과 수량을 선택해주세요.");
+                return;
             }
-            form.submit();  // POST 방식으로 폼 전송
+
+            // 동적 필드 추가
+            const modelInput = document.createElement("input");
+            modelInput.type = "hidden";
+            modelInput.name = "items[0].modelId";
+            modelInput.value = selectedModelId;
+            form.appendChild(modelInput);
+
+            const countInput = document.createElement("input");
+            countInput.type = "hidden";
+            countInput.name = "items[0].count";
+            countInput.value = count;
+            form.appendChild(countInput);
+
+            // 액션 설정
+            if(action === 'cart') {
+                form.action = "/cart/add";
+                document.getElementById('actionType').value = 'cart';
+            } else if(action === 'buy') {
+                form.action = "/order/now";
+                document.getElementById('actionType').value = 'buy';
+            }
+
+            form.submit();
         };
     });
 </script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // 탭 전환 스크립트 (기존)
