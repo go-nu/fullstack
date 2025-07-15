@@ -69,7 +69,4 @@ public class CategoryController {
         return "products"; // 상품 목록 템플릿
     }
 
-
-
-
 }

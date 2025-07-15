@@ -28,6 +28,12 @@ public class ReviewPostService {
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
 
+    // 리뷰 조회
+    public ReviewPost getReviewById(Long id) {
+        return reviewPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+    }
+
     // 리뷰 등록
     public void saveReview(ReviewPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
@@ -60,16 +66,47 @@ public class ReviewPostService {
     }
 
     // 리뷰 수정
-    public void updateReview(Long id, ReviewPostDto dto) throws IOException {
+    public void updateReview(Long id, ReviewPostDto dto, List<String> deleteImages) throws IOException {
         ReviewPost post = reviewPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
 
-        deleteFiles(post.getFilePaths());
-        List<String> storedPaths = handleMultipleFiles(dto.getFiles());
-        String joinedPaths = String.join(",", storedPaths);
-        String joinedNames = dto.getFiles().stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.joining(","));
+        // 기존 이미지 경로와 파일명 처리
+        List<String> currentPaths = new ArrayList<>();
+        List<String> currentNames = new ArrayList<>();
+
+        if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {
+            currentPaths.addAll(Arrays.asList(post.getFilePaths().split(",")));
+            currentNames.addAll(Arrays.asList(post.getFileNames().split(",")));
+        }
+
+        // 삭제할 이미지 처리
+        if (deleteImages != null && !deleteImages.isEmpty()) {
+            for (String pathToDelete : deleteImages) {
+                int index = currentPaths.indexOf(pathToDelete);
+                if (index != -1) {
+                    deleteFile(pathToDelete);  // 실제 파일 삭제
+                    currentPaths.remove(index);
+                    if (index < currentNames.size()) {
+                        currentNames.remove(index);
+                    }
+                }
+            }
+        }
+
+        // 새로운 파일이 있는 경우 추가
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty() && !dto.getFiles().get(0).isEmpty()) {
+            List<String> newPaths = handleMultipleFiles(dto.getFiles());
+            currentPaths.addAll(newPaths);
+
+            List<String> newNames = dto.getFiles().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .collect(Collectors.toList());
+            currentNames.addAll(newNames);
+        }
+
+        // 최종 경로와 파일명을 문자열로 변환
+        String joinedPaths = String.join(",", currentPaths);
+        String joinedNames = String.join(",", currentNames);
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -113,6 +150,14 @@ public class ReviewPostService {
                 File file = new File(System.getProperty("user.dir") + path);
                 if (file.exists()) file.delete();
             }
+        }
+    }
+
+    // 단일 파일 삭제
+    private void deleteFile(String filePath) {
+        if (filePath != null && !filePath.isEmpty()) {
+            File file = new File(System.getProperty("user.dir") + filePath);
+            if (file.exists()) file.delete();
         }
     }
 

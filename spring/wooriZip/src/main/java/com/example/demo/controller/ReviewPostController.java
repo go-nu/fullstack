@@ -71,11 +71,22 @@ public class ReviewPostController {
         return "redirect:/products/" + dto.getProductId();
     }
 
+    // 리뷰 수정 폼
+    @GetMapping("/edit/{id}")
+    public String getEditForm(@PathVariable Long id, Model model) {
+        ReviewPost review = reviewPostService.getReviewById(id);
+        model.addAttribute("review", review);
+        model.addAttribute("productId", review.getProduct().getId());
+        model.addAttribute("loginUser", review.getEmail()); // 수정 권한 확인을 위해
+        return "review/review";
+    }
+
     // 리뷰 수정
     @PostMapping("/update/{id}")
     public String updateReview(@PathVariable Long id,
                                @ModelAttribute ReviewPostDto dto,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
+                               @RequestParam(value = "deleteImages", required = false) List<String> deleteImages,
                                @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
         if (customUserDetails == null) {
             return "redirect:/user/login";
@@ -83,10 +94,11 @@ public class ReviewPostController {
         Users user = customUserDetails.getUser();
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
+
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
             dto.setFiles(List.of(files));
         }
-        reviewPostService.updateReview(id, dto);
+        reviewPostService.updateReview(id, dto, deleteImages);
         return "redirect:/products/" + dto.getProductId();
     }
 

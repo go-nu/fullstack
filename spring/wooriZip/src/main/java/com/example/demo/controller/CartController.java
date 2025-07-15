@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CartDto;
+import com.example.demo.oauth2.CustomOAuth2User;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +26,20 @@ public class CartController {
 
     // /cart 시 장바구니
     @GetMapping
-    public String viewCart(Model model, Principal principal) {
-        if (principal == null){
+    public String viewCart(Model model, Authentication authentication) {
+        String email = "";
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            model.addAttribute("loginUser", userDetails.getUser());
+            email = userDetails.getUser().getEmail();
+        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
+            model.addAttribute("loginUser", oauth2User.getUser());
+            email = oauth2User.getUser().getEmail();
+        }
+
+        if (email == null){
             return "redirect:/login";
         }
 
-        String email = principal.getName();
         CartDto cart = cartService.getCartByEmail(email);
         // 만약 없다면 빈 객체 생성하여 전달
         if (cart == null) {
@@ -39,9 +50,14 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String addToCart(@RequestParam Long productId, CartDto dto, Principal principal, Model model) {
-        String email = principal.getName();
-        log.info("email = " + email);
+    public String addToCart(@RequestParam Long productId, CartDto dto, Authentication authentication, Model model) {
+        String email = "";
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            email = userDetails.getUser().getEmail();
+        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
+            email = oauth2User.getUser().getEmail();
+        }
+
         try {
             cartService.addItemToCart(dto, email, productId);
             return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
@@ -54,10 +70,16 @@ public class CartController {
 
     // 카트 아이템 삭제 메소드
     @PostMapping("/remove")
-    public String removeItemFromCart(@RequestParam Long cartItemId, Principal principal, Model model) {
-        String userId = principal.getName();
+    public String removeItemFromCart(@RequestParam Long cartItemId, Authentication authentication, Model model) {
+        String email = "";
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            email = userDetails.getUser().getEmail();
+        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
+            email = oauth2User.getUser().getEmail();
+        }
+
         try {
-            cartService.removeItemFromCart(userId, cartItemId);
+            cartService.removeItemFromCart(email, cartItemId);
             return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
         } catch (Exception e) {
             log.error("Error removing item from cart", e);

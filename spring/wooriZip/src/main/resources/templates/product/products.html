@@ -25,12 +25,20 @@
 
 <form id="productForm" th:action="@{/admin/products}" method="post" enctype="multipart/form-data" th:object="${productForm}">
     <label>상품명: <input type="text" th:field="*{name}" required /></label><br/>
-    <label>가격: <input type="number" th:field="*{price}" required /></label><br/>
+    <!--    <label>가격: <input type="number" th:field="*{price}" required /></label><br/>-->
+
 
     <!-- 대분류 선택 -->
     <label>대분류:
-        <select id="parentCategory" onchange="loadChildCategories()">
+        <select id="parentCategory" onchange="loadMiddleCategories()">
             <option value="">대분류 선택</option>
+        </select>
+    </label><br/>
+
+    <!-- 중분류 선택 -->
+    <label>중분류:
+        <select id="middleCategory" onchange="loadChildCategories()">
+            <option value="">중분류 선택</option>
         </select>
     </label><br/>
 
@@ -42,32 +50,46 @@
     </label><br/>
 
     <label>모델 및 재고:</label><br/>
-    <div th:each="model, i : ${productForm.productModelDtoList}">
-        <!-- 모델명 -->
-        <label>모델명:</label>
-        <select th:field="*{productModelDtoList[__${i.index}__].productModelSelect}" required>
-            <option value="">옵션을 선택하세요</option>
-            <option th:value="'SUPER_SINGLE'" th:text="'슈퍼싱글'"></option>
-            <option th:value="'QUEEN'" th:text="'퀸'"></option>
-            <option th:value="'KING'" th:text="'킹'"></option>
-            <option th:value="'DEFAULT_MODEL'" th:text="'기본'"></option>
-        </select><br/>
+    <div id="optionContainer">
+        <div class="option-item">
+            <!-- 모델명 -->
+            <label>모델명:</label>
+            <input type="text" name="productModelDtoList[0].productModelSelect" placeholder="모델명(예: 퀸, 슈퍼싱글 등)" required/><br/>
 
-        <!-- 재고 -->
-        <label>재고:</label>
-        <input type="number" th:field="*{productModelDtoList[__${i.index}__].prStock}" placeholder="재고 입력"/><br/>
+            <!-- 재고 -->
+            <label>재고:</label>
+            <input type="number" name="productModelDtoList[0].prStock" placeholder="재고 입력"/><br/>
 
-        <!-- 가격 -->
-        <label>가격:</label>
-        <input type="number" th:field="*{productModelDtoList[__${i.index}__].price}" placeholder="가격 입력"/><br/>
+            <!-- 가격 -->
+            <label>가격:</label>
+            <input type="number" name="productModelDtoList[0].price" placeholder="가격 입력"/><br/>
 
-        <hr />
+            <button type="button" class="removeOptionBtn" style="display:none;">옵션 삭제</button>
+            <hr />
+        </div>
     </div>
+    <button type="button" onclick="addOption()">옵션 추가</button>
+
+    <!-- 상품 속성(옵션) 선택 -->
+    <label>상품 속성:
+        <select name="attributeValueIds" multiple size="5">
+            <th:block th:each="attr : ${attributes}">
+                <option disabled style="font-weight:bold; background:#f0f0f0;">[[${attr.name}]]</option>
+                <option th:each="val : ${attributeValues}"
+                        th:if="${val.attribute.id} == ${attr.id}"
+                        th:value="${val.id}"
+                        th:text="${val.value}">
+                </option>
+            </th:block>
+        </select>
+        <span style="font-size:0.9em; color:#888;">(Ctrl/Command로 다중 선택)</span>
+    </label><br/>
 
     <label>설명: <textarea th:field="*{description}"></textarea></label><br/>
 
+
     <label>이미지 업로드 (최대 4장):</label><br/>
-    <input type="file" id="imageInput" accept="image/*" multiple /><br/><br/>
+    <input type="file" id="imageInput" name="images" accept="image/*" multiple /><br/><br/>
 
     <div id="previewContainer"></div><br/>
 
@@ -75,7 +97,7 @@
 </form>
 
 <script>
-    // 카테고리 드롭다운 로딩
+    // 3단계 계층형 카테고리 드롭다운 로딩
     document.addEventListener("DOMContentLoaded", function () {
         fetch("/categories/parents")
             .then(res => res.json())
@@ -90,14 +112,30 @@
             });
     });
 
-    function loadChildCategories() {
+    function loadMiddleCategories() {
         const parentId = document.getElementById("parentCategory").value;
+        const middleSelect = document.getElementById("middleCategory");
+        const childSelect = document.getElementById("childCategory");
+        middleSelect.innerHTML = '<option value="">중분류 선택</option>';
+        childSelect.innerHTML = '<option value="">소분류 선택</option>';
+        if (!parentId) return;
+        fetch(`/categories/children?parentId=${parentId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(c => {
+                    const option = document.createElement("option");
+                    option.value = c.id;
+                    option.text = c.name;
+                    middleSelect.appendChild(option);
+                });
+            });
+    }
+    function loadChildCategories() {
+        const middleId = document.getElementById("middleCategory").value;
         const childSelect = document.getElementById("childCategory");
         childSelect.innerHTML = '<option value="">소분류 선택</option>';
-
-        if (!parentId) return;
-
-        fetch(`/categories/children?parentId=${parentId}`)
+        if (!middleId) return;
+        fetch(`/categories/children?parentId=${middleId}`)
             .then(res => res.json())
             .then(data => {
                 data.forEach(c => {
@@ -115,74 +153,92 @@
     const form = document.getElementById('productForm');
     let selectedFiles = [];
 
-    input.addEventListener('change', function () {
-        const newFiles = Array.from(this.files);
+    // [수정 전: 누적 방식]
+    // input.addEventListener('change', function () {
+    //     const newFiles = Array.from(this.files);
+    //     if (selectedFiles.length + newFiles.length > 4) { ... }
+    //     newFiles.forEach(file => { selectedFiles.push(file); ... });
+    //     this.value = '';
+    // });
 
-        if (selectedFiles.length + newFiles.length > 4) {
+    // [수정 후: 항상 최신 파일만 반영]
+    input.addEventListener('change', function () {
+        selectedFiles = Array.from(this.files);
+        if (selectedFiles.length > 4) {
             alert("이미지는 최대 4장까지 업로드할 수 있습니다.");
+            selectedFiles = selectedFiles.slice(0, 4);
+            this.value = '';
+            preview.innerHTML = '';
             return;
         }
-
-        newFiles.forEach(file => {
-            selectedFiles.push(file);
-
+        preview.innerHTML = '';
+        selectedFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = e => {
                 const box = document.createElement('div');
                 box.className = 'img-box';
-
                 const img = document.createElement('img');
                 img.src = e.target.result;
-
-                const delBtn = document.createElement('button');
-                delBtn.innerText = 'X';
-                delBtn.type = 'button';
-                delBtn.style.position = 'absolute';
-                delBtn.style.top = '0';
-                delBtn.style.right = '0';
-                delBtn.style.background = 'red';
-                delBtn.style.color = 'white';
-                delBtn.style.border = 'none';
-                delBtn.style.borderRadius = '50%';
-                delBtn.style.width = '20px';
-                delBtn.style.height = '20px';
-                delBtn.style.cursor = 'pointer';
-
-                delBtn.onclick = () => {
-                    const idx = Array.from(preview.children).indexOf(box);
-                    selectedFiles.splice(idx, 1);
-                    box.remove();
-                };
-
                 box.appendChild(img);
-                box.appendChild(delBtn);
                 preview.appendChild(box);
             };
             reader.readAsDataURL(file);
         });
-
-        this.value = '';
     });
 
-    // 폼 제출 시 이미지 포함해서 FormData로 전송
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(form);
 
-        selectedFiles.forEach(file => {
-            formData.append("images", file);
+    // 옵션 동적 추가/삭제
+    function addOption() {
+        const container = document.getElementById('optionContainer');
+        const optionCount = container.children.length;
+        if (optionCount >= 10) {
+            alert("옵션은 최대 10개까지 추가할 수 있습니다.");
+            return;
+        }
+        const div = document.createElement('div');
+        div.className = 'option-item';
+        div.innerHTML = `
+            <label>모델명:</label>
+            <input type="text" name="productModelDtoList[${optionCount}].productModelSelect" placeholder="모델명(예: 퀸, 슈퍼싱글 등)" required/><br/>
+            <label>재고:</label>
+            <input type="number" name="productModelDtoList[${optionCount}].prStock" placeholder="재고 입력"/><br/>
+            <label>가격:</label>
+            <input type="number" name="productModelDtoList[${optionCount}].price" placeholder="가격 입력"/><br/>
+            <button type="button" class="removeOptionBtn">옵션 삭제</button>
+            <hr />
+        `;
+        container.appendChild(div);
+        updateRemoveButtons();
+    }
+
+    function updateRemoveButtons() {
+        const container = document.getElementById('optionContainer');
+        const items = container.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            const btn = item.querySelector('.removeOptionBtn');
+            btn.style.display = (items.length > 1) ? '' : 'none';
+            btn.onclick = function() {
+                item.remove();
+                // 옵션 삭제 후 name 인덱스 재정렬
+                reorderOptionNames();
+                updateRemoveButtons();
+            };
         });
+    }
 
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        }).then(res => {
-            if (res.redirected) {
-                location.href = res.url;
-            } else {
-                alert("등록 실패");
-            }
-        }).catch(() => alert("에러 발생"));
+    function reorderOptionNames() {
+        const container = document.getElementById('optionContainer');
+        const items = container.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            item.querySelector('input[name$=".productModelSelect"]').name = `productModelDtoList[${idx}].productModelSelect`;
+            item.querySelector('input[name$=".prStock"]').name = `productModelDtoList[${idx}].prStock`;
+            item.querySelector('input[name$=".price"]').name = `productModelDtoList[${idx}].price`;
+        });
+    }
+
+    // 최초 1개만 있을 때 삭제 버튼 숨김
+    document.addEventListener('DOMContentLoaded', function() {
+        updateRemoveButtons();
     });
 </script>
 

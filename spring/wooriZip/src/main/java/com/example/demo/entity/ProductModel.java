@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 
-import com.example.demo.constant.ProductModelSelect;
+// import com.example.demo.constant.ProductModelSelect;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,8 +16,8 @@ public class ProductModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private ProductModelSelect productModelSelect; // 옵션
+    // private ProductModelSelect productModelSelect; // 옵션
+    private String productModelSelect; // 옵션명(자유입력)
     private Integer price;  // 옵션별 가격
     private Integer prStock; // 재고 수량
 
@@ -39,7 +39,7 @@ public class ProductModel {
         ProductModel that = (ProductModel) o;
 
         // 중요 속성 값들이 모두 같을 때만 같은 객체로 판단
-        // 여기서는 모델명(productModelSelect), 가격(price), 재고(prStock)을 기준으로 비교
+        // 여기서는 모델명(productModelSelect), 가격(price), 재고(prStock)를 기준으로 비교
         return Objects.equals(productModelSelect, that.productModelSelect)
                 && Objects.equals(price, that.price)
                 && Objects.equals(prStock, that.prStock);

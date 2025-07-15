@@ -6,7 +6,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -14,20 +13,29 @@
     <h2 th:text="${product.name}">상품 이름</h2>
     <p th:text="${product.description}">상품 설명</p>
 
-    <div th:each="img : ${product.images}">
-        <img th:src="${img.imageUrl}" alt="상품 이미지" width="300"/>
+    <!-- 이미지 여러 장 지원 (썸네일/리스트) -->
+    <div th:if="${product.images != null && #lists.size(product.images) > 0}">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <img th:each="img : ${product.images}" th:src="${img.imageUrl}" alt="상품 이미지" width="200"
+                 style="border:1px solid #ccc; border-radius:8px;"/>
+        </div>
+    </div>
+    <div th:if="${product.images == null || #lists.size(product.images) == 0}">
+        <p>이미지가 없습니다.</p>
     </div>
 
-    <!-- 모델/옵션 선택 -->
-    <h4>모델/옵션</h4>
-    <ul>
-        <li th:each="model, iterStat : ${product.productModels}">
-            <label>
-                <input type="radio" name="modelId" th:value="${model.id}" th:checked="${iterStat.index == 0}" />
-                <span th:text="${model.productModelSelect}">옵션</span> - 재고: <span th:text="${model.prStock}">0</span>
-            </label>
-        </li>
-    </ul>
+    <!-- 옵션/모델 셀렉트 박스 -->
+    <h4>모델/옵션 선택</h4>
+    <select id="modelSelect" class="form-select" style="max-width:300px;">
+        <option value="">옵션을 선택하세요</option>
+        <option th:each="model : ${product.productModels}"
+                th:value="${model.id}"
+                th:data-price="${model.price}"
+                th:data-stock="${model.prStock}"
+                th:text="|${model.productModelSelect} / ${#numbers.formatInteger(model.price, 3, 'COMMA')}원 / 재고:${model.prStock}|">
+        </option>
+    </select>
+    <div id="modelInfo" style="margin-top:10px;"></div>
 
     <!-- 찜/장바구니/구매 Form -->
     <form th:action="@{/wishlist/toggle}" method="post" id="productForm">
@@ -48,16 +56,15 @@
 
     <div>
         <div>
-            <input type="hidden" id="price" name="price" th:value="${product.price}" />
-            <span th:text="${product.price}"></span>원
+            <input type="hidden" id="price" name="price" />
+            <span id="selectedPrice">0</span>원
         </div>
         <div>
             <h5>결제 금액</h5>
             <h3 name="totalPrice" id="totalPrice"></h3>
         </div>
     </div>
-
-    <!-- 작성자에게만 보이는 수정/삭제 -->
+    <!-- 수정/삭제 버튼: 작성자만 보이게 -->
     <div th:if="${loginUser != null and product.writerId == loginUser.id}">
         <form th:action="@{'/products/' + ${product.id} + '/edit'}" method="get" style="display:inline;">
             <button type="submit">수정</button>
@@ -67,6 +74,7 @@
         </form>
     </div>
 
+    <!-- 🔙 목록으로 돌아가기 (항상 표시) -->
     <div style="margin-top: 20px;">
         <a th:href="@{/products}">
             <button type="button">목록으로 돌아가기</button>
@@ -74,401 +82,59 @@
     </div>
 </div>
 
-<!-- 리뷰/QnA 탭 -->
+<!-- 리뷰/QnA 탭 삽입 영역 -->
+<div id="tab-section-placeholder"></div>
+
 <div class="mt-5">
+    <!-- 탭 메뉴 -->
     <div class="tab-menu d-flex mb-3 border-bottom">
         <button class="btn btn-link me-3 tab-button active" data-target="review-section">리뷰</button>
         <button class="btn btn-link tab-button" data-target="qna-section">Q&A</button>
     </div>
+
+    <!-- 리뷰 영역 -->
     <div id="review-section" class="tab-content-section">
         <div th:replace="~{review/review :: reviewboard}"></div>
     </div>
+
+    <!-- Qna 영역 -->
     <div id="qna-section" class="tab-content-section" style="display: none;">
-        <div th:replace="~{qna/qna :: qnaboard}"></div>
+        <div  id="qna-content" th:replace="~{qna/qna :: qnaboard}"></div>
     </div>
 </div>
 
-<!-- 가격 계산 스크립트 -->
+<div th:replace="~{index/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/product/detail.js" defer></script>
 <script>
-    $(function() {
-        calculateTotalPrice();
-        $('#count').change(function(){
-            calculateTotalPrice();
-        });
-    });
-
-    function calculateTotalPrice(){
-        var count = parseInt($('#count').val());
-        var price = parseInt($('#price').val());
-        if (!isNaN(count) && !isNaN(price)) {
-            var totalPrice = count * price;
-            $('#totalPrice').html(totalPrice + '원');
-        } else {
-            $('#totalPrice').html('가격 계산 오류');
-        }
-    }
-</script>
-
-<!-- 장바구니/구매 전송 스크립트 -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        window.submitForm = function(action) {
-            const form = document.getElementById('productForm');
-
-            // 기존 items 필드 제거
-            ['items[0].modelId', 'items[0].count'].forEach(name => {
-                const old = form.querySelector(`input[name="${name}"]`);
-                if (old) old.remove();
-            });
-
-            const selectedModelId = document.querySelector('input[name="modelId"]:checked')?.value;
-            const count = document.getElementById('count').value;
-
-            if (!selectedModelId || !count) {
-                alert("옵션과 수량을 선택해주세요.");
-                return;
-            }
-
-            // 동적 필드 추가
-            const modelInput = document.createElement("input");
-            modelInput.type = "hidden";
-            modelInput.name = "items[0].modelId";
-            modelInput.value = selectedModelId;
-            form.appendChild(modelInput);
-
-            const countInput = document.createElement("input");
-            countInput.type = "hidden";
-            countInput.name = "items[0].count";
-            countInput.value = count;
-            form.appendChild(countInput);
-
-            // 액션 설정
-            if(action === 'cart') {
-                form.action = "/cart/add";
-                document.getElementById('actionType').value = 'cart';
-            } else if(action === 'buy') {
-                form.action = "/order/now";
-                document.getElementById('actionType').value = 'buy';
-            }
-
-            form.submit();
-        };
-    });
-</script>
-
-<script>
+    // 옵션 선택 시 가격/재고 표시 및 결제 금액 동적 계산
     document.addEventListener('DOMContentLoaded', function() {
-        // 탭 전환 스크립트 (기존)
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+        const modelSelect = document.getElementById('modelSelect');
+        const selectedPriceSpan = document.getElementById('selectedPrice');
+        const countInput = document.getElementById('count');
+        const totalPrice = document.getElementById('totalPrice');
 
-                const target = this.getAttribute('data-target');
-                document.querySelectorAll('.tab-content-section').forEach(section => {
-                    section.style.display = section.id === target ? 'block' : 'none';
-                });
-            });
-        });
-
-        // QnA 토글 함수
-        window.toggleQnaForm = function () {
-            const form = document.getElementById('qnaFormWrapper');
-            if (form) {
-                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        function updatePriceAndTotal() {
+            const selected = modelSelect.selectedOptions[0];
+            let price = 0;
+            if(selected && selected.dataset.price) {
+                price = parseInt(selected.dataset.price);
+                selectedPriceSpan.innerText = price.toLocaleString();
+                document.getElementById('price').value = price;
+            } else {
+                selectedPriceSpan.innerText = '0';
             }
-        };
-
-        // 리뷰 토글 함수
-        window.toggleReviewForm = function () {
-            const form = document.getElementById("reviewForm");
-            if (form) {
-                form.classList.toggle("d-none");
-            }
-        };
-
-        // 통합 이미지 미리보기 함수 (QnA용)
-        window.previewImages = function (input, previewId) {
-            handleImagePreview(input, previewId, 'img-thumbnail me-2', '100px');
-        };
-
-        // 리뷰 이미지 미리보기 함수
-        window.handleReviewImagePreview = function(input) {
-            const preview = document.getElementById('reviewPreviewContainer');
-            preview.innerHTML = '';
-
-            if (input.files.length > 4) {
-                alert("이미지는 최대 4장까지 첨부할 수 있습니다.");
-                input.value = '';
-                return;
-            }
-
-            Array.from(input.files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const box = document.createElement('div');
-                    box.className = 'img-box';
-                    box.style.display = 'inline-block';
-                    box.style.margin = '10px';
-                    box.style.position = 'relative';
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.width = '150px';
-                    img.style.height = 'auto';
-                    img.style.border = '1px solid #ccc';
-                    img.style.borderRadius = '12px';
-
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.innerText = 'X';
-                    deleteBtn.style.position = 'absolute';
-                    deleteBtn.style.top = '5px';
-                    deleteBtn.style.right = '5px';
-                    deleteBtn.style.background = 'red';
-                    deleteBtn.style.color = 'white';
-                    deleteBtn.style.border = 'none';
-                    deleteBtn.style.borderRadius = '50%';
-                    deleteBtn.style.width = '20px';
-                    deleteBtn.style.height = '20px';
-                    deleteBtn.style.cursor = 'pointer';
-                    deleteBtn.onclick = function() {
-                        // 파일 삭제를 위해 input의 files를 조작
-                        const dt = new DataTransfer();
-                        const files = Array.from(input.files);
-                        files.splice(index, 1);
-                        files.forEach(file => dt.items.add(file));
-                        input.files = dt.files;
-
-                        // 미리보기에서도 제거
-                        box.remove();
-                    };
-
-                    box.appendChild(img);
-                    box.appendChild(deleteBtn);
-                    preview.appendChild(box);
-                };
-                reader.readAsDataURL(file);
-            });
-        };
-
-        // QnA 이미지 첨부 기능 (인테리어 게시판과 동일한 방식)
-        let qnaSelectedFiles = [];
-
-        const qnaImageInput = document.getElementById('qnaImageInput');
-        const qnaPreviewContainer = document.getElementById('qnaPreviewContainer');
-
-        if (qnaImageInput && qnaPreviewContainer) {
-            qnaImageInput.addEventListener('change', function () {
-                const newFiles = Array.from(this.files);
-
-                if (qnaSelectedFiles.length + newFiles.length > 4) {
-                    alert("이미지는 최대 4장까지 첨부할 수 있습니다.");
-                    return;
-                }
-
-                newFiles.forEach(file => {
-                    qnaSelectedFiles.push(file);
-
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        const box = document.createElement('div');
-                        box.className = 'img-box';
-                        box.style.display = 'inline-block';
-                        box.style.margin = '10px';
-                        box.style.position = 'relative';
-
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.style.width = '150px';
-                        img.style.height = 'auto';
-                        img.style.border = '1px solid #ccc';
-                        img.style.borderRadius = '12px';
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.innerText = 'X';
-                        deleteBtn.style.position = 'absolute';
-                        deleteBtn.style.top = '5px';
-                        deleteBtn.style.right = '5px';
-                        deleteBtn.style.background = 'red';
-                        deleteBtn.style.color = 'white';
-                        deleteBtn.style.border = 'none';
-                        deleteBtn.style.borderRadius = '50%';
-                        deleteBtn.style.width = '20px';
-                        deleteBtn.style.height = '20px';
-                        deleteBtn.style.cursor = 'pointer';
-                        deleteBtn.onclick = function() {
-                            const index = qnaSelectedFiles.indexOf(file);
-                            if (index > -1) {
-                                qnaSelectedFiles.splice(index, 1);
-                            }
-                            box.remove();
-                        };
-
-                        box.appendChild(img);
-                        box.appendChild(deleteBtn);
-                        qnaPreviewContainer.appendChild(box);
-                    };
-                    reader.readAsDataURL(file);
-                });
-
-                this.value = '';
-            });
+            const count = parseInt(countInput.value) || 1;
+            totalPrice.innerText = (price * count).toLocaleString() + '원';
         }
-
-        // QnA 폼 제출 시 파일 추가
-        const qnaForm = document.querySelector('form[th\\:action*="/qna/create"]');
-        if (qnaForm) {
-            qnaForm.addEventListener('submit', function(e) {
-                // 선택된 파일들을 formData에 추가
-                qnaSelectedFiles.forEach(file => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.name = 'files';
-                    input.style.display = 'none';
-
-                    // FileList 객체 생성
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    input.files = dataTransfer.files;
-
-                    this.appendChild(input);
-                });
-
-                // 폼이 정상적으로 제출되도록 이벤트 리스너 제거
-                this.removeEventListener('submit', arguments.callee);
-            });
-        }
-
-        // 통합 이미지 미리보기 함수 (기존 QnA용 - 호환성 유지)
-        window.previewImages = function (input, previewId) {
-            handleImagePreview(input, previewId, 'img-thumbnail me-2', '100px');
-        };
-
-        // 공통 이미지 미리보기 처리 함수
-        function handleImagePreview(input, previewId, className, maxSize) {
-            const preview = document.getElementById(previewId);
-            preview.innerHTML = '';
-
-            if (input.files.length > 4) {
-                alert("이미지는 최대 4장까지 첨부할 수 있습니다.");
-                input.value = '';
-                return;
-            }
-
-            Array.from(input.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = className;
-                    img.style.maxHeight = maxSize;
-                    if (maxSize === '150px') {
-                        img.style.width = '150px';
-                    }
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // QnA 답변 작성 폼 토글 함수
-        window.toggleAnswerForm = function(qnaId) {
-            const form = document.getElementById('answerForm_' + qnaId);
-            if (form) {
-                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            }
-        };
-
-        // QnA 답변 수정 폼 토글 함수
-        window.toggleAnswerEditForm = function(qnaId) {
-            const form = document.getElementById('answerEditForm_' + qnaId);
-            if (form) {
-                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            }
-        };
-
-        // QnA 질문 수정 폼 토글 함수
-        window.toggleQnaEditForm = function(qnaId) {
-            const form = document.getElementById('qnaEditForm_' + qnaId);
-            if (form) {
-                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            }
-        };
-
-        // 리뷰 수정 폼 토글 함수
-        window.toggleReviewEditForm = function(reviewId) {
-            const form = document.getElementById('reviewEditForm_' + reviewId);
-            if (form) {
-                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            }
-        };
-
-
-
-        // 리뷰 이미지 미리보기 기능
-        const reviewImageInput = document.getElementById('reviewImageInput');
-        const reviewPreviewContainer = document.getElementById('reviewPreviewContainer');
-
-        if (reviewImageInput && reviewPreviewContainer) {
-            reviewImageInput.addEventListener('change', function() {
-                reviewPreviewContainer.innerHTML = '';
-
-                if (this.files.length > 4) {
-                    alert("이미지는 최대 4장까지 첨부할 수 있습니다.");
-                    this.value = '';
-                    return;
-                }
-
-                Array.from(this.files).forEach((file, index) => {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        const box = document.createElement('div');
-                        box.className = 'img-box';
-                        box.style.display = 'inline-block';
-                        box.style.margin = '10px';
-                        box.style.position = 'relative';
-
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.style.width = '150px';
-                        img.style.height = 'auto';
-                        img.style.border = '1px solid #ccc';
-                        img.style.borderRadius = '12px';
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.innerText = 'X';
-                        deleteBtn.style.position = 'absolute';
-                        deleteBtn.style.top = '5px';
-                        deleteBtn.style.right = '5px';
-                        deleteBtn.style.background = 'red';
-                        deleteBtn.style.color = 'white';
-                        deleteBtn.style.border = 'none';
-                        deleteBtn.style.borderRadius = '50%';
-                        deleteBtn.style.width = '20px';
-                        deleteBtn.style.height = '20px';
-                        deleteBtn.style.cursor = 'pointer';
-                        deleteBtn.onclick = function() {
-                            // 파일 삭제를 위해 input의 files를 조작
-                            const dt = new DataTransfer();
-                            const files = Array.from(reviewImageInput.files);
-                            files.splice(index, 1);
-                            files.forEach(file => dt.items.add(file));
-                            reviewImageInput.files = dt.files;
-
-                            // 미리보기에서도 제거
-                            box.remove();
-                        };
-
-                        box.appendChild(img);
-                        box.appendChild(deleteBtn);
-                        reviewPreviewContainer.appendChild(box);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
-        }
+        modelSelect.addEventListener('change', updatePriceAndTotal);
+        countInput.addEventListener('input', updatePriceAndTotal);
+        // 최초 로딩 시 결제 금액 표시
+        updatePriceAndTotal();
     });
 </script>
-
+<script src="/js/review/review.js" defer></script>
+<script src="/js/qna/qna.js" defer></script>
 </body>
 </html>

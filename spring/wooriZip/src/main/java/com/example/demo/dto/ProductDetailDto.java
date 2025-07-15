@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,7 +23,6 @@ public class ProductDetailDto {
         this.product = product;
         this.liked = liked;
     }
-
 
     public String getName() {
         return product.getName();
@@ -57,8 +55,5 @@ public class ProductDetailDto {
     public Users getUser() {
         return product.getUser();
     }
-
-
-
 
 }

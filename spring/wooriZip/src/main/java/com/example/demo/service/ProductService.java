@@ -8,6 +8,8 @@ import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductImageRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.WishlistRepository;
+import com.example.demo.repository.AttributeValueRepository;
+import com.example.demo.repository.ProductAttributeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class ProductService {
     private final ProductImageRepository imageRepository;
     private final WishlistRepository wishlistRepository;
     private final CategoryRepository categoryRepository;
+    private final AttributeValueRepository attributeValueRepository;
+    private final ProductAttributeRepository productAttributeRepository;
 
     // ✅ 상품 등록
     public Long createProduct(ProductForm form,
@@ -42,16 +46,19 @@ public class ProductService {
 
         // 2. Product 생성
         Product product = form.createProduct(category, loginUser);
-        product = productRepository.save(product);  // 상품 저장
+        // product = productRepository.save(product);  // 상품 저장 (중복 저장 제거)
 
         // 3. 모델 생성 및 재고 계산
         int totalStock = 0;
-        for (ProductModelDto dto : form.getProductModelDtoList()) {
+        List<ProductModelDto> validModels = form.getProductModelDtoList().stream()
+                .filter(dto -> dto.getProductModelSelect() != null && dto.getPrice() != null && dto.getPrStock() != null)
+                .collect(Collectors.toList());
+        for (ProductModelDto dto : validModels) {
             ProductModel model = new ProductModel();
-            model.setProductModelSelect(dto.getProductModelSelect());  // 모델 선택 (예: SUPER_SINGLE, QUEEN, KING)
+            model.setProductModelSelect(dto.getProductModelSelect());  // 모델명(자유입력)
             model.setPrice(dto.getPrice());  // 가격 설정
             model.setPrStock(dto.getPrStock());  // 재고 설정
-            //model.setProduct(product);  // 상품에 모델 연결
+            // model.setProduct(product);  // 상품에 모델 연결
             product.addProductModel(model);  // 상품에 모델 추가
             totalStock += model.getPrStock();
         }
@@ -66,12 +73,32 @@ public class ProductService {
                 ProductImage image = new ProductImage();
                 image.setImageUrl(path);
                 image.setProduct(product);
-                imageRepository.save(image);
+                product.getImages().add(image); // product에 이미지 추가
+                // imageRepository.save(image); // 별도 저장 불필요 (cascade)
+            }
+        }
+
+        product = productRepository.save(product);  // 연관 엔티티까지 한 번만 저장
+
+        // 5. 속성값(ProductAttribute) 저장
+        if (form.getAttributeValueIds() != null && !form.getAttributeValueIds().isEmpty()) {
+            for (Long attrValueId : form.getAttributeValueIds()) {
+                AttributeValue attrValue = attributeValueRepository.findById(attrValueId)
+                        .orElseThrow(() -> new IllegalArgumentException("속성값이 존재하지 않습니다."));
+                ProductAttribute pa = new ProductAttribute();
+                pa.setProduct(product);
+                pa.setAttributeValue(attrValue);
+                product.getProductAttributes().add(pa);
+                productAttributeRepository.save(pa);
             }
         }
 
         return product.getId();  // 상품 ID만 반환
     }
+
+
+
+
 
     // 이미지 저장 유틸 (변경 없음)
     private List<String> handleAndReturnFiles(MultipartFile[] files) {
@@ -139,7 +166,7 @@ public class ProductService {
         List<ProductModelDto> modelDtos = product.getProductModels().stream()
                 .map(model -> {
                     ProductModelDto dto = new ProductModelDto();
-                    dto.setProductModelSelect(model.getProductModelSelect()); // 모델명
+                    dto.setProductModelSelect(model.getProductModelSelect()); // 모델명(자유입력)
                     dto.setPrice(model.getPrice()); // 가격
                     dto.setPrStock(model.getPrStock()); // 재고
                     return dto;
@@ -194,6 +221,23 @@ public class ProductService {
         product.setName(form.getName());
         product.setPrice(form.getPrice());
         product.setDescription(form.getDescription());
+
+        // 기존 속성값(ProductAttribute) 모두 삭제 후 재등록
+        if (product.getProductAttributes() != null) {
+            productAttributeRepository.deleteAll(product.getProductAttributes());
+            product.getProductAttributes().clear();
+        }
+        if (form.getAttributeValueIds() != null && !form.getAttributeValueIds().isEmpty()) {
+            for (Long attrValueId : form.getAttributeValueIds()) {
+                AttributeValue attrValue = attributeValueRepository.findById(attrValueId)
+                        .orElseThrow(() -> new IllegalArgumentException("속성값이 존재하지 않습니다."));
+                ProductAttribute pa = new ProductAttribute();
+                pa.setProduct(product);
+                pa.setAttributeValue(attrValue);
+                product.getProductAttributes().add(pa);
+                productAttributeRepository.save(pa);
+            }
+        }
 
         productRepository.save(product);
     }

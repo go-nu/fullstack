@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.constant.Role;
 import com.example.demo.entity.QnaAnswer;
 import com.example.demo.entity.QnaPost;
 import com.example.demo.entity.Users;
@@ -60,9 +61,8 @@ public class QnaAnswerService {
 
     // 관리자 권한 확인
     private void validateAdmin(Users user) {
-        if (!user.getRole().equals("ADMIN")) {
+        if (user == null || user.getRole() != Role.ADMIN) {
             throw new SecurityException("관리자만 가능합니다.");
         }
     }
-
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 결과 표시 TextView -->
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="36sp"
+        android:gravity="end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
+
+    <!-- 버튼들을 GridLayout으로 감싸기 (예시) -->
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:rowCount="5"
+        android:columnCount="4"
+        app:layout_constraintTop_toBottomOf="@id/resultTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 숫자와 연산자 버튼 예시 -->
+        <!-- 숫자 버튼 -->
+        <Button android:id="@+id/button7" android:text="7"/>
+        <Button android:id="@+id/button8" android:text="8"/>
+        <Button android:id="@+id/button9" android:text="9"/>
+        <Button android:id="@+id/buttonDivide" android:text="÷"/>
+
+        <Button android:id="@+id/button4" android:text="4"/>
+        <Button android:id="@+id/button5" android:text="5"/>
+        <Button android:id="@+id/button6" android:text="6"/>
+        <Button android:id="@+id/buttonMultiply" android:text="×"/>
+
+        <Button android:id="@+id/button1" android:text="1"/>
+        <Button android:id="@+id/button2" android:text="2"/>
+        <Button android:id="@+id/button3" android:text="3"/>
+        <Button android:id="@+id/buttonMinus" android:text="-"/>
+
+        <Button android:id="@+id/button0" android:text="0"/>
+        <Button android:id="@+id/buttonClear" android:text="C"/>
+        <Button android:id="@+id/buttonEqual" android:text="="/>
+        <Button android:id="@+id/buttonPlus" android:text="+"/>
+
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

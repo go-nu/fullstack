@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
+import com.example.demo.repository.AttributeRepository;
+import com.example.demo.repository.AttributeValueRepository;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.ProductService;
@@ -29,6 +31,8 @@ public class ProductController {
     private final ReviewPostService reviewPostService;
     private final QnaPostService qnaPostService;
     private final CategoryRepository categoryRepository;
+    private final AttributeRepository attributeRepository;
+    private final AttributeValueRepository attributeValueRepository;
 
     @GetMapping("/admin/products")
     public String showProductForm(Model model) {
@@ -39,8 +43,12 @@ public class ProductController {
         productForm.getProductModelDtoList().add(defaultModel);  // 기본 모델 추가
 
         model.addAttribute("productForm", productForm);  // 상품 폼 전달
+        // 속성/속성값 목록 추가
+        model.addAttribute("attributes", attributeRepository.findAll());
+        model.addAttribute("attributeValues", attributeValueRepository.findAll());
         return "product/products";  // 상품 등록 페이지로 리턴
     }
+
 
     // 상품등록
     @PostMapping("/admin/products")
@@ -48,6 +56,13 @@ public class ProductController {
                                 @RequestParam("images") MultipartFile[] images,
                                 @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                 Model model) {
+        // === 여기서부터 로그 찍기 ===
+        System.out.println("옵션 개수: " + form.getProductModelDtoList().size());
+        for (ProductModelDto dto : form.getProductModelDtoList()) {
+            System.out.println(dto.getProductModelSelect() + " / " + dto.getPrice() + " / " + dto.getPrStock());
+        }
+        // === 여기까지 ===
+
         try {
             // customUserDetails가 null인 경우 예외 처리 또는 로그인 페이지로 리다이렉트
             if (customUserDetails == null) {
@@ -72,10 +87,8 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
-        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId, Model model) {
         List<Product> productList = productService.findProducts(categoryId);
-        model.addAttribute("loginUser", user);
         model.addAttribute("products", productList);
         return "product/list"; // 실제 Thymeleaf 템플릿 경로에 맞게 조정
     }
@@ -130,6 +143,9 @@ public class ProductController {
         return "product/detail";
     }
 
+
+
+
     @PostMapping("/wishlist/toggle")
     public String toggleWishlist(@RequestParam Long productId,
                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -154,6 +170,9 @@ public class ProductController {
             return "redirect:/access-denied";
         }
         model.addAttribute("productForm", ProductForm.from(product));
+        // 속성/속성값 목록 추가
+        model.addAttribute("attributes", attributeRepository.findAll());
+        model.addAttribute("attributeValues", attributeValueRepository.findAll());
         return "product/update";
     }
 

@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 
-import com.example.demo.constant.ProductModelSelect;
 import com.example.demo.entity.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,12 +13,15 @@ import java.util.List;
 public class ProductForm {
     private Long id;
     private String name;
-    private String description;
+    private String description; // 사물
     private int price;
     private Category category;
     private int stockQuantity;
 
     private Long categoryId;
+
+    // 상품 속성값 id 리스트 (예: 색상-화이트, 사이즈-퀸 등)
+    private List<Long> attributeValueIds = new ArrayList<>();
 
     //  하위 모델들
     private List<ProductModelDto> productModelDtoList = new ArrayList<>();
@@ -33,14 +35,14 @@ public class ProductForm {
         product.setPrice(this.price);
         product.setCategory(category); // 엔티티 기준
         product.setUser(user);
-        product.setAverageRating(0.0);
+        product.setAverageRating(0.0); // 별점 평균
         product.setStockQuantity(0);  // 초기 재고 수량 설정
 
         // 모델 정보 추가 (productModelDtoList)
         if (this.productModelDtoList != null && !this.productModelDtoList.isEmpty()) {
             for (ProductModelDto dto : this.productModelDtoList) {
                 ProductModel model = new ProductModel();
-                model.setProductModelSelect(dto.getProductModelSelect());    // 모델 선택
+                model.setProductModelSelect(dto.getProductModelSelect());    // 모델명(자유입력)
                 model.setPrStock(dto.getPrStock());  // 재고 설정
                 model.setPrice(dto.getPrice());  // 가격 설정
                 model.setProduct(product);  // 상품에 모델 연결

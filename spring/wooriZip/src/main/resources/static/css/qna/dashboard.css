@@ -1,0 +1,49 @@
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table-section-header {
+    background-color: #f8f9fa;
+}
+
+.table-section-header td {
+    padding: 10px 15px;
+    font-weight: 500;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.answered-row {
+    background-color: #ffffff;
+}
+
+.unanswered-row {
+    background-color: #ffffff;
+}
+
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.7em;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table {
+    border: 1px solid #dee2e6;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+} 

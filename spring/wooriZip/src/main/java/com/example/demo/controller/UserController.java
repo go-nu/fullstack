@@ -10,7 +10,6 @@ import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ public class UserController {
         return "/user/signUp";
     }
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public String signUp(@ModelAttribute UserDto dto){
         userService.signUp(dto);
         return "redirect:/";

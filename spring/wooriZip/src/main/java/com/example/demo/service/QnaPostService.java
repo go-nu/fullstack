@@ -4,21 +4,25 @@ import com.example.demo.dto.QnaAnswerDto;
 import com.example.demo.dto.QnaPostDto;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.QnaPost;
+import com.example.demo.entity.Users;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.QnaAnswerRepository;
 import com.example.demo.repository.QnaPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QnaPostService {
 
     private final QnaPostRepository qnaPostRepository;
@@ -28,6 +32,7 @@ public class QnaPostService {
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
     // Q 등록
+    @Transactional
     public void saveQna(QnaPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
@@ -58,6 +63,7 @@ public class QnaPostService {
     }
 
     // Q 수정
+    @Transactional
     public void updateQna(Long id, QnaPostDto dto) throws IOException {
         QnaPost post = qnaPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("질문이 존재하지 않습니다."));
@@ -90,6 +96,7 @@ public class QnaPostService {
     }
 
     // Q 삭제
+    @Transactional
     public void deleteQna(Long id, String email) {
         QnaPost post = qnaPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("질문이 존재하지 않습니다."));
@@ -135,10 +142,15 @@ public class QnaPostService {
                 .orElseThrow(() -> new IllegalArgumentException("질문 없음"));
     }
 
+    // 상품 정보 조회
+    public Product getProductById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+    }
+
     // QnA DTO 리스트 (답변 포함)
     public List<QnaPostDto> getQnaPostDtoList(Long productId, int page) {
         int offset = page * 5;
-
         List<QnaPost> posts = qnaPostRepository.findByProductIdWithPaging(productId, offset, 5);
         if (posts == null) {
             posts = new ArrayList<>();
@@ -170,4 +182,71 @@ public class QnaPostService {
                 .getProduct().getId();
     }
 
+    public Map<String, Long> getQnaStatistics() {
+        List<QnaPost> allQna = qnaPostRepository.findAll();
+        
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("total", (long) allQna.size());
+        stats.put("answered", allQna.stream().filter(qna -> qna.getAnswer() != null).count());
+        stats.put("unanswered", allQna.stream().filter(qna -> qna.getAnswer() == null).count());
+        
+        return stats;
+    }
+
+    public Map<String, Map<String, Object>> getQnaByCategoryWithStatus() {
+        List<QnaPost> allQna = qnaPostRepository.findAll();
+        Map<String, Map<String, Object>> categoryStats = new HashMap<>();
+        
+        // 각 QnA의 페이지 번호를 계산
+        Map<Long, Integer> postPages = new HashMap<>();
+        allQna.forEach(qna -> {
+            long position = qnaPostRepository.countPositionInProduct(qna.getId(), qna.getProduct().getId());
+            int page = (int) ((position - 1) / 5);  // 5는 페이지당 게시글 수
+            postPages.put(qna.getId(), page);
+        });
+        
+        allQna.forEach(qna -> {
+            String category = qna.getProduct().getCategory().getName();
+            categoryStats.putIfAbsent(category, new HashMap<>());
+            
+            Map<String, Object> stats = categoryStats.get(category);
+            
+            List<QnaPostWithPage> answeredList = (List<QnaPostWithPage>) stats.getOrDefault("answeredList", new ArrayList<QnaPostWithPage>());
+            List<QnaPostWithPage> unansweredList = (List<QnaPostWithPage>) stats.getOrDefault("unansweredList", new ArrayList<QnaPostWithPage>());
+            
+            QnaPostWithPage postWithPage = new QnaPostWithPage(qna, postPages.get(qna.getId()));
+            
+            if (qna.getAnswer() != null) {
+                answeredList.add(postWithPage);
+            } else {
+                unansweredList.add(postWithPage);
+            }
+            
+            stats.put("answeredList", answeredList);
+            stats.put("unansweredList", unansweredList);
+            stats.put("answered", answeredList.size());
+            stats.put("unanswered", unansweredList.size());
+        });
+        
+        return categoryStats;
+    }
+
+    // QnaPost와 페이지 정보를 함께 담는 내부 클래스
+    @Getter
+    public class QnaPostWithPage {
+        private final QnaPost post;
+        private final int page;
+
+        public QnaPostWithPage(QnaPost post, int page) {
+            this.post = post;
+            this.page = page;
+        }
+    }
+
+    public List<QnaPost> getUnansweredQna() {
+        return qnaPostRepository.findAll().stream()
+                .filter(qna -> qna.getAnswer() == null)
+                .sorted(Comparator.comparing(QnaPost::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
 }

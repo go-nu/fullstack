@@ -95,6 +95,7 @@ public class QnaPostController {
         model.addAttribute("qnaTotal", totalCount);
         model.addAttribute("qnaPage", page);
         model.addAttribute("isLogin", user != null);
+        model.addAttribute("loginUser", user);
 
         return "product/detail"; // detail.html에서 qna 프래그먼트로 include
     }

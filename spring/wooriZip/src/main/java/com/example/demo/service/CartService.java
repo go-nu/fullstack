@@ -25,7 +25,6 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-//    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public CartDto getCartByEmail(String email) {
