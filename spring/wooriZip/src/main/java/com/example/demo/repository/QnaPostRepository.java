@@ -19,4 +19,18 @@ public interface QnaPostRepository extends JpaRepository<QnaPost, Long> {
     //페이지네이션
     @Query(value = "SELECT * FROM qna_post WHERE product_id = :productId ORDER BY created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<QnaPost> findByProductIdWithPaging(Long productId, int offset, int limit);
+
+    List<QnaPost> findByProductIdOrderByCreatedAtDesc(Long productId);
+
+    // 특정 QnA 게시글의 페이지 번호를 계산하는 쿼리
+    @Query(value = """
+           WITH post_position AS (
+               SELECT ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY created_at DESC) - 1 as position
+               FROM qna_post 
+               WHERE product_id = :productId AND id = :postId
+           )
+           SELECT FLOOR(position/5) + 1 as page_number 
+           FROM post_position
+           """, nativeQuery = true)
+    int getQnaPageNumber(@Param("productId") Long productId, @Param("postId") Long postId);
 }

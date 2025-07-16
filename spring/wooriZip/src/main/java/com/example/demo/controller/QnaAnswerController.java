@@ -9,6 +9,7 @@ import com.example.demo.service.QnaAnswerService;
 import com.example.demo.service.QnaPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,14 +29,17 @@ public class QnaAnswerController {
     @PostMapping("/create/{postId}")
     public String create(@PathVariable Long postId,
                          @RequestParam String content,
-                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails == null) {
-            return "redirect:/user/login";
-        }
-        Users user = customUserDetails.getUser();
+                         @RequestParam(required = false) Integer qnaPage,
+                         Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user = (Users) UserUtils.getUser(authentication);
         qnaAnswerService.saveAnswer(postId, content, user);
         Long productId = qnaPostService.getProductIdByQnaPostId(postId);
-        return "redirect:/products/" + productId;
+
+        // 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
+        String pageParam = qnaPage != null ? "?qnaPage=" + qnaPage : "";
+        return "redirect:/products/" + productId + pageParam + "#qna-tab";
     }
 
     // 답변 수정
@@ -43,31 +47,39 @@ public class QnaAnswerController {
     public String update(@PathVariable Long answerId,
                          @RequestParam String content,
                          @RequestParam Long productId,
-                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails == null) {
-            return "redirect:/user/login";
-        }
-        Users user = customUserDetails.getUser();
+                         @RequestParam(required = false) Integer qnaPage,
+                         Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user =  (Users) UserUtils.getUser(authentication);
         qnaAnswerService.updateAnswer(answerId, content, user);
-        return "redirect:/products/" + productId;
+
+        // 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
+        String pageParam = qnaPage != null ? "?qnaPage=" + qnaPage : "";
+        return "redirect:/products/" + productId + pageParam + "#qna-tab";
     }
 
     // 답변 삭제
     @PostMapping("/delete/{answerId}")
     public String delete(@PathVariable Long answerId,
                          @RequestParam Long productId,
-                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails == null) {
-            return "redirect:/user/login";
-        }
-        Users user = customUserDetails.getUser();
+                         @RequestParam(required = false) Integer qnaPage,
+                         Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user =  (Users) UserUtils.getUser(authentication);
         qnaAnswerService.deleteAnswer(answerId, user);
-        return "redirect:/products/" + productId;
+
+        // 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
+        String pageParam = qnaPage != null ? "?qnaPage=" + qnaPage : "";
+        return "redirect:/products/" + productId + pageParam + "#qna-tab";
     }
 
     @GetMapping("/admin/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
-    public String adminDashboard(Model model) {
+    public String adminDashboard(Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
         // 전체 통계
         Map<String, Long> statistics = qnaPostService.getQnaStatistics();
         model.addAttribute("statistics", statistics);
@@ -81,7 +93,9 @@ public class QnaAnswerController {
 
     @GetMapping("/admin/unanswered")
     @PreAuthorize("hasRole('ADMIN')")
-    public String getUnansweredQna(Model model) {
+    public String getUnansweredQna(Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
         model.addAttribute("unansweredQna", qnaPostService.getUnansweredQna());
         return "qna/admin/unanswered";
     }

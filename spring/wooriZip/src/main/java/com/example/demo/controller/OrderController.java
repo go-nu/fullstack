@@ -50,16 +50,8 @@ public class OrderController {
     public String processOrder(@RequestParam("type") String orderType,
                                @RequestParam("cartItemIds") List<Long> cartItemIds,
                                Model model, Authentication authentication) {
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
-
-        if (email == null) {
-            return "redirect:/login";
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         log.info("들어온 값 : {}", cartItemIds);
         log.info("들어온 타입 : {}", orderType);
@@ -79,12 +71,7 @@ public class OrderController {
         Long orderId = Long.valueOf(payload.get("orderId").toString());
         Long orderItemId = Long.valueOf(payload.get("orderItemId").toString());
 
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
+        String email = UserUtils.getEmail(authentication);
 
         Map<String, Object> response = new HashMap<>();
         try {
@@ -120,12 +107,8 @@ public class OrderController {
             page = 0;
         }
 
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         List<OrderDto> order = orderService.history(email);
         Page<OrderDto> orderPage = orderService.orderPage(order, page);
@@ -144,12 +127,8 @@ public class OrderController {
     public String orderNow(@RequestParam Long productId, CartDto dto , Authentication authentication, Model model) {
         log.info("바로구매로 넘어온 값 : 상품아이디 : {} , dto {}", productId, dto.toString());
 
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         OrderDto orderDto = orderService.createOrderByNow(dto, productId, email);
         model.addAttribute("orderDto", orderDto);

@@ -33,7 +33,7 @@
     <tbody>
     <tr th:each="item : ${cart.items}">
         <td><input type="checkbox" name="cartId" th:value="${item.cartItemId}" class="cart-item-checkbox"></td>
-        <td><img th:src="@{${item.getImgUrl()}}" alt="상품 이미지"></td>
+        <td><img th:src="@{${item.getImgUrl()}}" alt="상품 이미지" style="width: 100px; height: auto;"></td>
         <td>
             <strong th:text="${item.productName}">상품명</strong><br>
             <span th:text="${item.modelName}">모델명</span>
@@ -60,15 +60,15 @@
         <tbody>
         <tr>
             <th>총 상품금액</th>
-            <td th:text="${#numbers.formatDecimal(cart.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')} + '원'">0원</td>
+            <td id="finalTotalPrice">0원</td>
         </tr>
         <tr>
             <th>배송비</th>
-            <td>0원</td>
+            <td id="deliveryFee">0원</td>
         </tr>
         <tr>
             <th>결제예정금액</th>
-            <td th:text="${#numbers.formatDecimal(cart.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')} + '원'">0원</td>
+            <td id="finalPaymentAmount">0원</td>
         </tr>
         </tbody>
     </table>

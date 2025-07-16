@@ -1,87 +1,110 @@
-    $(document).ready(function () {
-        // 상품 수량 변동에 따른 처리
-        $('.item-count').on('change', function () {
-            let $input = $(this);
-            let newCount = $input.val();
-            let cartId = $input.data('cart-id');
+$(document).ready(function () {
 
-            // console.log("보내는 데이터: ", { cartItemId: cartId, count: newCount }); // 확인을 위한 로그
+    // ✅ 수량 변경 시 서버에 반영하고 요약만 갱신
+    $('.item-count').on('change', function () {
+        let $input = $(this);
+        let newCount = $input.val();
+        let cartId = $input.data('cart-id');
 
-            $.ajax({
-                url: '/cart/update',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({cartItemId: cartId, count: newCount}),
-                success: function (response) {
-                    console.log('서버 응답: ', response); // 확인을 위한 로그
-                    if (response.success) {
-                        console.log('수량 업데이트 성공');
-                        location.reload(); // 성공 시 페이지 새로고침
-                    } else {
-                        console.error('수량 업데이트 실패: ', response.message);
-                        alert('오류: ' + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    let response = JSON.parse(xhr.responseText);
-                    console.error('에러 발생:', response.message);
+        $.ajax({
+            url: '/cart/update',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({cartItemId: cartId, count: newCount}),
+            success: function (response) {
+                if (response.success) {
+                    updateSummary(); // 페이지 새로고침 없이 요약만 업데이트
+                } else {
                     alert('오류: ' + response.message);
-                    location.reload();
                 }
-            });
-        }); // 수량의 끝
-
-        // 전체주문 클릭시
-        $(".allOrder").on("click", function (event) {
-            event.preventDefault(); // 기본 폼 전송 동작 막기
-            // 전체 체크박스를 선택한 후 전송
-            $(".cart-item-checkbox").prop("checked", true);
-            sendOrderRequest();
-        });
-
-        // 선택주문 클릭시
-        $(".selectOrder").on("click", function (event) {
-            event.preventDefault(); // 기본 폼 전송 동작 막기
-            sendOrderRequest();
-        });
-
-        // 전체 선택/해제
-        $("#selectAll").on("change", function () {
-            $(".cart-item-checkbox").prop("checked", $(this).prop("checked"));
-        });
-
-        function sendOrderRequest() {
-            // 체크 박스에 체크된 아이템들을 순회하면서 id값 넣어주기
-            let selectedItems = $(".cart-item-checkbox:checked").map(function () {
-                return $(this).val();
-            }).get();
-            console.log("값 : ", selectedItems)
-
-            if (selectedItems.length === 0) {
-                alert("주문할 상품을 선택하세요.");
-                return;
+            },
+            error: function (xhr) {
+                let response = JSON.parse(xhr.responseText);
+                alert('오류: ' + response.message);
+                location.reload();
             }
+        });
+    });
 
-            let form = $('<form>', {
-                'method': 'POST',
-                'action': '/order'
-            });
+    // ✅ 전체 주문 클릭 시 전체 선택 후 전송
+    $(".allOrder").on("click", function (event) {
+        event.preventDefault();
+        $(".cart-item-checkbox").prop("checked", true);
+        sendOrderRequest();
+    });
 
-            selectedItems.forEach(function (item) {
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': 'cartItemIds',
-                    'value': item
-                }));
-            });
+    // ✅ 선택 주문 클릭 시 선택된 항목만 전송
+    $(".selectOrder").on("click", function (event) {
+        event.preventDefault();
+        sendOrderRequest();
+    });
 
+    // ✅ 전체 선택/해제 체크박스
+    $("#selectAll").on("change", function () {
+        $(".cart-item-checkbox").prop("checked", $(this).prop("checked"));
+        updateSummary(); // 전체 선택/해제 시 요약 반영
+    });
+
+    // ✅ 수량 or 체크박스 변경 시 요약 갱신
+    $(".cart-item-checkbox, .item-count").on("change", function () {
+        updateSummary();
+    });
+
+    // ✅ 페이지 진입 시 최초 1회 결제 요약 계산
+    updateSummary();
+
+    // ✅ 선택된 항목 기반 주문 전송 함수
+    function sendOrderRequest() {
+        let selectedItems = $(".cart-item-checkbox:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        if (selectedItems.length === 0) {
+            alert("주문할 상품을 선택하세요.");
+            return;
+        }
+
+        let form = $('<form>', {
+            'method': 'POST',
+            'action': '/order'
+        });
+
+        selectedItems.forEach(function (item) {
             form.append($('<input>', {
                 'type': 'hidden',
-                'name': 'type',
-                'value': 'cart'
+                'name': 'cartItemIds',
+                'value': item
             }));
+        });
 
-            $('body').append(form);
-            form.submit();
-        }
-    });
+        form.append($('<input>', {
+            'type': 'hidden',
+            'name': 'type',
+            'value': 'cart'
+        }));
+
+        $('body').append(form);
+        form.submit();
+    }
+
+    // ✅ 체크된 상품 기준 결제 요약 계산 함수
+    function updateSummary() {
+        let totalPrice = 0;
+        let deliveryFee = 3000;
+
+        $("tr").has("input.cart-item-checkbox:checked").each(function () {
+            const price = parseInt($(this).find("td").eq(3).text().replace(/[^0-9]/g, ""));
+            const count = parseInt($(this).find("input[name='count']").val());
+
+            if (!isNaN(price) && !isNaN(count)) {
+                totalPrice += price * count;
+            }
+        });
+
+        // DOM 업데이트
+        $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
+        $("#deliveryFee").text((totalPrice === 0 ? 0 : deliveryFee).toLocaleString() + "원");
+        $("#finalPaymentAmount").text((totalPrice + (totalPrice === 0 ? 0 : deliveryFee)).toLocaleString() + "원");
+    }
+
+});

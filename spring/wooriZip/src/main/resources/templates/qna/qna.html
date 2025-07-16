@@ -1,7 +1,25 @@
 <div th:fragment="qnaboard">
     <!-- Q&A 제목 및 작성 버튼 -->
     <div class="mb-4">
-        <h4>Q&A (<span th:text="${qnaTotal}"></span>)</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Q&A (<span th:text="${qnaTotal}"></span>)</h4>
+
+            <!-- QnA 필터 버튼 -->
+            <div class="btn-group" role="group">
+                <a th:href="@{'/products/' + ${product.id}(qnaFilter='all')} + '#qna-tab'"
+                   class="btn" th:classappend="${qnaFilter == 'all' || qnaFilter == null} ? 'btn-primary' : 'btn-outline-primary'">
+                    전체보기
+                </a>
+                <a th:href="@{'/products/' + ${product.id}(qnaFilter='answered')} + '#qna-tab'"
+                   class="btn" th:classappend="${qnaFilter == 'answered'} ? 'btn-primary' : 'btn-outline-primary'">
+                    답변완료
+                </a>
+                <a th:href="@{'/products/' + ${product.id}(qnaFilter='unanswered')} + '#qna-tab'"
+                   class="btn" th:classappend="${qnaFilter == 'unanswered'} ? 'btn-primary' : 'btn-outline-primary'">
+                    미답변
+                </a>
+            </div>
+        </div>
 
         <!-- 로그인 사용자만 작성 가능 -->
         <div th:if="${loginUser != null}">
@@ -123,6 +141,7 @@
                     <div th:id="'answerEditForm_' + ${dto.id}" class="mt-2" style="display: none;">
                         <form th:action="@{'/qna/answer/update/' + ${dto.answer.id}}" method="post">
                             <input type="hidden" name="productId" th:value="${product.id}" />
+                            <input type="hidden" name="qnaPage" th:value="${qnaPage}" />
                             <div class="mb-2">
                                 <textarea name="content" class="form-control" rows="3" th:text="${dto.answer.content}" required></textarea>
                             </div>
@@ -139,6 +158,7 @@
                     <div th:id="'answerForm_' + ${dto.id}" class="mt-2" style="display: none;">
                         <form th:action="@{'/qna/answer/create/' + ${dto.id}}" method="post">
                             <input type="hidden" name="productId" th:value="${product.id}" />
+                            <input type="hidden" name="qnaPage" th:value="${qnaPage}" />
                             <div class="mb-2">
                                 <textarea name="content" class="form-control" rows="3" placeholder="답변을 입력하세요..." required></textarea>
                             </div>
@@ -156,19 +176,19 @@
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${qnaPage == 1} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage - 1})} + '#qna-tab'">이전</a>
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage - 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">이전</a>
             </li>
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(1, T(java.lang.Math).ceil(qnaTotal / 5.0))}"
                 th:classappend="${i == qnaPage} ? 'active'">
                 <a class="page-link"
-                   th:href="@{'/products/' + ${product.id}(qnaPage=${i})} + '#qna-tab'" 
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${i}, qnaFilter=${qnaFilter})} + '#qna-tab'"
                    th:text="${i}">1</a>
             </li>
             <li class="page-item"
                 th:classappend="${qnaPage == T(java.lang.Math).ceil(qnaTotal / 5.0)} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage + 1})} + '#qna-tab'">다음</a>
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage + 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">다음</a>
             </li>
         </ul>
     </nav>

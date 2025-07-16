@@ -26,7 +26,7 @@ public class CartItemDto {
         this.productId = cartItem.getProduct().getId();
         this.modelId =  cartItem.getProductModel().getId();
         this.count = cartItem.getCount();
-        this.price = cartItem.getProduct().getPrice();
+        this.price = cartItem.getProductModel().getPrice();
         // 대표사진만 필요
         this.imgUrl = cartItem.getProduct().getImages().get(0).getImageUrl();
     }

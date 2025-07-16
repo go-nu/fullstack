@@ -27,18 +27,9 @@ public class CartController {
     // /cart 시 장바구니
     @GetMapping
     public String viewCart(Model model, Authentication authentication) {
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            model.addAttribute("loginUser", userDetails.getUser());
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            model.addAttribute("loginUser", oauth2User.getUser());
-            email = oauth2User.getUser().getEmail();
-        }
-
-        if (email == null){
-            return "redirect:/login";
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
         CartDto cart = cartService.getCartByEmail(email);
         // 만약 없다면 빈 객체 생성하여 전달
@@ -51,12 +42,8 @@ public class CartController {
 
     @PostMapping("/add")
     public String addToCart(@RequestParam Long productId, CartDto dto, Authentication authentication, Model model) {
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         try {
             cartService.addItemToCart(dto, email, productId);
@@ -71,12 +58,8 @@ public class CartController {
     // 카트 아이템 삭제 메소드
     @PostMapping("/remove")
     public String removeItemFromCart(@RequestParam Long cartItemId, Authentication authentication, Model model) {
-        String email = "";
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            email = userDetails.getUser().getEmail();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            email = oauth2User.getUser().getEmail();
-        }
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         try {
             cartService.removeItemFromCart(email, cartItemId);

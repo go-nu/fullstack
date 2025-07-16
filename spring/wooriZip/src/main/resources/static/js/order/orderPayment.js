@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 console.log($);
     // 상품 수량 변동에 따른 처리
@@ -25,33 +24,6 @@ console.log($);
                 console.error('에러 발생:', error);
                 alert('에러 발생');
                 location.reload();
-            }
-        });
-    });
-
-
-    // 삭제 버튼 클릭 시
-    $('.remove-item').on('click', function (e) {
-        e.preventDefault();
-        let $button = $(this);
-        let orderId = $button.data('orderDto-id');
-        let orderDetailId = $button.data('orderDto-detail-id');
-
-        $.ajax({
-            url: '/order/remove',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({orderId: orderId, orderDetailId: orderDetailId}),
-            success: function (response) {
-                if (response.success) {
-                    window.location.href = '/order';
-                } else {
-                    alert('오류: ' + response.message);
-                }
-            },
-            error: function (xhr) {
-                let response = JSON.parse(xhr.responseText);
-                alert('오류: ' + response.message);
             }
         });
     });

@@ -1,0 +1,93 @@
+/* ===== WOORIZIP MAIN CSS ===== */
+
+/* Import base styles */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/typography.css');
+
+/* Import components */
+@import url('components/buttons.css');
+
+/* Import layout */
+@import url('layout/navigation.css');
+@import url('layout/grid.css');
+
+/* Import pages */
+@import url('pages/user.css');
+@import url('pages/product.css');
+@import url('pages/cart.css');
+@import url('pages/order.css');
+@import url('pages/interior.css');
+
+/* Import utilities */
+@import url('utilities/spacing.css');
+@import url('utilities/display.css');
+@import url('utilities/flexbox.css');
+@import url('utilities/colors.css');
+@import url('utilities/responsive.css');
+
+/* ===== GLOBAL LAYOUT ===== */
+body {
+    padding-top: var(--header-height);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+.container-sm {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+.container-lg {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+.container-xl {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+/* ===== RESPONSIVE CONTAINERS ===== */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        padding: 0 var(--spacing-4);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-3);
+    }
+    
+    body {
+        padding-top: 60px; /* Smaller header on mobile */
+    }
+    
+    main {
+        min-height: calc(100vh - 60px);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-2);
+    }
+} 

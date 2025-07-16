@@ -4,14 +4,13 @@ import com.example.demo.dto.InteriorPostDto;
 import com.example.demo.dto.PostCommentDto;
 import com.example.demo.dto.ReviewPostDto;
 import com.example.demo.entity.Users;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.InteriorPostService;
 import com.example.demo.service.PostCommentService;
 import com.example.demo.service.PostLikeService;
 import com.example.demo.service.ReviewPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +36,11 @@ public class InteriorPostController {
     @GetMapping
     public String list(@RequestParam(defaultValue = "1") int page,
                        Model model,
-                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
+                       Authentication authentication) {
+        // 비로그인 사용자도 목록 조회 가능
+        String email = UserUtils.getEmail(authentication);
+        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        model.addAttribute("loginUser", loginUser);
 
         int pageSize = 10;
         Page<InteriorPostDto> postPage = service.findPagedPosts(page, pageSize);
@@ -47,20 +48,18 @@ public class InteriorPostController {
         model.addAttribute("postPage", postPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", postPage.getTotalPages());
-        model.addAttribute("loginUser", loginUser);
 
         return "interior/list";
     }
 
     /** 글 작성 폼 */
     @GetMapping("/write")
-    public String writeForm(Model model,
-                            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
+    public String writeForm(Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
         model.addAttribute("dto", new InteriorPostDto());
-        model.addAttribute("loginUser", loginUser);
         return "interior/write";
     }
 
@@ -69,11 +68,12 @@ public class InteriorPostController {
     @ResponseBody
     public String writePost(@ModelAttribute InteriorPostDto dto,
                             @RequestParam(value = "files", required = false) MultipartFile[] files,
-                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+                            Authentication authentication) {
 
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "unauthorized";
-
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "unauthorized";
+        
+        Users loginUser = (Users) UserUtils.getUser(authentication);
         dto.setEmail(loginUser.getEmail());
         dto.setNickname(loginUser.getNickname());
 
@@ -89,9 +89,11 @@ public class InteriorPostController {
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id,
                          Model model,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
+                         Authentication authentication) {
+        // 비로그인 사용자도 상세 조회 가능
+        String email = UserUtils.getEmail(authentication);
+        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        model.addAttribute("loginUser", loginUser);
 
         service.increaseViews(id);
         InteriorPostDto dto = service.findById(id, loginUser);
@@ -107,12 +109,12 @@ public class InteriorPostController {
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id,
                            Model model,
-                           @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
-
-        model.addAttribute("dto", service.findById(id, loginUser));
+                           Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
         model.addAttribute("loginUser", loginUser);
+        model.addAttribute("dto", service.findById(id, loginUser));
 
         return "interior/edit";
     }
@@ -123,10 +125,10 @@ public class InteriorPostController {
     public String edit(@ModelAttribute InteriorPostDto dto,
                        @RequestParam(value = "files", required = false) MultipartFile[] files,
                        @RequestParam(value = "deleteIndexes", required = false) List<Integer> deleteIndexes,
-                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "unauthorized";
+                       Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
         dto.setEmail(loginUser.getEmail());
         dto.setNickname(loginUser.getNickname());
@@ -181,10 +183,9 @@ public class InteriorPostController {
     /** 삭제 */
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id,
-                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
+                         Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
 
         service.delete(id);
         return "redirect:/interior";
@@ -194,10 +195,10 @@ public class InteriorPostController {
     @PostMapping("/{postId}/comment")
     public String addComment(@PathVariable Long postId,
                              @RequestParam String content,
-                             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
+                             Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto comment = PostCommentDto.builder()
                 .postId(postId)
@@ -214,10 +215,10 @@ public class InteriorPostController {
     @PostMapping("/{postId}/comment/delete/{commentId}")
     public String deleteComment(@PathVariable Long postId,
                                 @PathVariable Long commentId,
-                                @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
+                                Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto dto = commentService.findById(commentId);
         if (!dto.getEmail().equals(loginUser.getEmail())) {
@@ -233,10 +234,10 @@ public class InteriorPostController {
     public String editComment(@PathVariable Long postId,
                               @PathVariable Long commentId,
                               @RequestParam String content,
-                              @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "redirect:/user/login";
+                              Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto dto = commentService.findById(commentId);
         if (!dto.getEmail().equals(loginUser.getEmail())) {
@@ -289,10 +290,10 @@ public class InteriorPostController {
     @PostMapping("/{postId}/like")
     @ResponseBody
     public String toggleLike(@PathVariable Long postId,
-                             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        Users loginUser = (userDetails != null) ? userDetails.getUser() : null;
-        if (loginUser == null) return "unauthorized";
+                             Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
         return postLikeService.toggleLike(postId, loginUser.getEmail());
     }

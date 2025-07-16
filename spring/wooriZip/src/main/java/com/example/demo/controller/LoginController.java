@@ -27,11 +27,7 @@ public class LoginController {
 
     @GetMapping("/")
     public String welcome(Authentication authentication, Model model) {
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            model.addAttribute("loginUser", userDetails.getUser());
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            model.addAttribute("loginUser", oauth2User.getUser());
-        }
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
         return "welcome";
     }
 

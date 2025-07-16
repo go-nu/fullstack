@@ -13,6 +13,7 @@ import com.example.demo.service.WishlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,11 @@ public class ProductController {
     private final AttributeValueRepository attributeValueRepository;
 
     @GetMapping("/admin/products")
-    public String showProductForm(Model model) {
+    public String showProductForm(Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+
         ProductForm productForm = new ProductForm();
 
         // 기본적으로 하나의 모델을 추가
@@ -49,13 +54,12 @@ public class ProductController {
         return "product/products";  // 상품 등록 페이지로 리턴
     }
 
-
     // 상품등록
     @PostMapping("/admin/products")
     public String createProduct(@ModelAttribute ProductForm form,
                                 @RequestParam("images") MultipartFile[] images,
-                                @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                Model model) {
+                                Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
         // === 여기서부터 로그 찍기 ===
         System.out.println("옵션 개수: " + form.getProductModelDtoList().size());
         for (ProductModelDto dto : form.getProductModelDtoList()) {
@@ -65,11 +69,10 @@ public class ProductController {
 
         try {
             // customUserDetails가 null인 경우 예외 처리 또는 로그인 페이지로 리다이렉트
-            if (customUserDetails == null) {
-                return "redirect:/login";  // 로그인 페이지로 리다이렉트
-            }
 
-            Users loginUser = customUserDetails.getUser();
+            if (email == null) return "redirect:/login";
+
+            Users loginUser = (Users) UserUtils.getUser(authentication);
 
             // 상품 등록 처리
             Long productId = productService.createProduct(form, Arrays.asList(images), loginUser);
@@ -84,8 +87,6 @@ public class ProductController {
         return "redirect:/products";  // 상품 목록 페이지로 리다이렉트
     }
 
-
-
     @GetMapping("/products")
     public String showProductList(@RequestParam(name = "category", required = false) Long categoryId, Model model) {
         List<Product> productList = productService.findProducts(categoryId);
@@ -99,10 +100,11 @@ public class ProductController {
                               @RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "latest") String sort,
                               @RequestParam(name = "qnaPage", defaultValue = "1") int qnaPage,
-                              Model model,
-                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                              @RequestParam(name = "qnaFilter", defaultValue = "all") String qnaFilter,
+                              Model model, Authentication authentication) {
 
-        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+        String email = UserUtils.getEmail(authentication);
+        Users user = email != null ? (Users) UserUtils.getUser(authentication) : null;
 
         // ───────────── 상품 상세 정보 ─────────────
         ProductDetailDto dto = productService.getProductDetail(id, user);
@@ -133,38 +135,33 @@ public class ProductController {
 
         // ───────────── QnA 데이터 ─────────────
         int qnaPageNum = Math.max(qnaPage - 1, 0);
-        List<QnaPostDto> qnaList = qnaPostService.getQnaPostDtoList(id, qnaPageNum);
-        long qnaTotal = qnaPostService.countByProduct(id);
+        List<QnaPostDto> qnaList = qnaPostService.getQnaPostDtoList(id, qnaPageNum, qnaFilter);
+        long qnaTotal = qnaPostService.countByProduct(id, qnaFilter);
 
         model.addAttribute("qnaList", qnaList != null ? qnaList : new ArrayList<>());
         model.addAttribute("qnaTotal", qnaTotal);
         model.addAttribute("qnaPage", qnaPage);
+        model.addAttribute("qnaFilter", qnaFilter);
 
         return "product/detail";
     }
 
-
-
-
     @PostMapping("/wishlist/toggle")
     public String toggleWishlist(@RequestParam Long productId,
-                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
-        if (user == null) {
-            return "redirect:/user/login";
-        }
+                                 Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user = (Users) UserUtils.getUser(authentication);
         wishlistService.toggleWishlist(user, productId);
         return "redirect:/products/" + productId;
     }
 
     @GetMapping("/products/{id}/edit")
     public String editProductForm(@PathVariable Long id,
-                                  @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                  Model model) {
-        Users loginUser = customUserDetails != null ? customUserDetails.getUser() : null;
-        if (loginUser == null) {
-            return "redirect:/user/login";
-        }
+                                  Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
         Product product = productService.findById(id);
         if (product.getUser() == null || !product.getUser().getId().equals(loginUser.getId())) {
             return "redirect:/access-denied";
@@ -181,16 +178,17 @@ public class ProductController {
                                 @ModelAttribute ProductForm form,
                                 @RequestParam(value = "images", required = false) MultipartFile[] images,
                                 @RequestParam(value = "deleteIndexes", required = false) String deleteIndexes,
-                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Users loginUser = customUserDetails.getUser();
+                                Authentication authentication) {
+        Users loginUser = (Users) UserUtils.getUser(authentication);
         productService.updateProduct(id, form, images, deleteIndexes, loginUser);
         return "redirect:/products/" + id;
     }
 
     @PostMapping("/products/{id}/delete")
     public String deleteProduct(@PathVariable Long id,
-                                @AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
-        Users loginUser = customUserDetails != null ? customUserDetails.getUser() : null;
+                                Authentication authentication) throws Exception {
+        String email = UserUtils.getEmail(authentication);
+        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
         if (loginUser == null) {
             return "redirect:/user/login";
         }

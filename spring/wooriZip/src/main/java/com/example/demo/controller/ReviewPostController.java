@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +33,9 @@ public class ReviewPostController {
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "createdAt") String sortBy,
                                  Model model,
-                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        Users user = customUserDetails != null ? customUserDetails.getUser() : null;
+                                 Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        Users user = email != null ? (Users) UserUtils.getUser(authentication) : null;
         Page<ReviewPost> reviewPage = reviewPostService.getReviews(productId, page, sortBy);
 
         Map<Integer, Long> ratingSummary = reviewPostService.getRatingDistribution(productId);
@@ -57,11 +58,10 @@ public class ReviewPostController {
     @PostMapping("/create")
     public String createReview(@ModelAttribute ReviewPostDto dto,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
-                               @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
-        if (customUserDetails == null) {
-            return "redirect:/user/login";
-        }
-        Users user = customUserDetails.getUser();
+                               Authentication authentication) throws IOException {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
@@ -73,11 +73,19 @@ public class ReviewPostController {
 
     // 리뷰 수정 폼
     @GetMapping("/edit/{id}")
-    public String getEditForm(@PathVariable Long id, Model model) {
+    public String getEditForm(@PathVariable Long id, Model model, Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        
         ReviewPost review = reviewPostService.getReviewById(id);
+        // 작성자 본인 확인
+        if (!review.getEmail().equals(email)) {
+            return "redirect:/access-denied";
+        }
+        
         model.addAttribute("review", review);
         model.addAttribute("productId", review.getProduct().getId());
-        model.addAttribute("loginUser", review.getEmail()); // 수정 권한 확인을 위해
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
         return "review/review";
     }
 
@@ -87,11 +95,10 @@ public class ReviewPostController {
                                @ModelAttribute ReviewPostDto dto,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                @RequestParam(value = "deleteImages", required = false) List<String> deleteImages,
-                               @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
-        if (customUserDetails == null) {
-            return "redirect:/user/login";
-        }
-        Users user = customUserDetails.getUser();
+                               Authentication authentication) throws IOException {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
 
@@ -104,7 +111,18 @@ public class ReviewPostController {
 
     // 리뷰 삭제
     @PostMapping("/delete/{id}")
-    public String deleteReview(@PathVariable Long id, @RequestParam Long productId) {
+    public String deleteReview(@PathVariable Long id, 
+                             @RequestParam Long productId,
+                             Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/login";
+        
+        ReviewPost review = reviewPostService.getReviewById(id);
+        // 작성자 본인 확인
+        if (!review.getEmail().equals(email)) {
+            return "redirect:/access-denied";
+        }
+        
         reviewPostService.deleteReview(id);
         return "redirect:/products/" + productId;
     }
