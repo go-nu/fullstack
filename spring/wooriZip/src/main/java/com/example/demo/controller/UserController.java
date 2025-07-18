@@ -39,13 +39,22 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPage(Authentication authentication, Model model) {
+        Users loginUser = null;
+
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            model.addAttribute("loginUser", userDetails.getUser());
+            loginUser = userDetails.getUser();
         } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            model.addAttribute("loginUser", oauth2User.getUser());
+            loginUser = oauth2User.getUser();
         }
+
+        if (loginUser != null) {
+            model.addAttribute("loginUser", loginUser);
+            model.addAttribute("userCoupons", userService.getUserCoupons(loginUser));
+        }
+
         return "/user/mypage";
     }
+
 
     @GetMapping("/edit")
     public String editForm(Authentication authentication, Model model) {

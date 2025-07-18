@@ -60,7 +60,7 @@ public class ReviewPostController {
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                Authentication authentication) throws IOException {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
@@ -75,7 +75,7 @@ public class ReviewPostController {
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable Long id, Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         
         ReviewPost review = reviewPostService.getReviewById(id);
         // 작성자 본인 확인
@@ -97,7 +97,7 @@ public class ReviewPostController {
                                @RequestParam(value = "deleteImages", required = false) List<String> deleteImages,
                                Authentication authentication) throws IOException {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
@@ -115,7 +115,7 @@ public class ReviewPostController {
                              @RequestParam Long productId,
                              Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         
         ReviewPost review = reviewPostService.getReviewById(id);
         // 작성자 본인 확인

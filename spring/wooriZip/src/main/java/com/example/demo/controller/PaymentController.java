@@ -1,28 +1,27 @@
-/*
 package com.example.demo.controller;
 
-import com.example.demo.dto.OrderDto;
+import com.example.demo.dto.*;
 import com.example.demo.service.CartService;
 import com.example.demo.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,9 @@ public class PaymentController {
     private final CartService cartService;
 
     @PostMapping(value = "/confirm")
-    public String confirmPayment(@RequestBody String jsonBody) {
+    public String confirmPayment(@RequestBody String jsonBody, Model model, Authentication authentication) {
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+
         log.info("confirmPayment called with body: {}", jsonBody);  // 요청이 들어오는지 로그 확인
         JSONParser parser = new JSONParser();
         String orderId;
@@ -139,37 +140,26 @@ public class PaymentController {
         }
     }
 
-
     @GetMapping(value = "/success")
-    public String paymentRequest(HttpServletRequest request, Model model) {
-        // 결제 성공.시 주문한 객체를 쏴준다
-
+    public String paymentRequest(HttpServletRequest request, Model model, Authentication authentication) {
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
         String orderId = request.getParameter("orderId");
-
         OrderDto orderDto = orderService.getOrderByOrderId(orderId);
-        log.info("성공 객체 : {}",orderDto);
         model.addAttribute("orderDto", orderDto);
-        model.addAttribute("test","테스트");
-
         return "order/orderComplete";
     }
 
     @PostMapping("/pay/checkout")
     @ResponseBody
-    public ResponseEntity<Map<String, String>> initiatePayment(@RequestBody Map<String, String> payload, Principal principal) {
-        String orderId = payload.get("orderId");
-        String userId = principal.getName();
-        log.info("결제 요청 넘어온값 오더아이디 : " + payload);
+    public ResponseEntity<Map<String, String>> initiatePayment(@RequestBody InitiatePaymentRequestDto dto, Authentication authentication) {
+        String orderId = dto.getOrderId();
+        String email = UserUtils.getEmail(authentication);
 
         try {
-            OrderDto orderDto = orderService.getOrder(userId);
-
-            // 결제 요청을 위한 정보 생성
+            OrderDto orderDto = orderService.getOrder(email);
             String amount = String.valueOf(orderDto.getTotalPrice());
             String paymentKey = orderDto.getOrderId();
-            log.info("고객 키 : " + paymentKey);
 
-            // 토스 결제 요청 URL 생성
             Map<String, String> response = new HashMap<>();
             response.put("success", "true");
             response.put("orderId", orderId);
@@ -177,7 +167,6 @@ public class PaymentController {
             response.put("paymentKey", paymentKey);
             response.put("redirectUrl", "/pay/checkoutPage?orderId=" + orderId + "&amount=" + amount + "&paymentKey=" + paymentKey);
 
-            // OrderDto를 세션에 저장
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             request.getSession().setAttribute("orderDto", orderDto);
 
@@ -190,36 +179,30 @@ public class PaymentController {
         }
     }
 
-    // 결제 요청 페이지
     @GetMapping(value = "/pay/checkoutPage")
     public String checkoutPage(@RequestParam String orderId, @RequestParam String amount,
                                @RequestParam String paymentKey, Model model) {
-        // 세션에서 OrderDto 가져오기
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         OrderDto orderDto = (OrderDto) request.getSession().getAttribute("orderDto");
 
         model.addAttribute("orderId", orderId);
         model.addAttribute("amount", amount);
         model.addAttribute("paymentKey", paymentKey);
-        model.addAttribute("order", orderDto);
+        model.addAttribute("orderDto", orderDto);
         return "pay/checkout";
     }
 
     @GetMapping(value = "/fail")
-    public String failPayment(HttpServletRequest request, Model model) {
-        String failCode = request.getParameter("code");
-        String failMessage = request.getParameter("message");
-
-        model.addAttribute("code", failCode);
-        model.addAttribute("message", failMessage);
-
+    public String failPayment(@RequestParam String code, @RequestParam String message, Model model) {
+        model.addAttribute("code", code);
+        model.addAttribute("message", message);
         return "pay/fail";
     }
 
-    // 주문을 취소했을 경우
     @PostMapping("/cancel")
-    public ResponseEntity<String> cancelOrder(@RequestBody Map<String, String> request) {
-        String orderId = request.get("orderId");
+    @ResponseBody
+    public ResponseEntity<String> cancelOrder(@RequestBody CancelOrderRequestDto dto) {
+        String orderId = dto.getOrderId();
         try {
             orderService.failOrder(orderId);
             return ResponseEntity.ok("주문 취소가 정상적으로 완료되었습니다");
@@ -229,4 +212,3 @@ public class PaymentController {
         }
     }
 }
-*/

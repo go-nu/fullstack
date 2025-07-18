@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Review;
 import com.example.demo.entity.Users;
@@ -8,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,6 +24,7 @@ public class ProductDetailDto {
         this.liked = liked;
     }
 
+
     public String getName() {
         return product.getName();
     }
@@ -36,16 +37,13 @@ public class ProductDetailDto {
         return product.getPrice();
     }
 
-    public String getDescription() {
-        return product.getDescription();
-    }
 
     public List<?> getImages() {
         return product.getImages();
     }
 
-    public List<?> getProductModels() {
-        return product.getProductModels();
+    public List<ProductModelDto> getProductModels() {
+        return this.productModels;
     }
 
     public Long getId() {
@@ -55,5 +53,8 @@ public class ProductDetailDto {
     public Users getUser() {
         return product.getUser();
     }
+
+
+
 
 }

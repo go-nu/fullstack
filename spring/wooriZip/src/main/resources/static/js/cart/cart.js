@@ -92,19 +92,28 @@ $(document).ready(function () {
         let totalPrice = 0;
         let deliveryFee = 3000;
 
-        $("tr").has("input.cart-item-checkbox:checked").each(function () {
-            const price = parseInt($(this).find("td").eq(3).text().replace(/[^0-9]/g, ""));
+        $("tr").has("input.cart-item-checkbox").each(function () {
+            const priceText = $(this).find("td").eq(3).text().replace(/[^0-9]/g, "");
             const count = parseInt($(this).find("input[name='count']").val());
 
+            const price = parseInt(priceText);
             if (!isNaN(price) && !isNaN(count)) {
-                totalPrice += price * count;
+                const subtotal = price * count;
+
+                // ✅ 합계 셀 업데이트 (index 5)
+                $(this).find("td").eq(5).text(subtotal.toLocaleString() + "원");
+
+                // ✅ 체크된 항목만 총합 계산
+                if ($(this).find(".cart-item-checkbox").prop("checked")) {
+                    totalPrice += subtotal;
+                }
             }
         });
 
-        // DOM 업데이트
         $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
         $("#deliveryFee").text((totalPrice === 0 ? 0 : deliveryFee).toLocaleString() + "원");
         $("#finalPaymentAmount").text((totalPrice + (totalPrice === 0 ? 0 : deliveryFee)).toLocaleString() + "원");
     }
+
 
 });

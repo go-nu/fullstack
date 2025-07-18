@@ -32,7 +32,7 @@ public class QnaAnswerController {
                          @RequestParam(required = false) Integer qnaPage,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         qnaAnswerService.saveAnswer(postId, content, user);
         Long productId = qnaPostService.getProductIdByQnaPostId(postId);
@@ -50,7 +50,7 @@ public class QnaAnswerController {
                          @RequestParam(required = false) Integer qnaPage,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user =  (Users) UserUtils.getUser(authentication);
         qnaAnswerService.updateAnswer(answerId, content, user);
 
@@ -66,7 +66,7 @@ public class QnaAnswerController {
                          @RequestParam(required = false) Integer qnaPage,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user =  (Users) UserUtils.getUser(authentication);
         qnaAnswerService.deleteAnswer(answerId, user);
 
@@ -79,7 +79,7 @@ public class QnaAnswerController {
     @PreAuthorize("hasRole('ADMIN')")
     public String adminDashboard(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         // 전체 통계
         Map<String, Long> statistics = qnaPostService.getQnaStatistics();
         model.addAttribute("statistics", statistics);
@@ -95,7 +95,7 @@ public class QnaAnswerController {
     @PreAuthorize("hasRole('ADMIN')")
     public String getUnansweredQna(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         model.addAttribute("unansweredQna", qnaPostService.getUnansweredQna());
         return "qna/admin/unanswered";
     }

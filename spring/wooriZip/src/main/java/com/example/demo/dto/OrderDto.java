@@ -28,6 +28,11 @@ public class OrderDto {
     private String email; // 이메일
 
     private String phone; // 전화번호
+
+    private String tel1;
+    private String tel2;
+    private String tel3;
+
     // 우편번호 기본주소 나머지주소
     private String pCode; // 우편번호
     private String loadAddress; // 도로
@@ -38,4 +43,22 @@ public class OrderDto {
 
     // 결제 성공시 넘길 내용
     private String payInfo; // 결제 수단
+
+    public void tranceOther(String phone, String email) {
+        if (phone != null && phone.length() >= 10) {
+            this.tel1 = phone.substring(0, 3); // 01036272884
+            if (phone.length() >= 7) {
+                this.tel2 = phone.substring(3, 7);
+                this.tel3 = phone.substring(7);
+            } else {
+                this.tel2 = phone.substring(3, phone.length());
+                this.tel3 = "";
+            }
+        } else {
+            this.tel1 = "";
+            this.tel2 = "";
+            this.tel3 = "";
+
+        }
+    }
 }

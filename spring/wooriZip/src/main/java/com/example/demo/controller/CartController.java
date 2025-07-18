@@ -28,7 +28,7 @@ public class CartController {
     @GetMapping
     public String viewCart(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
         CartDto cart = cartService.getCartByEmail(email);
@@ -43,7 +43,7 @@ public class CartController {
     @PostMapping("/add")
     public String addToCart(@RequestParam Long productId, CartDto dto, Authentication authentication, Model model) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         try {
             cartService.addItemToCart(dto, email, productId);
@@ -59,7 +59,7 @@ public class CartController {
     @PostMapping("/remove")
     public String removeItemFromCart(@RequestParam Long cartItemId, Authentication authentication, Model model) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         try {
             cartService.removeItemFromCart(email, cartItemId);
@@ -71,18 +71,20 @@ public class CartController {
         }
     }
 
-//    @PostMapping("/clear")
-//    public String clearCart(Principal principal, Model model) {
-//        String userId = principal.getName();
-//        try {
-//            cartService.clearCart(userId);
-//            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
-//        } catch (Exception e) {
-//            log.error("Error clearing cart", e);
-//            model.addAttribute("error", "Failed to clear cart");
-//            return "error";
-//        }
-//    }
+    @PostMapping("/clear")
+    public String clearCart(Authentication authentication, Model model) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
+
+        try {
+            cartService.clearCart(email);
+            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
+        } catch (Exception e) {
+            log.error("Error clearing cart", e);
+            model.addAttribute("error", "Failed to clear cart");
+            return "error";
+        }
+    }
 
     // 업데이트
     @PostMapping("/update")

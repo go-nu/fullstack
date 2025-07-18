@@ -30,4 +30,9 @@ public class AttributeValue {
      */
     @Column(nullable = false)
     private String value; // ex: 화이트, 원목, 슈퍼싱글 등
+
+    public AttributeValue(Attribute attribute, String value) {
+        this.attribute = attribute;
+        this.value = value;
+    }
 }

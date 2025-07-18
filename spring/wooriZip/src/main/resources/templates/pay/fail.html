@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 실패</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="result wrapper">
+    <div class="box_section">
+        <h2 style="padding: 20px 0px 10px 0px">
+            <img width="25px" src="https://static.toss.im/3d-emojis/u1F6A8-apng.png"/>
+            결제 실패
+        </h2>
+        <p id="code"></p>
+        <p id="message"></p>
+    </div>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get("orderId");
+    const code = urlParams.get("code");
+    const message = urlParams.get("message");
+
+    document.getElementById("code").textContent = "에러코드: " + code;
+    document.getElementById("message").textContent = "실패 사유: " + message;
+
+    // 서버에 주문 취소 요청
+    if (orderId) {
+        fetch('/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId: orderId })
+        }).then(response => {
+            if (!response.ok) {
+                console.error('❗ 주문 취소 실패');
+            }
+        }).catch(error => {
+            console.error('❗ 주문 취소 중 에러 발생:', error);
+        });
+    }
+</script>
+</body>
+</html>

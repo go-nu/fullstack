@@ -84,9 +84,9 @@
         </h1>
         <div class="gnb-wrap">
             <div class="gnb-group-1">
-                <a href="/products">쇼핑</a>
-                <a href="/interior">커뮤니티</a>
-                <a href="#">공지/이벤트</a>
+                <a th:href="@{/products}">쇼핑</a>
+                <a th:href="@{/interior}">커뮤니티</a>
+                <a th:href="@{/event}">공지/이벤트</a>
             </div>
             <div class="divider"></div>
             <div class="gnb-group-2">
@@ -101,8 +101,9 @@
                     <a href="#" style="color: #B17457;">관리자</a>
                     <div class="admin-menu-content">
                         <a href="/qna/answer/admin/dashboard">QnA 관리</a>
-                        <a href="#">A 관리</a>
-                        <a href="#">B 관리</a>
+                        <a href="/admin/coupons">쿠폰 관리</a>
+                        <a href="/admin/product-details">상품 상세정보 관리</a>
+                        <a href="/admin/products">상품 등록</a>
                     </div>
                 </div>
             </div>

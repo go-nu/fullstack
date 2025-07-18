@@ -6,6 +6,7 @@ import com.example.demo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     // 카테고리로 상품 목록 조회
@@ -16,4 +17,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategoryIdIn(List<Long> categoryIds);
 
+    Optional<Product> findByProductCode(String productCode); // 삭제 보류 0718
 }

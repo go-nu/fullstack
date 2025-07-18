@@ -56,7 +56,7 @@ public class InteriorPostController {
     @GetMapping("/write")
     public String writeForm(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
         model.addAttribute("dto", new InteriorPostDto());
@@ -111,7 +111,7 @@ public class InteriorPostController {
                            Model model,
                            Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("dto", service.findById(id, loginUser));
@@ -127,7 +127,7 @@ public class InteriorPostController {
                        @RequestParam(value = "deleteIndexes", required = false) List<Integer> deleteIndexes,
                        Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         dto.setEmail(loginUser.getEmail());
@@ -185,7 +185,7 @@ public class InteriorPostController {
     public String delete(@PathVariable Long id,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         service.delete(id);
         return "redirect:/interior";
@@ -197,7 +197,7 @@ public class InteriorPostController {
                              @RequestParam String content,
                              Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto comment = PostCommentDto.builder()
@@ -217,7 +217,7 @@ public class InteriorPostController {
                                 @PathVariable Long commentId,
                                 Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto dto = commentService.findById(commentId);
@@ -236,7 +236,7 @@ public class InteriorPostController {
                               @RequestParam String content,
                               Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto dto = commentService.findById(commentId);
@@ -292,7 +292,7 @@ public class InteriorPostController {
     public String toggleLike(@PathVariable Long postId,
                              Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         return postLikeService.toggleLike(postId, loginUser.getEmail());

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>비밀번호 재설정</title>
-    <link rel="stylesheet" th:href="@{/css/theme.css}">
-    <link rel="stylesheet" th:href="@{/css/main_style.css}">
+    <link rel="stylesheet" href="/css/pages/user.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <script>
@@ -19,6 +21,9 @@
 </script>
 
 <body>
+<div th:replace="~{index/header :: header}"></div>
+
+<main>
 <h2>비밀번호 재설정</h2>
 
 <!-- 에러 메시지 표시 -->
@@ -33,6 +38,9 @@
     <div id="pwCheckResult"></div>
     <button type="submit">비밀번호 변경</button>
 </form>
+</main>
+
+<div th:replace="~{index/footer :: footer}"></div>
 <script src="/js/user/resetPw.js"></script>
 </body>
 </html>

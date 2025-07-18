@@ -28,4 +28,8 @@ public class Attribute {
      * 속성 타입 (ex: select, text 등. 확장용)
      */
     private String type;
+
+    public Attribute(String name) {
+        this.name = name;
+    }
 }

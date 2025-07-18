@@ -15,8 +15,11 @@ public class Product { // 상품
     private Long id;
 
     private String name;
-    private String description;
     private int price;
+    // private String description; 필요없으므로 삭제 0718
+
+    @Column(unique = true)
+    private String productCode; // ex) SEAT-0001
 
     private int stockQuantity; // 전체 재고 수량
     private double averageRating; // 후기 평점 평균
@@ -39,7 +42,6 @@ public class Product { // 상품
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // 상품(Product)에 모델(ProductModel)을 추가하는 메서드
     public void addProductModel(ProductModel model) {
         // 현재 리스트에 동일한 모델이 이미 존재하는지 확인
         // equals() 메서드 기준으로 비교 (모델명, 가격, 재고가 같은 경우 동일 객체로 판단)

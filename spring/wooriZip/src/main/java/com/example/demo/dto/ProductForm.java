@@ -13,7 +13,7 @@ import java.util.List;
 public class ProductForm {
     private Long id;
     private String name;
-    private String description; // 사물
+//    private String description; // 설명
     private int price;
     private Category category;
     private int stockQuantity;
@@ -23,7 +23,7 @@ public class ProductForm {
     // 상품 속성값 id 리스트 (예: 색상-화이트, 사이즈-퀸 등)
     private List<Long> attributeValueIds = new ArrayList<>();
 
-    //  하위 모델들
+    //  하위 모델들 (각 ProductModelDto는 여러 속성값 id를 가질 수 있음)
     private List<ProductModelDto> productModelDtoList = new ArrayList<>();
     private List<String> imageUrls;
 
@@ -31,7 +31,6 @@ public class ProductForm {
     public Product createProduct(Category category, Users user) {
         Product product = new Product();
         product.setName(this.name);
-        product.setDescription(this.description);
         product.setPrice(this.price);
         product.setCategory(category); // 엔티티 기준
         product.setUser(user);
@@ -51,6 +50,7 @@ public class ProductForm {
             }
         }
 
+        // ProductModelDto의 attributeValueIds는 서비스에서 ProductModelAttribute로 변환/연결 처리 예정
         return product;
     }
 
@@ -59,7 +59,6 @@ public class ProductForm {
         ProductForm form = new ProductForm();
         form.setId(product.getId());
         form.setName(product.getName());
-        form.setDescription(product.getDescription());
         form.setPrice(product.getPrice());
 
         // 모델 정보 매핑 (옵션)

@@ -18,4 +18,10 @@ public interface ProductModelRepository extends JpaRepository<ProductModel, Long
     void deleteByPrIdIsNull();
 
     void deleteByProduct(Product product);
+
+//    @Query("SELECT pm FROM ProductModel pm WHERE pm.product.productCode = :productCode")
+//    List<ProductModel> findAllByProduct_ProductCode(@Param("productCode") String productCode);
+
+    @Query("SELECT pm FROM ProductModel pm WHERE pm.product.id = :productId")
+    List<ProductModel> findAllByProduct_ProductId(@Param("productId") Long productId);
 }

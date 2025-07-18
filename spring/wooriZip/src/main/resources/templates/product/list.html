@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>상품 목록</title>
+    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
 
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<body class="product-page">
 <div th:replace="~{index/header :: header}"></div>
+
+<main>
 <h2>전체 상품</h2>
 
 <h2>상품 검색</h2>
@@ -38,6 +53,9 @@
         <span th:text="'₩' + ${product.price}"></span>
     </div>
 </div>
+</main>
+
+<div th:replace="~{index/footer :: footer}"></div>
 <script src="/js/product/list.js"></script>
 </body>
 </html>

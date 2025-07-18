@@ -3,10 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.CartDto;
 import com.example.demo.dto.CartItemDto;
 import com.example.demo.entity.*;
-import com.example.demo.repository.CartItemRepository;
-import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +22,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public CartDto getCartByEmail(String email) {
@@ -81,18 +79,18 @@ public class CartService {
     }
 
     // 비우기 메소드
-//    public void clearCart(String orderId) {
-//        Order order = orderRepository.findByOrderId(orderId).orElseThrow(()-> new IllegalArgumentException("주문 정보가 없습니다!"));
-//        String email = order.getUsers().getEmail();
-//        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
-//        Cart cart = cartRepository.findByUser(user);
-//        if (cart != null) {
-//            cart.getCartItems().clear();
-//            cartRepository.save(cart);
-//        }else {
-//            throw new IllegalArgumentException("장바구니가 없습니다");
-//        }
-//    }
+    public void clearCart(String orderId) {
+        Order order = orderRepository.findByOrderId(orderId).orElseThrow(()-> new IllegalArgumentException("주문 정보가 없습니다!"));
+        String email = order.getUsers().getEmail();
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
+        Cart cart = cartRepository.findByUser(user);
+        if (cart != null) {
+            cart.getCartItems().clear();
+            cartRepository.save(cart);
+        }else {
+            throw new IllegalArgumentException("장바구니가 없습니다");
+        }
+    }
 
     // 장바구니에서 삭제
     public void removeItemFromCart(String email, Long cartItemId) {

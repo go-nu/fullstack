@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 
-// import com.example.demo.constant.ProductModelSelect;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +25,13 @@ public class ProductModel {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @OneToMany(mappedBy = "productModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    /**
+     * 이 옵션(ProductModel)이 가지는 속성값들(색상, 사이즈 등)
+     * ProductModelAttribute를 통해 N:M 구조로 연결됨
+     */
+    private java.util.List<ProductModelAttribute> modelAttributes = new java.util.ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

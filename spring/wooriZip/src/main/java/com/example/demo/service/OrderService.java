@@ -325,7 +325,7 @@ public class OrderService {
     public void failOrder(String orderId) {
         try {
             // 실패시 해당 주문아이디로 주문을 찾고 상태를 캔슬로 변경 > 재고 다시 원상복구
-            Order order = orderRepository.findByOrderId(orderId).orElseThrow(() -> new EntityNotFoundException("주문정보를 찾을수 없습니다"));
+            Order order = orderRepository.findByOrderId(orderId).orElseThrow(() -> new EntityNotFoundException("주문정보를 찾을수 없습니다."));
             order.setOrderStatus(OrderStatus.CANCEL);
 
 //            for (OrderItem orderItem : order.getOrderItems()) {

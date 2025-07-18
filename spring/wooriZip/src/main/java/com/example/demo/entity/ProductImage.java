@@ -25,4 +25,5 @@ public class ProductImage { // 상품 이미지
         this.imageUrl = imageUrl;
     }
 
+
 }

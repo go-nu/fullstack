@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
+    <link rel="stylesheet" href="/css/pages/user.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/theme.css}">
-    <link rel="stylesheet" th:href="@{/css/main_style.css}">
-    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
 <script>
@@ -63,9 +61,6 @@
                 <label for="phone">휴대전화</label>
                 <div class="flex-group">
                     <input id="phone" name="phone" type="hidden" th:value="*{phone}" />
-    <!--                <input id="phone1" name="phone1" maxlength="3" type="tel" th:value="${loginUser.phone.substring(0,3)}" required />-->
-    <!--                <input id="phone2" name="phone2" maxlength="4" type="tel" th:value="${loginUser.phone.substring(3,7)}" required />-->
-    <!--                <input id="phone3" name="phone3" maxlength="4" type="tel" th:value="${loginUser.phone.substring(7)}" required />-->
                     <input id="phone1" name="phone1" maxlength="3" type="tel"
                            th:value="${loginUser.phone != '' ? loginUser.phone.substring(0,3) : ''}" />
                     <input id="phone2" name="phone2" maxlength="4" type="tel"

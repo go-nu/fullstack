@@ -130,8 +130,9 @@
         <div th:each="review : ${reviewPage.content}" class="card mb-3">
             <div class="card-body">
                 <h6 class="card-title">
+                    평점: <span class="fw-bold" th:text="${review.rating}"
+                          th:style="${'color: ' + (review.rating >= 4 ? '#198754' : (review.rating >= 3 ? '#0d6efd' : '#dc3545'))}"></span> 점 |
                     작성자: <span th:text="${review.nickname}"></span> |
-                    평 점: <span th:text="${review.rating}"></span> 점 |
                     <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
                 </h6>
                 <h5 class="card-title mt-2" th:text="${review.title}"></h5>

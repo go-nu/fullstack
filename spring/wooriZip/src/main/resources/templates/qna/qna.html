@@ -63,7 +63,10 @@
         <div th:if="${qnaList != null}" th:each="dto : ${qnaList}" class="border rounded p-3 mb-3" th:id="'qna-' + ${dto.id}">
             <!-- 질문 영역 -->
             <div>
-                <strong th:text="${dto.title}">제목</strong>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="fw-bold text-primary me-2" style="font-size: 1.2em;">Q.</span>
+                    <strong th:text="${dto.title}">제목</strong>
+                </div>
                 <p th:text="${dto.content}">내용</p>
                 <small class="text-muted"
                        th:text="${dto.nickname + ' | ' + #temporals.format(dto.createdAt, 'yyyy-MM-dd HH:mm')}">작성자</small>
@@ -123,7 +126,10 @@
 
                 <!-- 답변 영역 (관리자) -->
                 <div th:if="${dto.answer != null}" class="border-top pt-2 mt-2">
-                    <strong>답변</strong>
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="fw-bold text-success me-2" style="font-size: 1.2em;">A.</span>
+                        <strong>답변</strong>
+                    </div>
                     <p th:if="${dto.answer.content != null}" th:text="${dto.answer.content}">답변내용</p>
                     <small class="text-muted"
                            th:text="${#temporals.format(dto.answer.createdAt, 'yyyy-MM-dd HH:mm')}">답변일시</small>

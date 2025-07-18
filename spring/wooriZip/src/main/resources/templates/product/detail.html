@@ -2,16 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>상품 상세</title>
+    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<body class="product-detail-page">
+<div th:replace="~{index/header :: header}"></div>
+
+<main>
 <div>
     <h2 th:text="${product.name}">상품 이름</h2>
-    <p th:text="${product.description}">상품 설명</p>
 
     <!-- 이미지 여러 장 지원 (썸네일/리스트) -->
     <div th:if="${product.images != null && #lists.size(product.images) > 0}">
@@ -24,18 +38,34 @@
         <p>이미지가 없습니다.</p>
     </div>
 
+
     <!-- 옵션/모델 셀렉트 박스 -->
+    <!-- 옵션별 속성값 id 리스트를 data-attr에 저장 (문자열로 변환) -->
     <h4>모델/옵션 선택</h4>
     <select id="modelSelect" class="form-select" style="max-width:300px;">
         <option value="">옵션을 선택하세요</option>
         <option th:each="model : ${product.productModels}"
                 th:value="${model.id}"
+                th:data-attr="${model.attributeValueIdsStr}"
                 th:data-price="${model.price}"
                 th:data-stock="${model.prStock}"
                 th:text="|${model.productModelSelect} / ${#numbers.formatInteger(model.price, 3, 'COMMA')}원 / 재고:${model.prStock}|">
         </option>
     </select>
     <div id="modelInfo" style="margin-top:10px;"></div>
+
+    <!-- 옵션별 속성값 드롭다운: JS로 동적 채움 -->
+    <div id="optionAttributes">
+        <label>색상:
+            <select id="colorSelect"><option value="">색상 선택</option></select>
+        </label>
+        <label>사이즈:
+            <select id="sizeSelect"><option value="">사이즈 선택</option></select>
+        </label>
+        <label>소재:
+            <select id="materialSelect"><option value="">소재 선택</option></select>
+        </label>
+    </div>
 
     <!-- 찜/장바구니/구매 Form -->
     <form th:action="@{/wishlist/toggle}" method="post" id="productForm">
@@ -56,12 +86,12 @@
 
     <div>
         <div>
-            <input type="hidden" id="price" name="price" />
-            <span id="selectedPrice">0</span>원
+            <input type="hidden" id="price" name="price" th:value="${product.price}" />
+            <span id="selectedPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}" th:data-initial-price="${product.price}"></span>원
         </div>
         <div>
             <h5>결제 금액</h5>
-            <h3 name="totalPrice" id="totalPrice"></h3>
+            <h3 name="totalPrice" id="totalPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></h3>
         </div>
     </div>
     <!-- 수정/삭제 버튼: 작성자만 보이게 -->
@@ -80,6 +110,13 @@
             <button type="button">목록으로 돌아가기</button>
         </a>
     </div>
+</div>
+
+
+
+<!-- 상품 상세정보 섹션 -->
+<div id="product-detail-section">
+    <div th:replace="~{productdetail/detail :: productdetail}"></div>
 </div>
 
 <!-- 리뷰/QnA 탭 삽입 영역 -->
@@ -105,35 +142,168 @@
 
 <div th:replace="~{index/footer :: footer}"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/js/product/detail.js" defer></script>
-<script>
-    // 옵션 선택 시 가격/재고 표시 및 결제 금액 동적 계산
-    document.addEventListener('DOMContentLoaded', function() {
-        const modelSelect = document.getElementById('modelSelect');
-        const selectedPriceSpan = document.getElementById('selectedPrice');
-        const countInput = document.getElementById('count');
-        const totalPrice = document.getElementById('totalPrice');
+<!-- 플로팅 네비게이션 리모콘 -->
+<div class="floating-nav" id="floatingNav">
+    <div class="floating-nav-toggle" onclick="toggleFloatingNav()">
+        <span class="nav-icon">🧭</span>
+        <span class="nav-text">메뉴</span>
+    </div>
+    <div class="floating-nav-menu" id="floatingNavMenu">
+        <button class="floating-nav-item" onclick="scrollToSection('product-detail-section')" title="상세정보">
+            <span class="nav-emoji">📋</span>
+            <span class="nav-label">상세정보</span>
+        </button>
+        <button class="floating-nav-item" onclick="scrollToSection('review-section')" title="리뷰">
+            <span class="nav-emoji">⭐</span>
+            <span class="nav-label">리뷰</span>
+        </button>
+        <button class="floating-nav-item" onclick="scrollToSection('qna-section')" title="Q&A">
+            <span class="nav-emoji">❓</span>
+            <span class="nav-label">Q&A</span>
+        </button>
+        <button class="floating-nav-item" onclick="scrollToTop()" title="맨 위로">
+            <span class="nav-emoji">⬆️</span>
+            <span class="nav-label">맨 위로</span>
+        </button>
+    </div>
+</div>
+</main>
 
-        function updatePriceAndTotal() {
-            const selected = modelSelect.selectedOptions[0];
-            let price = 0;
-            if(selected && selected.dataset.price) {
-                price = parseInt(selected.dataset.price);
-                selectedPriceSpan.innerText = price.toLocaleString();
-                document.getElementById('price').value = price;
-            } else {
-                selectedPriceSpan.innerText = '0';
-            }
-            const count = parseInt(countInput.value) || 1;
-            totalPrice.innerText = (price * count).toLocaleString() + '원';
-        }
-        modelSelect.addEventListener('change', updatePriceAndTotal);
-        countInput.addEventListener('input', updatePriceAndTotal);
-        // 최초 로딩 시 결제 금액 표시
-        updatePriceAndTotal();
-    });
+<div th:replace="~{index/footer :: footer}"></div>
+<style>
+.floating-nav {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.floating-nav-toggle {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    color: white;
+    border: none;
+}
+
+.floating-nav-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+}
+
+.floating-nav-toggle .nav-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.floating-nav-toggle .nav-text {
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.floating-nav-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.floating-nav-menu.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.floating-nav-item {
+    width: 120px;
+    height: 45px;
+    background: white;
+    border: none;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 15px;
+    cursor: pointer;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.floating-nav-item:hover {
+    transform: translateX(-5px) scale(1.05);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    background: #f8f9fa;
+}
+
+.floating-nav-item .nav-emoji {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.floating-nav-item .nav-label {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .floating-nav {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .floating-nav-toggle {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .floating-nav-toggle .nav-icon {
+        font-size: 16px;
+    }
+    
+    .floating-nav-toggle .nav-text {
+        font-size: 8px;
+    }
+    
+    .floating-nav-item {
+        width: 100px;
+        height: 40px;
+        padding: 0 12px;
+    }
+    
+    .floating-nav-item .nav-emoji {
+        font-size: 16px;
+    }
+    
+    .floating-nav-item .nav-label {
+        font-size: 11px;
+    }
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+    window.allAttributeValues = /*[[${attributeValues}]]*/ [];
 </script>
+<script src="/js/product/detail.js" defer></script>
 <script src="/js/review/review.js" defer></script>
 <script src="/js/qna/qna.js" defer></script>
 </body>

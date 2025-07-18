@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>상품 수정</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
@@ -16,11 +16,25 @@
         }
     </style>
 </head>
-<body>
 
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<body class="product-edit-page">
+<div th:replace="~{index/header :: header}"></div>
+
+<main>
 <h2>상품 수정</h2>
 
-<form id="editForm" enctype="multipart/form-data">
+<form class="product-form" id="editForm" enctype="multipart/form-data">
     <input type="hidden" name="id" th:value="${productForm.id}" />
 
     <!-- 삭제할 기존 이미지 인덱스 -->
@@ -100,6 +114,7 @@
 
     <button type="submit">상품 수정</button>
 </form>
+</main>
 
 <script>
     let selectedFiles = [];
@@ -230,5 +245,6 @@
     }
 </script>
 
+<div th:replace="~{index/footer :: footer}"></div>
 </body>
 </html>

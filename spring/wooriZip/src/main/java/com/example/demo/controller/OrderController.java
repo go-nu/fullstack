@@ -51,7 +51,7 @@ public class OrderController {
                                @RequestParam("cartItemIds") List<Long> cartItemIds,
                                Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         log.info("들어온 값 : {}", cartItemIds);
         log.info("들어온 타입 : {}", orderType);
@@ -108,7 +108,7 @@ public class OrderController {
         }
 
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         List<OrderDto> order = orderService.history(email);
         Page<OrderDto> orderPage = orderService.orderPage(order, page);
@@ -128,7 +128,7 @@ public class OrderController {
         log.info("바로구매로 넘어온 값 : 상품아이디 : {} , dto {}", productId, dto.toString());
 
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
 
         OrderDto orderDto = orderService.createOrderByNow(dto, productId, email);
         model.addAttribute("orderDto", orderDto);

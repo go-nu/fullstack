@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세정보 관리</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+        }
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+        .btn-box {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn-box button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #saveBtn {
+            background-color: #007bff;
+            color: white;
+        }
+        #saveBtn:hover {
+            background-color: #0056b3;
+        }
+        #cancelBtn {
+            background-color: #6c757d;
+            color: white;
+        }
+        #cancelBtn:hover {
+            background-color: #545b62;
+        }
+        .detail-info-textarea {
+            min-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{index/header :: header}"></div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <span th:text="${product.name}">상품명</span> - 상세정보 관리
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="productDetailForm" enctype="multipart/form-data">
+                        <input type="hidden" id="productId" th:value="${product.id}" />
+
+                        <!-- 기존 상세 이미지 표시 (수정 모드일 때) -->
+                        <div th:if="${productDetail != null && productDetail.detailImagePathList != null}">
+                            <h5>기존 상세 이미지</h5>
+                            <div id="existingImages" class="mb-3">
+                                <div th:each="imagePath : ${productDetail.detailImagePathList}" 
+                                     class="image-container">
+                                    <img th:src="${imagePath}" class="image-preview" alt="기존 이미지"/>
+                                    <button type="button" class="remove-btn existing-remove" 
+                                            th:data-path="${imagePath}">×</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 새 이미지 업로드 -->
+                        <div class="mb-3">
+                            <label for="imageInput" class="form-label">상세 이미지 첨부 (최대 10장)</label>
+                            <input type="file" id="imageInput" class="form-control" 
+                                   accept="image/*" multiple>
+                            <small class="text-muted">최대 10장의 이미지를 선택할 수 있습니다.</small>
+                        </div>
+
+                        <!-- 새 이미지 미리보기 -->
+                        <div id="previewContainer" class="mb-3"></div>
+
+                        <!-- 상품 상세정보 (단일 textarea로 통일) -->
+                        <div class="mb-3">
+                            <label for="detailInfo" class="form-label">상품 상세정보</label>
+                            <textarea id="detailInfo" name="detailInfo" class="form-control" rows="15" required></textarea>
+                            <small class="text-muted">각 항목에 맞는 내용을 입력해주세요.</small>
+                        </div>
+
+                        <!-- 버튼 영역 -->
+                        <div class="btn-box">
+                            <button type="button" id="saveBtn">저장</button>
+                            <button type="button" id="cancelBtn">취소</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 기존 상세정보를 JavaScript로 전달 -->
+<script th:inline="javascript">
+    window.existingDetailInfo = /*[[${productDetail != null ? productDetail.detailInfo : null}]]*/ null;
+</script>
+
+<script src="/js/productdetail/add.js"></script>
+</body>
+</html> 

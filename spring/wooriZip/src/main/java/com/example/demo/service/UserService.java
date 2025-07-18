@@ -1,13 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.entity.UserCoupon;
 import com.example.demo.entity.Users;
+import com.example.demo.repository.UserCouponRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserCouponRepository userCouponRepository;
 
     @Transactional
     public void signUp(UserDto dto) {
@@ -64,6 +68,10 @@ public class UserService {
         user.setUserPw(encodedPw);
 
         userRepository.save(user);
+    }
+
+    public List<UserCoupon> getUserCoupons(Users user) {
+        return userCouponRepository.findByUser(user);
     }
 
 }

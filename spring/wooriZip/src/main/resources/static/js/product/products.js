@@ -1,140 +1,246 @@
-// 카테고리 드롭다운 로딩
 document.addEventListener("DOMContentLoaded", function () {
+    const parentSelect = document.getElementById("parentCategory");
+    const middleSelect = document.getElementById("middleCategory");
+    const childSelect = document.getElementById("childCategory");
+    const input = document.getElementById('imageInput');
+    const preview = document.getElementById('previewContainer');
+    const form = document.getElementById('productForm');
+    const optionContainer = document.getElementById('optionContainer');
+    let selectedFiles = [];
+
+    // 1. 카테고리 드롭다운 로딩
     fetch("/categories/parents")
         .then(res => res.json())
         .then(data => {
-            const parentSelect = document.getElementById("parentCategory");
             data.forEach(c => {
-                const option = document.createElement("option");
-                option.value = c.id;
-                option.text = c.name;
+                const option = new Option(c.name, c.id);
                 parentSelect.appendChild(option);
             });
         });
-});
 
-function loadChildCategories() {
-    const parentId = document.getElementById("parentCategory").value;
-    const childSelect = document.getElementById("childCategory");
-    childSelect.innerHTML = '<option value="">소분류 선택</option>';
+    parentSelect?.addEventListener('change', function () {
+        const parentId = this.value;
+        middleSelect.innerHTML = '<option value="">중분류 선택</option>';
+        childSelect.innerHTML = '<option value="">소분류 선택</option>';
+        if (!parentId) return;
+        fetch(`/categories/children?parentId=${parentId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(c => {
+                    middleSelect.appendChild(new Option(c.name, c.id));
+                });
+            });
+    });
 
-    if (!parentId) return;
+    middleSelect?.addEventListener('change', function () {
+        const middleId = this.value;
+        childSelect.innerHTML = '<option value="">소분류 선택</option>';
+        if (!middleId) return;
+        fetch(`/categories/children?parentId=${middleId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(c => {
+                    childSelect.appendChild(new Option(c.name, c.id));
+                });
+            });
+    });
 
-    fetch(`/categories/children?parentId=${parentId}`)
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(c => {
-                const option = document.createElement("option");
-                option.value = c.id;
-                option.text = c.name;
-                childSelect.appendChild(option);
+    // 2. 이미지 미리보기
+    input.addEventListener('change', function () {
+        selectedFiles = Array.from(this.files);
+        if (selectedFiles.length > 4) {
+            alert("이미지는 최대 4장까지 업로드할 수 있습니다.");
+            selectedFiles = selectedFiles.slice(0, 4);
+            this.value = '';
+            preview.innerHTML = '';
+            return;
+        }
+
+        preview.innerHTML = '';
+        selectedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const box = document.createElement('div');
+                box.className = 'img-box';
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                box.appendChild(img);
+                preview.appendChild(box);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // === 모든 조합 자동생성 및 옵션 테이블 ===
+    function getCheckedValuesWithLabel(name) {
+        return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+            .map(cb => ({ id: cb.value, label: cb.dataset.label }));
+    }
+
+    function cartesianProduct(arrays) {
+        return arrays.reduce((a, b) => a.flatMap(d => b.map(e => [...d, e])), [[]]);
+    }
+
+    function generateOptionTable() {
+        const colors = getCheckedValuesWithLabel('color');
+        const sizes = getCheckedValuesWithLabel('size');
+        const materials = getCheckedValuesWithLabel('material');
+
+        if (!colors.length || !sizes.length || !materials.length) {
+            alert('모든 속성에서 최소 1개 이상 선택하세요.');
+            return;
+        }
+
+        const allCombos = cartesianProduct([colors, sizes, materials]);
+        const tbody = document.querySelector('#optionTable tbody');
+        tbody.innerHTML = '';
+
+        allCombos.forEach((combo, idx) => {
+            const optionName = combo.map(c => c.label).join('/');
+            const attrIds = combo.map(c => c.id);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <input type="hidden" class="attr-ids" value="${attrIds.join(',')}">
+                    <span>${optionName}</span>
+                </td>
+                <td><input type="number" class="option-price" min="0" required></td>
+                <td><input type="number" class="option-stock" min="0" required></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('optionTable').style.display = '';
+    }
+
+    document.getElementById('generateOptionsBtn').addEventListener('click', generateOptionTable);
+
+    // 폼 제출 시 모든 옵션을 JSON으로 변환
+    function collectOptionsToJson() {
+        const rows = document.querySelectorAll('#optionTable tbody tr');
+        const models = [];
+        rows.forEach(row => {
+            const attrIds = row.querySelector('.attr-ids').value.split(',');
+            const optionName = row.querySelector('span').innerText;
+            const price = row.querySelector('.option-price').value;
+            const prStock = row.querySelector('.option-stock').value;
+            models.push({
+                productModelSelect: optionName,
+                price: price,
+                prStock: prStock,
+                attributeValueIds: attrIds
             });
         });
-}
-
-// 이미지 미리보기 및 삭제 기능
-const input = document.getElementById('imageInput');
-const preview = document.getElementById('previewContainer');
-const form = document.getElementById('productForm');
-let selectedFiles = [];
-
-// [수정 후: 항상 최신 파일만 반영]
-input.addEventListener('change', function () {
-    selectedFiles = Array.from(this.files);
-    if (selectedFiles.length > 4) {
-        alert("이미지는 최대 4장까지 업로드할 수 있습니다.");
-        selectedFiles = selectedFiles.slice(0, 4);
-        this.value = '';
-        preview.innerHTML = '';
-        return;
+        return models;
     }
-    preview.innerHTML = '';
-    selectedFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const box = document.createElement('div');
-            box.className = 'img-box';
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            box.appendChild(img);
-            preview.appendChild(box);
-        };
-        reader.readAsDataURL(file);
-    });
-});
 
-// [폼 제출 시: 중복 append 제거]
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const formData = new FormData(form);
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    }).then(res => {
-        if (res.redirected) {
-            location.href = res.url;
-        } else {
-            alert("등록 실패");
+    // 4. 옵션 추가 함수
+    window.addOption = function () {
+        const optionCount = optionContainer.children.length;
+        if (optionCount >= 10) {
+            alert("옵션은 최대 10개까지 추가할 수 있습니다.");
+            return;
         }
-    }).catch(() => alert("에러 발생"));
-});
 
-// 옵션 동적 추가/삭제
-function addOption() {
-    const container = document.getElementById('optionContainer');
-    const optionCount = container.children.length;
-    if (optionCount >= 10) {
-        alert("옵션은 최대 10개까지 추가할 수 있습니다.");
-        return;
+        const div = document.createElement('div');
+        div.className = 'option-item';
+
+        let colorChecks = '', sizeChecks = '', materialChecks = '';
+        window.attributeValues.forEach(val => {
+            const checkbox = `<input type="checkbox" name="productModelDtoList[${optionCount}].attributeValueIds" value="${val.id}">${val.value} `;
+            if (val.attributeName === '색상') colorChecks += checkbox;
+            if (val.attributeName === '사이즈') sizeChecks += checkbox;
+            if (val.attributeName === '소재') materialChecks += checkbox;
+        });
+
+        div.innerHTML = `
+            <label>모델명:</label>
+            <input type="text" name="productModelDtoList[${optionCount}].productModelSelect" placeholder="모델명" required><br/>
+            <label>재고:</label>
+            <input type="number" name="productModelDtoList[${optionCount}].prStock" placeholder="재고 입력"><br/>
+            <label>가격:</label>
+            <input type="number" name="productModelDtoList[${optionCount}].price" placeholder="가격 입력"><br/>
+            <div class="option-attributes">
+                <label>색상:</label> ${colorChecks}<br/>
+                <label>사이즈:</label> ${sizeChecks}<br/>
+                <label>소재:</label> ${materialChecks}
+            </div>
+            <button type="button" class="removeOptionBtn">옵션 삭제</button>
+            <hr/>
+        `;
+
+        optionContainer.appendChild(div);
+        updateRemoveButtons();
+    };
+
+    function updateRemoveButtons() {
+        const items = optionContainer.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            const btn = item.querySelector('.removeOptionBtn');
+            btn.style.display = (items.length > 1) ? '' : 'none';
+            btn.onclick = function () {
+                item.remove();
+                reorderOptionNames();
+                updateRemoveButtons();
+            };
+        });
     }
-    const div = document.createElement('div');
-    div.className = 'option-item';
-    div.innerHTML = `
-        <label>모델명:</label>
-        <select name="productModelDtoList[${optionCount}].productModelSelect" required>
-            <option value="">옵션을 선택하세요</option>
-            <option value="SUPER_SINGLE">슈퍼싱글</option>
-            <option value="QUEEN">퀸</option>
-            <option value="KING">킹</option>
-            <option value="DEFAULT_MODEL">기본</option>
-        </select><br/>
-        <label>재고:</label>
-        <input type="number" name="productModelDtoList[${optionCount}].prStock" placeholder="재고 입력"/><br/>
-        <label>가격:</label>
-        <input type="number" name="productModelDtoList[${optionCount}].price" placeholder="가격 입력"/><br/>
-        <button type="button" class="removeOptionBtn">옵션 삭제</button>
-        <hr />
-    `;
-    container.appendChild(div);
-    updateRemoveButtons();
-}
 
-function updateRemoveButtons() {
-    const container = document.getElementById('optionContainer');
-    const items = container.querySelectorAll('.option-item');
-    items.forEach((item, idx) => {
-        const btn = item.querySelector('.removeOptionBtn');
-        btn.style.display = (items.length > 1) ? '' : 'none';
-        btn.onclick = function() {
-            item.remove();
-            // 옵션 삭제 후 name 인덱스 재정렬
-            reorderOptionNames();
-            updateRemoveButtons();
-        };
+    function reorderOptionNames() {
+        const items = optionContainer.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            item.querySelector('input[name$=".productModelSelect"]').name = `productModelDtoList[${idx}].productModelSelect`;
+            item.querySelector('input[name$=".prStock"]').name = `productModelDtoList[${idx}].prStock`;
+            item.querySelector('input[name$=".price"]').name = `productModelDtoList[${idx}].price`;
+
+            const checkboxes = item.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.name = `productModelDtoList[${idx}].attributeValueIds`;
+            });
+        });
+    }
+
+    updateRemoveButtons(); // 초기화
+
+    // 기존 폼 제출 이벤트 오버라이드
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let models = [];
+        // optionTable이 보이면 테이블 기반, 아니면 기존 방식
+        if (document.getElementById('optionTable').style.display !== 'none') {
+            models = collectOptionsToJson();
+        } else {
+            // 기존 옵션 입력 UI (숨겨져 있지만 혹시 모를 fallback)
+            const optionItems = optionContainer.querySelectorAll('.option-item');
+            optionItems.forEach(item => {
+                const model = {
+                    productModelSelect: item.querySelector('input[name$=".productModelSelect"]').value,
+                    prStock: item.querySelector('input[name$=".prStock"]').value,
+                    price: item.querySelector('input[name$=".price"]').value,
+                    attributeValueIds: Array.from(item.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value)
+                };
+                models.push(model);
+            });
+        }
+
+        const formData = new FormData(form);
+        // 기존 옵션 관련 필드 제거
+        for (let pair of formData.keys()) {
+            if (pair.startsWith('productModelDtoList[')) {
+                formData.delete(pair);
+            }
+        }
+        formData.append('productModelDtoListJson', JSON.stringify(models));
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            if (res.redirected) {
+                location.href = res.url;
+            } else {
+                alert('등록 실패');
+            }
+        }).catch(() => alert('에러 발생'));
     });
-}
-
-function reorderOptionNames() {
-    const container = document.getElementById('optionContainer');
-    const items = container.querySelectorAll('.option-item');
-    items.forEach((item, idx) => {
-        item.querySelector('select').name = `productModelDtoList[${idx}].productModelSelect`;
-        item.querySelector('input[name$=".prStock"]').name = `productModelDtoList[${idx}].prStock`;
-        item.querySelector('input[name$=".price"]').name = `productModelDtoList[${idx}].price`;
-    });
-}
-
-// 최초 1개만 있을 때 삭제 버튼 숨김
-document.addEventListener('DOMContentLoaded', function() {
-    updateRemoveButtons();
 });

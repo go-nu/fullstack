@@ -29,7 +29,7 @@ public class QnaPostController {
                          Authentication authentication) throws IOException {
 
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         dto.setProductId(productId);
         dto.setEmail(user.getEmail());
@@ -53,7 +53,7 @@ public class QnaPostController {
                          Authentication authentication) throws IOException {
 
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
@@ -78,7 +78,7 @@ public class QnaPostController {
                          @RequestParam(required = false) String qnaFilter,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/login";
+        if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
         qnaPostService.deleteQna(id, user.getEmail());
 
