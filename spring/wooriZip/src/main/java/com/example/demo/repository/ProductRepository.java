@@ -4,6 +4,8 @@ package com.example.demo.repository;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +19,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategoryIdIn(List<Long> categoryIds);
 
-    Optional<Product> findByProductCode(String productCode); // 삭제 보류 0718
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN FETCH p.category c " +
+            "LEFT JOIN FETCH c.parent cp " +
+            "LEFT JOIN FETCH cp.parent cpp " +
+            "WHERE p.id = :id")
+    Product findWithCategoryTreeById(@Param("id") Long id);
+
+    List<Product> findByIdIn(List<Long> myWishList);
 }

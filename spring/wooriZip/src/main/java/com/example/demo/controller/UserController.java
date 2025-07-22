@@ -1,19 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.InteriorPostDto;
+import com.example.demo.dto.QnaPostDto;
+import com.example.demo.dto.ReviewPostDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.PasswordResetToken;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
 import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
-import com.example.demo.service.EmailService;
-import com.example.demo.service.PasswordResetService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +28,10 @@ public class UserController {
     private final UserService userService;
     private final PasswordResetService passwordResetService;
     private final EmailService emailService;
+    private final ProductService productService;
+    private final InteriorPostService interiorPostService;
+    private final QnaPostService qnaPostService;
+    private final ReviewPostService reviewPostService;
 
     @GetMapping("/signup")
     public String singupForm() {
@@ -50,7 +57,19 @@ public class UserController {
         if (loginUser != null) {
             model.addAttribute("loginUser", loginUser);
             model.addAttribute("userCoupons", userService.getUserCoupons(loginUser));
+
+            // 내가 작성한 게시글 목록
+            List<InteriorPostDto> interiorPosts = interiorPostService.findByUser(loginUser);
+            List<QnaPostDto> qnaPosts = qnaPostService.findByUser(loginUser);
+            List<ReviewPostDto> reviewPosts = reviewPostService.findByUser(loginUser);
+
+            model.addAttribute("myInteriorPosts", interiorPosts);
+            model.addAttribute("myQnaPosts", qnaPosts);
+            model.addAttribute("myReviews", reviewPosts);
         }
+
+        List<Product> productList = productService.findByUser(loginUser.getId());
+        model.addAttribute("products", productList);
 
         return "/user/mypage";
     }

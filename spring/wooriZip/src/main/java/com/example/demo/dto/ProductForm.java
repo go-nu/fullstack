@@ -4,7 +4,7 @@ package com.example.demo.dto;
 import com.example.demo.entity.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +13,23 @@ import java.util.List;
 public class ProductForm {
     private Long id;
     private String name;
-//    private String description; // 설명
     private int price;
     private Category category;
     private int stockQuantity;
 
+    @JsonProperty("categoryId")
     private Long categoryId;
-
-    // 상품 속성값 id 리스트 (예: 색상-화이트, 사이즈-퀸 등)
-    private List<Long> attributeValueIds = new ArrayList<>();
 
     //  하위 모델들 (각 ProductModelDto는 여러 속성값 id를 가질 수 있음)
     private List<ProductModelDto> productModelDtoList = new ArrayList<>();
+
+    // ✅ 삭제할 모델 인덱스 리스트
+    private List<Integer> deleteIndexes = new ArrayList<>();
+
     private List<String> imageUrls;
+
+    // 상품 속성값 id 리스트 (예: 색상-화이트, 사이즈-퀸 등)
+    // private List<Long> attributeValueIds = new ArrayList<>();
 
     // 엔티티 변환
     public Product createProduct(Category category, Users user) {
@@ -60,6 +64,17 @@ public class ProductForm {
         form.setId(product.getId());
         form.setName(product.getName());
         form.setPrice(product.getPrice());
+        form.setCategory(product.getCategory()); // 반드시 있어야 함
+
+        // ====== 카테고리 계층 구조 점검 로그 ======
+        Category cat = product.getCategory();
+        System.out.println("[ProductForm.from] 소분류: " + (cat != null ? cat.getName() : "null") +
+                ", id=" + (cat != null ? cat.getId() : "null"));
+        System.out.println("[ProductForm.from] 중분류: " + (cat != null && cat.getParent() != null ? cat.getParent().getName() : "null") +
+                ", id=" + (cat != null && cat.getParent() != null ? cat.getParent().getId() : "null"));
+        System.out.println("[ProductForm.from] 대분류: " + (cat != null && cat.getParent() != null && cat.getParent().getParent() != null ? cat.getParent().getParent().getName() : "null") +
+                ", id=" + (cat != null && cat.getParent() != null && cat.getParent().getParent() != null ? cat.getParent().getParent().getId() : "null"));
+        // =========================================
 
         // 모델 정보 매핑 (옵션)
         if (product.getProductModels() != null && !product.getProductModels().isEmpty()) {
@@ -69,6 +84,13 @@ public class ProductForm {
                         dto.setProductModelSelect(model.getProductModelSelect());
                         dto.setPrStock(model.getPrStock());
                         dto.setImageUrl(model.getImageUrl());
+                        // 옵션별 속성값 id 세팅
+                        if (model.getModelAttributes() != null && !model.getModelAttributes().isEmpty()) {
+                            List<Long> attrValueIds = model.getModelAttributes().stream()
+                                    .map(pma -> pma.getAttributeValue().getId())
+                                    .toList();
+                            dto.setAttributeValueIds(attrValueIds);
+                        }
                         return dto;
                     })
                     .toList();

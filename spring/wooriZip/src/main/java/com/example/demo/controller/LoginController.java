@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-
 public class LoginController {
     private final LoginService loginService;
 
@@ -24,11 +23,4 @@ public class LoginController {
     public String logout(){
         return "redirect:/logout";
     }
-
-    @GetMapping("/")
-    public String welcome(Authentication authentication, Model model) {
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
-        return "welcome";
-    }
-
 }

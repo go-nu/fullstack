@@ -1,148 +1,3 @@
-//document.addEventListener("DOMContentLoaded", function () {
-//    const modelSelect = document.getElementById('modelSelect');
-//    const countInput = document.getElementById('count');
-//    const totalPrice = document.getElementById('totalPrice');
-//    const selectedPriceSpan = document.getElementById('selectedPrice');
-//    const modelInfo = document.getElementById('modelInfo');
-//    const allAttributeValues = window.allAttributeValues || [];
-//
-//    // 가격/수량 계산
-//    function updatePriceAndTotal() {
-//        const selected = modelSelect?.selectedOptions[0];
-//        let price = 0;
-//        if (selected && selected.dataset.price) {
-//            price = parseInt(selected.dataset.price);
-//            selectedPriceSpan && (selectedPriceSpan.innerText = price.toLocaleString());
-//            modelInfo && (modelInfo.innerText = `가격: ${price}원, 재고: ${selected.dataset.stock}`);
-//        } else {
-//            selectedPriceSpan && (selectedPriceSpan.innerText = '0');
-//            modelInfo && (modelInfo.innerText = '모델/옵션을 선택하세요.');
-//        }
-//        const count = parseInt(countInput?.value) || 1;
-//        totalPrice && (totalPrice.innerText = (price * count).toLocaleString() + '원');
-//    }
-//
-//    // 속성값 드롭다운 동적 표시
-//    function updateAttributeDropdowns() {
-//        const selected = modelSelect?.selectedOptions[0];
-//        let attrIds = [];
-//        if (selected && selected.dataset.attr) {
-//            try {
-//                attrIds = JSON.parse(selected.dataset.attr.replaceAll("'", '"'));
-//            } catch (e) {
-//                attrIds = selected.dataset.attr.replace(/\[|\]/g, '').split(',').map(s => s.trim()).filter(Boolean);
-//            }
-//        }
-//
-//        const colorSelect = document.getElementById('colorSelect');
-//        const sizeSelect = document.getElementById('sizeSelect');
-//        const materialSelect = document.getElementById('materialSelect');
-//        if (colorSelect) colorSelect.innerHTML = '<option value="">색상 선택</option>';
-//        if (sizeSelect) sizeSelect.innerHTML = '<option value="">사이즈 선택</option>';
-//        if (materialSelect) materialSelect.innerHTML = '<option value="">소재 선택</option>';
-//
-//        allAttributeValues.forEach(val => {
-//            if (attrIds.includes(val.id.toString())) {
-//                const option = `<option value="${val.id}">${val.value}</option>`;
-//                if (val.attributeName === '색상' && colorSelect) colorSelect.innerHTML += option;
-//                if (val.attributeName === '사이즈' && sizeSelect) sizeSelect.innerHTML += option;
-//                if (val.attributeName === '소재' && materialSelect) materialSelect.innerHTML += option;
-//            }
-//        });
-//    }
-//
-//    // modelSelect, count 이벤트 바인딩
-//    modelSelect?.addEventListener('change', function () {
-//        updatePriceAndTotal();
-//        updateAttributeDropdowns();
-//    });
-//    countInput?.addEventListener('input', updatePriceAndTotal);
-//    updatePriceAndTotal();
-//    updateAttributeDropdowns();
-//
-//    // 장바구니/구매 폼 전송
-//    window.submitForm = function (action) {
-//        const form = document.getElementById('productForm');
-//        ['items[0].modelId', 'items[0].count'].forEach(name => {
-//            const old = form.querySelector(`input[name="${name}"]`);
-//            if (old) old.remove();
-//        });
-//
-//        const selectedModelId = modelSelect?.value;
-//        const count = countInput?.value;
-//        if (!selectedModelId || !count) {
-//            alert("옵션과 수량을 선택해주세요.");
-//            return;
-//        }
-//
-//        const modelInput = document.createElement("input");
-//        modelInput.type = "hidden";
-//        modelInput.name = "items[0].modelId";
-//        modelInput.value = selectedModelId;
-//        form.appendChild(modelInput);
-//
-//        const countInputHidden = document.createElement("input");
-//        countInputHidden.type = "hidden";
-//        countInputHidden.name = "items[0].count";
-//        countInputHidden.value = count;
-//        form.appendChild(countInputHidden);
-//
-//        form.action = action === 'cart' ? "/cart/add" : "/order/now";
-//        document.getElementById('actionType').value = action;
-//        form.submit();
-//    };
-//
-//    // 탭 전환 로직
-//    function initializeTabs() {
-//        function switchTab(targetId) {
-//            document.querySelectorAll('.tab-button').forEach(b => {
-//                b.classList.toggle('active', b.getAttribute('data-target') === targetId);
-//            });
-//            document.querySelectorAll('.tab-content-section').forEach(section => {
-//                section.style.display = section.id === targetId ? 'block' : 'none';
-//            });
-//        }
-//
-//        function handleHash() {
-//            const hash = window.location.hash;
-//            if (hash.includes('qna-tab')) {
-//                switchTab('qna-section');
-//
-//                const pageMatch = hash.match(/page-(\d+)/);
-//                if (pageMatch) {
-//                    const pageButton = document.querySelector(`.page-link[data-page="${pageMatch[1]}"]`);
-//                    pageButton?.click();
-//                }
-//
-//                const qnaMatch = hash.match(/qna-(\d+)/);
-//                if (qnaMatch) {
-//                    setTimeout(() => {
-//                        const qnaElement = document.querySelector(`#qna-${qnaMatch[1]}`);
-//                        qnaElement?.scrollIntoView({ behavior: 'smooth' });
-//                    }, 500);
-//                }
-//            } else {
-//                switchTab('review-section');
-//            }
-//        }
-//
-//        document.querySelectorAll('.tab-button').forEach(btn => {
-//            btn.addEventListener('click', function () {
-//                const target = this.getAttribute('data-target');
-//                switchTab(target);
-//                const currentHash = window.location.hash;
-//                const pageMatch = currentHash.match(/page-(\d+)/);
-//                const pageInfo = pageMatch ? `,page-${pageMatch[1]}` : '';
-//                window.location.hash = target === 'qna-section' ? `qna-tab${pageInfo}` : 'review-section';
-//            });
-//        });
-//
-//        window.addEventListener('hashchange', handleHash);
-//        handleHash();
-//    }
-//
-//    initializeTabs();
-//});
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -304,6 +159,29 @@ document.addEventListener("DOMContentLoaded", function () {
             updatePriceAndTotal(parseInt(selected.dataset.price), parseInt(selected.dataset.stock), modelName);
             const currentAttrIds = parseAttributeIds(selected.dataset.attr); // 헬퍼 함수 사용
             populateIndividualDropdowns(currentAttrIds); // 개별 드롭다운도 해당 모델의 속성으로 채우고 선택 표시
+
+            const productId = window.location.pathname.split("/").pop();
+            const modelId = selected.value;
+            const actionType = "VIEW";
+            const weight = 1;
+
+            fetch("/recommend/log", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    productId: productId,
+                    modelId: modelId,
+                    actionType: actionType,
+                    weight: weight
+                })
+            }).then(response => {
+                if(!response.ok) {
+                console.warn("로그 전송 실패");
+                }
+            }).catch(error => {
+                console.error("로그 전송 에러: ", error);
+            });
+
         } else {
             // "옵션을 선택하세요" 선택 시 초기화
             updatePriceAndTotal(0, 0, '');
@@ -339,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
     populateIndividualDropdowns([]); // 초기에는 어떤 옵션도 선택되지 않은 상태로 개별 드롭다운 채움
 
     // =====================================================================
-    // 6. 탭 전환 로직 (기존 코드 유지)
+    // 6. 탭 전환 로직
     // =====================================================================
     function initializeTabs() {
         function switchTab(targetId) {
@@ -351,53 +229,91 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        function handleHash() {
-            const hash = window.location.hash;
-            if (hash.includes('qna-tab')) {
+        // URL 파라미터에서 값을 가져오는 함수
+        function getParamFromURL(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // 페이지 로드 시와 해시 변경 시 모두 실행되는 함수
+        function handleTabChange() {
+            const activeTab = getParamFromURL('activeTab');
+            const editQnaId = getParamFromURL('editQna');
+            const editReviewId = getParamFromURL('editReview');
+
+            // 탭 전환
+            if (activeTab === 'qna') {
                 switchTab('qna-section');
-
-                const pageMatch = hash.match(/page-(\d+)/);
-                if (pageMatch) {
-                    // QnA 페이지네이션 로드 또는 스크롤 로직이 QnA JS 파일에 있다면 해당 로직 호출
-                    // 여기서는 단순히 Q&A 탭 활성화만
-                }
-
-                const qnaMatch = hash.match(/qna-(\d+)/);
-                if (qnaMatch) {
+                // QnA 수정 처리
+                if (editQnaId) {
                     setTimeout(() => {
-                        const qnaElement = document.querySelector(`#qna-${qnaMatch[1]}`);
-                        qnaElement?.scrollIntoView({ behavior: 'smooth' });
+                        const qnaRow = document.querySelector(`[data-qna-id="${editQnaId}"]`);
+                        if (qnaRow) {
+                            const editBtn = qnaRow.querySelector('.qna-edit-btn');
+                            if (editBtn) {
+                                editBtn.click();
+                            }
+                        }
+                    }, 500);
+                }
+            } else if (activeTab === 'review') {
+                switchTab('review-section');
+                // 리뷰 수정 처리
+                if (editReviewId) {
+                    setTimeout(() => {
+                        const reviewRow = document.querySelector(`[data-review-id="${editReviewId}"]`);
+                        if (reviewRow) {
+                            const editBtn = reviewRow.querySelector('.review-edit-btn');
+                            if (editBtn) {
+                                editBtn.click();
+                            }
+                        }
                     }, 500);
                 }
             } else {
-                switchTab('review-section');
+                switchTab('review-section'); // 기본값
+            }
+
+            // 해시에 따른 스크롤 처리
+            if (window.location.hash) {
+                setTimeout(() => {
+                    const section = document.querySelector(window.location.hash);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
             }
         }
 
+        // 탭 버튼 클릭 이벤트
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.addEventListener('click', function () {
                 const target = this.getAttribute('data-target');
                 switchTab(target);
-                const currentHash = window.location.hash;
-                const pageMatch = currentHash.match(/page-(\d+)/);
-                const pageInfo = pageMatch ? `,page-${pageMatch[1]}` : '';
-                window.location.hash = target === 'qna-section' ? `qna-tab${pageInfo}` : 'review-section';
+
+                // URL 파라미터 업데이트
+                const url = new URL(window.location);
+                url.searchParams.set('activeTab', target === 'qna-section' ? 'qna' : 'review');
+                window.history.pushState({}, '', url);
             });
         });
 
-        window.addEventListener('hashchange', handleHash);
-        handleHash();
+        // 페이지 로드 시 실행
+        handleTabChange();
+
+        // 해시가 변경될 때도 처리
+        window.addEventListener('hashchange', handleTabChange);
     }
 
     initializeTabs();
-
 
     // =====================================================================
     // 7. 장바구니/구매 폼 전송 함수 (이전과 동일)
     // =====================================================================
     window.submitForm = function (action) {
         const form = document.getElementById('productForm');
-        // 기존에 추가했던 hidden input 제거
+
+        // 기존 hidden input 제거
         ['items[0].modelId', 'items[0].count'].forEach(name => {
             const old = form.querySelector(`input[name="${name}"]`);
             if (old) old.remove();
@@ -406,48 +322,68 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedModelId = modelSelect?.value;
         const count = countInput?.value;
 
-        if (!selectedModelId || !count || parseInt(count) === 0) { // count가 '0'일 때도 체크
+        if (!selectedModelId || !count || parseInt(count) === 0) {
             alert("옵션과 수량을 정확히 선택해주세요.");
             return;
         }
 
-        // 선택된 모델 ID hidden input 추가
+        // hidden input 추가
         const modelInput = document.createElement("input");
         modelInput.type = "hidden";
         modelInput.name = "items[0].modelId";
         modelInput.value = selectedModelId;
         form.appendChild(modelInput);
 
-        // 수량 hidden input 추가
         const countInputHidden = document.createElement("input");
         countInputHidden.type = "hidden";
         countInputHidden.name = "items[0].count";
         countInputHidden.value = count;
         form.appendChild(countInputHidden);
 
-        // 폼 액션 변경
+        // 추천 로그 정보
+        const productId = window.location.pathname.split("/").pop();
+        const actionType = action === 'cart' ? 'CART' : 'BUY';
+        const weight = actionType === 'CART' ? 3 : 5;
+
+        // actionType hidden input 값 설정
+        document.getElementById('actionType').value = action; // "cart" or "order"
         form.action = action === 'cart' ? "/cart/add" : "/order/now";
-        // actionType hidden input 업데이트 (기존 HTML에 있는 것으로 가정)
-        document.getElementById('actionType').value = action;
-        form.submit();
+
+        // 추천 로그 전송 후 폼 제출
+        fetch("/recommend/log", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                productId: productId,
+                modelId: selectedModelId,
+                actionType: actionType,
+                weight: weight
+            })
+        })
+        .then(() => {
+            form.submit(); // Ajax 성공 후 제출
+        })
+        .catch(err => {
+            console.error("추천 로그 전송 실패:", err);
+            form.submit(); // 실패해도 제출은 진행
+        });
     };
+
 });
-
-
 
 // 빠른 이동 스크롤 함수
 function scrollToSection(sectionId) {
     // 플로팅 메뉴 닫기
     closeFloatingNav();
-    
+
     if (sectionId === 'qna-section') {
         // Q&A 탭으로 직접 전환 (기존 함수 사용)
         switchTabDirect('qna-section');
         setTimeout(() => {
             const section = document.getElementById(sectionId);
             if (section) {
-                section.scrollIntoView({ 
-                    behavior: 'smooth', 
+                section.scrollIntoView({
+                    behavior: 'smooth',
                     block: 'start',
                     inline: 'nearest'
                 });
@@ -459,8 +395,8 @@ function scrollToSection(sectionId) {
         setTimeout(() => {
             const section = document.getElementById(sectionId);
             if (section) {
-                section.scrollIntoView({ 
-                    behavior: 'smooth', 
+                section.scrollIntoView({
+                    behavior: 'smooth',
                     block: 'start',
                     inline: 'nearest'
                 });
@@ -470,8 +406,8 @@ function scrollToSection(sectionId) {
         // 상세정보 등 일반 섹션
         const section = document.getElementById(sectionId);
         if (section) {
-            section.scrollIntoView({ 
-                behavior: 'smooth', 
+            section.scrollIntoView({
+                behavior: 'smooth',
                 block: 'start',
                 inline: 'nearest'
             });
@@ -523,3 +459,75 @@ document.addEventListener('click', function(event) {
         closeFloatingNav();
     }
 });
+
+// URL 해시 기반 탭 전환 및 스크롤 기능
+function handleTabFromHash() {
+    const hash = window.location.hash;
+    if (hash) {
+        // #qna-tab -> qna-section
+        const targetId = hash.replace('-tab', '-section');
+        const tabButton = document.querySelector(`.tab-button[data-target="${targetId.substring(1)}"]`);
+
+        if (tabButton) {
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('.tab-content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 선택된 탭 활성화
+            tabButton.classList.add('active');
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+
+                // 스크롤 애니메이션
+                setTimeout(() => {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+    }
+}
+
+// 페이지 로드 시 URL 해시 처리
+document.addEventListener('DOMContentLoaded', handleTabFromHash);
+
+// URL 해시 변경 시 처리
+window.addEventListener('hashchange', handleTabFromHash);
+
+// 탭 버튼 클릭 이벤트
+document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+
+        // 모든 탭 컨텐츠 숨기기
+        document.querySelectorAll('.tab-content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // 모든 탭 버튼 비활성화
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+        });
+
+        // 선택된 탭 활성화
+        this.classList.add('active');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+
+            // URL 해시 업데이트 (#qna-section -> #qna-tab)
+            const hash = '#' + targetId.replace('-section', '-tab');
+            history.pushState(null, '', hash);
+
+            // 스크롤 애니메이션
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+

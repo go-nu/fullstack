@@ -28,13 +28,14 @@ public class CategoryInitializer implements CommandLineRunner {
 
             // 2. 소분류들 + 세분류 포함 구조
             Map<String, List<String>> subWithChildren = Map.of(
-                    "침대", List.of("슈퍼싱글", "퀸", "킹"),
-                    "소파", List.of("1인용", "2~3인용", "카우치형"),
-                    "테이블·식탁·책상", List.of("식탁", "좌식테이블", "사무용책상"),
-                    "수납·거실장", List.of("서랍장", "TV장", "수납장"),
-                    "의자", List.of("식탁의자", "사무용의자", "스툴"),
-                    "행거·옷장", List.of("행거", "붙박이장")
-
+                    "침대", List.of("침대프레임", "침대+매트리스", "침대부속가구"),
+                    "테이블.식탁.책상", List.of("식탁", "책상", "좌식책상"),
+                    "소파", List.of("일반소파", "좌식소파", "리클라이너"),
+                    "서랍.수납장", List.of("서랍", "수납장", "협탁"),
+                    "진열장.책장.선반", List.of("진열장", "책장", "선반"),
+                    "의자", List.of("학생.사무용의자", "식탁의자", "스툴", "좌식의자"),
+                    "행거.붙박이장", List.of("행거", "붙박이장"),
+                    "거울", List.of("전신거울", "벽거울", "탁상거울")
             );
 
             for (Map.Entry<String, List<String>> entry : subWithChildren.entrySet()) {
@@ -61,7 +62,7 @@ public class CategoryInitializer implements CommandLineRunner {
             }
 
             // 3. 기타 소분류 (세분류 없음)
-            List<String> etcMids = List.of("선반·진열장·책장", "거울");
+            List<String> etcMids = List.of("선반·진열장·책장");
             for (String name : etcMids) {
                 Category mid = Category.builder()
                         .name(name)

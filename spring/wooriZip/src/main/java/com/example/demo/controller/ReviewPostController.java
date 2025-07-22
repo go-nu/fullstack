@@ -76,13 +76,13 @@ public class ReviewPostController {
     public String getEditForm(@PathVariable Long id, Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        
+
         ReviewPost review = reviewPostService.getReviewById(id);
         // 작성자 본인 확인
         if (!review.getEmail().equals(email)) {
             return "redirect:/access-denied";
         }
-        
+
         model.addAttribute("review", review);
         model.addAttribute("productId", review.getProduct().getId());
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
@@ -95,6 +95,7 @@ public class ReviewPostController {
                                @ModelAttribute ReviewPostDto dto,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                @RequestParam(value = "deleteImages", required = false) List<String> deleteImages,
+                               @RequestParam(required = false) Boolean fromMyPage,
                                Authentication authentication) throws IOException {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
@@ -106,24 +107,33 @@ public class ReviewPostController {
             dto.setFiles(List.of(files));
         }
         reviewPostService.updateReview(id, dto, deleteImages);
+
+        if (Boolean.TRUE.equals(fromMyPage)) {
+            return "redirect:/user/myPage";
+        }
         return "redirect:/products/" + dto.getProductId();
     }
 
     // 리뷰 삭제
     @PostMapping("/delete/{id}")
-    public String deleteReview(@PathVariable Long id, 
-                             @RequestParam Long productId,
-                             Authentication authentication) {
+    public String deleteReview(@PathVariable Long id,
+                               @RequestParam Long productId,
+                               @RequestParam(required = false) Boolean fromMyPage,
+                               Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        
+
         ReviewPost review = reviewPostService.getReviewById(id);
         // 작성자 본인 확인
         if (!review.getEmail().equals(email)) {
             return "redirect:/access-denied";
         }
-        
+
         reviewPostService.deleteReview(id);
+
+        if (Boolean.TRUE.equals(fromMyPage)) {
+            return "redirect:/user/mypage";
+        }
         return "redirect:/products/" + productId;
     }
 }

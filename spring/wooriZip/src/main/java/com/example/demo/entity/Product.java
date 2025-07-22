@@ -16,10 +16,6 @@ public class Product { // 상품
 
     private String name;
     private int price;
-    // private String description; 필요없으므로 삭제 0718
-
-    @Column(unique = true)
-    private String productCode; // ex) SEAT-0001
 
     private int stockQuantity; // 전체 재고 수량
     private double averageRating; // 후기 평점 평균
@@ -30,9 +26,6 @@ public class Product { // 상품
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,  orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<ProductImage> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductAttribute> productAttributes = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

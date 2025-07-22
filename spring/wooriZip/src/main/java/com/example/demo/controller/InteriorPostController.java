@@ -4,6 +4,7 @@ import com.example.demo.dto.InteriorPostDto;
 import com.example.demo.dto.PostCommentDto;
 import com.example.demo.dto.ReviewPostDto;
 import com.example.demo.entity.Users;
+import com.example.demo.constant.Role;
 import com.example.demo.service.InteriorPostService;
 import com.example.demo.service.PostCommentService;
 import com.example.demo.service.PostLikeService;
@@ -68,14 +69,23 @@ public class InteriorPostController {
     @ResponseBody
     public String writePost(@ModelAttribute InteriorPostDto dto,
                             @RequestParam(value = "files", required = false) MultipartFile[] files,
+                            @RequestParam(value = "isNotice", required = false) Boolean isNotice,
                             Authentication authentication) {
 
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "unauthorized";
-        
+
         Users loginUser = (Users) UserUtils.getUser(authentication);
         dto.setEmail(loginUser.getEmail());
         dto.setNickname(loginUser.getNickname());
+
+        // 공지사항 권한 체크
+        if (Boolean.TRUE.equals(isNotice)) {
+            if (loginUser.getRole() != Role.ADMIN) {
+                return "forbidden";
+            }
+            dto.setNotice(true);
+        }
 
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
             handleMultipleFiles(dto, files);
@@ -183,11 +193,16 @@ public class InteriorPostController {
     /** 삭제 */
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id,
+                         @RequestParam(required = false) Boolean fromMyPage,
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
 
         service.delete(id);
+
+        if (Boolean.TRUE.equals(fromMyPage)) {
+            return "redirect:/user/mypage";
+        }
         return "redirect:/interior";
     }
 

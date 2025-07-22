@@ -38,8 +38,9 @@
 <main>
     <h2>상품 등록</h2>
 
-    <form class="product-form" id="productForm" th:action="@{/admin/products}" method="post" enctype="multipart/form-data" th:object="${productForm}">
-        <label>상품명: <input type="text" th:field="*{name}" required /></label><br/>
+    <form class="product-form" id="productForm" th:action="@{/admin/products}" method="post"
+          enctype="multipart/form-data" th:object="${productForm}">
+        <label>상품명: <input type="text" th:field="*{name}" required/></label><br/>
         <!--    <label>가격: <input type="number" th:field="*{price}" required /></label><br/>-->
 
 
@@ -68,19 +69,22 @@
         <div>
             <label>색상:</label>
             <span th:each="val : ${attributeValues}" th:if="${val.attributeName} == '색상'">
-        <input type="checkbox" name="color" th:value="${val.id}" th:attr="data-label=${val.value}" th:text="${val.value}"/>
+        <input type="checkbox" name="color" th:value="${val.id}" th:attr="data-label=${val.value}"
+               th:text="${val.value}"/>
       </span>
         </div>
         <div>
             <label>사이즈:</label>
             <span th:each="val : ${attributeValues}" th:if="${val.attributeName} == '사이즈'">
-        <input type="checkbox" name="size" th:value="${val.id}" th:attr="data-label=${val.value}" th:text="${val.value}"/>
+        <input type="checkbox" name="size" th:value="${val.id}" th:attr="data-label=${val.value}"
+               th:text="${val.value}"/>
       </span>
         </div>
         <div>
             <label>소재:</label>
             <span th:each="val : ${attributeValues}" th:if="${val.attributeName} == '소재'">
-        <input type="checkbox" name="material" th:value="${val.id}" th:attr="data-label=${val.value}" th:text="${val.value}"/>
+        <input type="checkbox" name="material" th:value="${val.id}" th:attr="data-label=${val.value}"
+               th:text="${val.value}"/>
       </span>
         </div>
         <button type="button" id="generateOptionsBtn">모든 조합 생성</button>
@@ -102,8 +106,9 @@
         <button type="button" onclick="addOption()" style="display:none;">옵션 추가</button>
 
         <label>이미지 업로드 (최대 4장):</label><br/>
-        <input type="file" id="imageInput" name="images" accept="image/*" multiple /><br/><br/>
-        <div id="previewContainer"></div><br/>
+        <input type="file" id="imageInput" name="images" accept="image/*" multiple/><br/><br/>
+        <div id="previewContainer"></div>
+        <br/>
         <button type="submit">등록하기</button>
     </form>
 </main>

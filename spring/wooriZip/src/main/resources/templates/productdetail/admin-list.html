@@ -66,8 +66,8 @@
                         <label for="productSelect" class="form-label">상품 선택</label>
                         <select id="productSelect" class="form-select form-select-lg">
                             <option value="">상품을 선택하세요</option>
-                            <option th:each="product : ${products}" 
-                                    th:value="${product.id}" 
+                            <option th:each="product : ${products}"
+                                    th:value="${product.id}"
                                     th:text="|${product.name} - ${product.category?.name ?: '카테고리 없음'}|"
                                     th:data-has-detail="${hasDetailMap.get(product.id)}">
                             </option>
@@ -88,10 +88,10 @@
             <!-- 상품 카드 목록 -->
             <div class="mb-4">
                 <h5 class="mb-3">
-                    <i class="bi bi-grid-3x3-gap"></i> 전체 상품 목록 
+                    <i class="bi bi-grid-3x3-gap"></i> 전체 상품 목록
                     <span class="badge bg-secondary" th:text="${#lists.size(products)}">0</span>
                 </h5>
-                
+
                 <!-- 필터 버튼 -->
                 <div class="btn-group mb-3" role="group">
                     <input type="radio" class="btn-check" name="filter" id="filterAll" value="all" checked>
@@ -105,27 +105,27 @@
                 </div>
 
                 <div class="row" id="productGrid">
-                    <div th:each="product : ${products}" 
-                         class="col-md-4 col-lg-3 mb-4 product-item" 
+                    <div th:each="product : ${products}"
+                         class="col-md-4 col-lg-3 mb-4 product-item"
                          th:data-has-detail="${hasDetailMap.get(product.id)}">
                         <div class="card product-card h-100 position-relative"
                              th:onclick="|location.href='/products/' + ${product.id}|">
-                            
+
                             <!-- 상태 배지 -->
                             <div class="status-badge">
-                                <span th:if="${hasDetailMap.get(product.id)}" 
+                                <span th:if="${hasDetailMap.get(product.id)}"
                                       class="badge bg-success">상세정보 있음</span>
-                                <span th:unless="${hasDetailMap.get(product.id)}" 
+                                <span th:unless="${hasDetailMap.get(product.id)}"
                                       class="badge bg-warning">상세정보 없음</span>
                             </div>
 
                             <!-- 상품 이미지 -->
                             <div th:if="${product.images != null && !product.images.isEmpty()}">
-                                <img th:src="${product.images[0].imageUrl}" 
-                                     class="product-image" 
+                                <img th:src="${product.images[0].imageUrl}"
+                                     class="product-image"
                                      alt="상품 이미지">
                             </div>
-                            <div th:unless="${product.images != null && !product.images.isEmpty()}" 
+                            <div th:unless="${product.images != null && !product.images.isEmpty()}"
                                  class="product-image bg-light d-flex align-items-center justify-content-center">
                                 <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
                             </div>
@@ -133,7 +133,7 @@
                             <div class="card-body">
                                 <h6 class="card-title" th:text="${product.name}">상품명</h6>
                                 <p class="card-text text-muted small mb-2">
-                                    <i class="bi bi-tag"></i> 
+                                    <i class="bi bi-tag"></i>
                                     <span th:text="${product.category?.name ?: '카테고리 없음'}">카테고리</span>
                                 </p>
                                 <p class="card-text text-primary fw-bold">
@@ -151,7 +151,7 @@
                                            onclick="event.stopPropagation();">
                                             <i class="bi bi-pencil"></i> 수정하기
                                         </a>
-                                        <button type="button" 
+                                        <button type="button"
                                                 class="btn btn-outline-danger btn-sm delete-detail-btn"
                                                 th:data-product-id="${product.id}"
                                                 th:data-product-name="${product.name}"

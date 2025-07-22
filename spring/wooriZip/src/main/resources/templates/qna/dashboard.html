@@ -13,13 +13,16 @@
 
         <!-- 전체 통계 탭 버튼 -->
         <div class="nav nav-tabs mb-4" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab">
+            <button class="nav-link active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all"
+                    type="button" role="tab">
                 전체 문의 <span class="badge bg-secondary" th:text="${statistics.total}">0</span>
             </button>
-            <button class="nav-link" id="nav-answered-tab" data-bs-toggle="tab" data-bs-target="#nav-answered" type="button" role="tab">
+            <button class="nav-link" id="nav-answered-tab" data-bs-toggle="tab" data-bs-target="#nav-answered"
+                    type="button" role="tab">
                 답변 완료 <span class="badge bg-success" th:text="${statistics.answered}">0</span>
             </button>
-            <button class="nav-link" id="nav-unanswered-tab" data-bs-toggle="tab" data-bs-target="#nav-unanswered" type="button" role="tab">
+            <button class="nav-link" id="nav-unanswered-tab" data-bs-toggle="tab" data-bs-target="#nav-unanswered"
+                    type="button" role="tab">
                 미답변 <span class="badge bg-danger" th:text="${statistics.unanswered}">0</span>
             </button>
         </div>

@@ -20,12 +20,13 @@ public class RecommendLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
-    private String gender;
-    private String ageGroup;
-    private Integer residence;
+    private Long userId;
 
     private Long productId;
+    private Long modelId;
+
+    private String actionType;
+    private int weight;
 
     private LocalDateTime timestamp;
 }

@@ -106,10 +106,20 @@ public class InteriorPostService {
 
     /** 페이지네이션 */
     public Page<InteriorPostDto> findPagedPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "postId"));
+        // 공지사항을 먼저 가져오고, 그 다음 일반 게시글을 가져오도록 정렬 조건 수정
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.DESC, "isNotice")  // 공지사항 우선
+                        .and(Sort.by(Sort.Direction.DESC, "postId"))); // 그 다음 최신순
         return repository.findAll(pageable).map(InteriorPostDto::fromEntity);
     }
 
+    /** 사용자가 작성한 게시글 목록 */
+    public List<InteriorPostDto> findByUser(Users user) {
+        return repository.findByUserOrderByCreatedAtDesc(user)
+                .stream()
+                .map(InteriorPostDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     // -----------------------
     // Entity <-> DTO 변환
@@ -135,6 +145,7 @@ public class InteriorPostService {
                 .nickname(post.getUser().getNickname())
                 .liked(post.getLiked())
                 .views(post.getViews())
+                .isNotice(post.isNotice())
                 .build();
     }
 
@@ -150,8 +161,8 @@ public class InteriorPostService {
         post.setLiked(0);
         post.setViews(0);
         post.setUser(user); // 작성자 설정
+        post.setNotice(dto.isNotice()); // 공지사항 여부 설정
 
         return post;
     }
-
 }

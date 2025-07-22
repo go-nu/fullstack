@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 import java.util.*;
 
@@ -32,7 +33,6 @@ public class ProductController {
     private final CategoryRepository categoryRepository;
     private final AttributeRepository attributeRepository;
     private final AttributeValueRepository attributeValueRepository;
-
 
     @GetMapping("/admin/products")
     public String showProductForm(Model model, Authentication authentication) {
@@ -100,7 +100,6 @@ public class ProductController {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
-
         List<Product> productList = productService.findProducts(categoryId);
         model.addAttribute("products", productList);
         return "product/list"; // 실제 Thymeleaf 템플릿 경로에 맞게 조정
@@ -179,33 +178,88 @@ public class ProductController {
         return "redirect:/products/" + productId;
     }
 
+    // 상품수정
     @GetMapping("/products/{id}/edit")
     public String editProductForm(@PathVariable Long id,
                                   Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
-        Product product = productService.findById(id);
+        Product product = productService.findWithCategoryTreeById(id);
         if (product.getUser() == null || !product.getUser().getId().equals(loginUser.getId())) {
             return "redirect:/access-denied";
         }
         model.addAttribute("productForm", ProductForm.from(product));
-        // 속성/속성값 목록 추가
+        // 속성/속성값 목록 추가 (DTO 변환)
         model.addAttribute("attributes", attributeRepository.findAll());
-        model.addAttribute("attributeValues", attributeValueRepository.findAll());
+        List<AttributeValue> attributeValues = attributeValueRepository.findAllWithAttribute();
+        List<AttributeValueDto> attributeValueDtos = attributeValues.stream()
+                .map(av -> new AttributeValueDto(av.getId(), av.getValue(), av.getAttribute().getName()))
+                .toList();
+        model.addAttribute("attributeValues", attributeValueDtos);
         return "product/update";
     }
 
-    @PostMapping("/products/{id}/edit")
+//    @PostMapping(value = "/products/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public String updateProduct(@PathVariable Long id,
+//                                @RequestParam("productJson") String productJson,
+//                                @RequestParam(value = "images", required = false) MultipartFile[] images,
+//                                @RequestParam(value = "deleteIndexes", required = false) String deleteIndexes,
+//                                Authentication authentication) {
+//        String email = UserUtils.getEmail(authentication);
+//        if (email == null) return "redirect:/user/login";
+//        Users loginUser = (Users) UserUtils.getUser(authentication);
+//        try {
+//            // JSON -> ProductForm 변환
+//            com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+//            ProductForm form = objectMapper.readValue(productJson, ProductForm.class);
+//            // 서비스 호출
+//            productService.updateProduct(id, form, images, deleteIndexes, loginUser);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "redirect:/error";
+//        }
+//        return "redirect:/products/" + id;
+//    }
+
+    @PostMapping(value = "/products/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String updateProduct(@PathVariable Long id,
-                                @ModelAttribute ProductForm form,
+                                @RequestParam("productJson") String productJson,
                                 @RequestParam(value = "images", required = false) MultipartFile[] images,
-                                @RequestParam(value = "deleteIndexes", required = false) String deleteIndexes,
                                 Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
-        productService.updateProduct(id, form, images, deleteIndexes, loginUser);
+        try {
+            // JSON -> ProductForm 변환
+            com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            ProductForm form = objectMapper.readValue(productJson, ProductForm.class);
+
+            // ✅ deleteIndexes는 이제 ProductForm 안에 포함되어 있음
+            List<Integer> deleteIndexes = form.getDeleteIndexes();
+
+            // 서비스 호출
+            productService.updateProduct(id, form, images, deleteIndexes, loginUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/error";
+        }
         return "redirect:/products/" + id;
     }
+
+
+    /*
+    // 방법2: @RequestPart 방식 (예비용)
+    @PostMapping(value = "/products/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String updateProductAlt(@PathVariable Long id,
+                                @RequestPart("productJson") ProductForm form,
+                                @RequestPart(value = "images", required = false) List<MultipartFile> images,
+                                @RequestParam(value = "deleteIndexes", required = false) String deleteIndexes,
+                                Authentication authentication) {
+        // ...
+        return "redirect:/products/" + id;
+    }
+    */
 
     @PostMapping("/products/{id}/delete")
     public String deleteProduct(@PathVariable Long id,
@@ -213,7 +267,7 @@ public class ProductController {
         String email = UserUtils.getEmail(authentication);
         Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
         if (loginUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/user/user/login";
         }
         productService.deleteProduct(id, loginUser);
         return "redirect:/products";

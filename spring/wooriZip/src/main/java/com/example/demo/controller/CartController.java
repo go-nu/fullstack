@@ -71,7 +71,7 @@ public class CartController {
         }
     }
 
-    @PostMapping("/clear")
+//    @PostMapping("/clear")
     public String clearCart(Authentication authentication, Model model) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";

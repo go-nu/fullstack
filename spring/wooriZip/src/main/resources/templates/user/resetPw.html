@@ -24,20 +24,20 @@
 <div th:replace="~{index/header :: header}"></div>
 
 <main>
-<h2>비밀번호 재설정</h2>
+    <h2>비밀번호 재설정</h2>
 
-<!-- 에러 메시지 표시 -->
-<div th:if="${error}" th:text="${error}" class="error"></div>
+    <!-- 에러 메시지 표시 -->
+    <div th:if="${error}" th:text="${error}" class="error"></div>
 
-<form id="resetPwForm" th:action="@{/user/resetPw}" method="post">
-    <input type="hidden" name="token" th:value="${token}"/>
-    <label for="newPw">새 비밀번호</label>
-    <input type="password" name="newPw" id="newPw" required><br/>
-    <label for="confirmPw">비밀번호 확인</label>
-    <input type="password" name="confirmPw" id="confirmPw" required><br/>
-    <div id="pwCheckResult"></div>
-    <button type="submit">비밀번호 변경</button>
-</form>
+    <form id="resetPwForm" th:action="@{/user/resetPw}" method="post">
+        <input type="hidden" name="token" th:value="${token}"/>
+        <label for="newPw">새 비밀번호</label>
+        <input type="password" name="newPw" id="newPw" required><br/>
+        <label for="confirmPw">비밀번호 확인</label>
+        <input type="password" name="confirmPw" id="confirmPw" required><br/>
+        <div id="pwCheckResult"></div>
+        <button type="submit">비밀번호 변경</button>
+    </form>
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>

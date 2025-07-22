@@ -6,8 +6,8 @@ const preview = document.getElementById('previewContainer');
 input.addEventListener('change', function () {
     const newFiles = Array.from(this.files);
 
-    if (selectedFiles.length + newFiles.length > 4) {
-        alert("이미지는 최대 4장까지 첨부할 수 있습니다.");
+    if (selectedFiles.length + newFiles.length > 8) {
+        alert("이미지는 최대 8장까지 첨부할 수 있습니다.");
         return;
     }
 

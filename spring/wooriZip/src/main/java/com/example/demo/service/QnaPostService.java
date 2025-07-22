@@ -150,56 +150,44 @@ public class QnaPostService {
 
     // QnA DTO 리스트 (답변 포함)
     public List<QnaPostDto> getQnaPostDtoList(Long productId, int page, String filter) {
-        // 모든 게시글을 가져옵니다
-        List<QnaPost> allPosts = qnaPostRepository.findByProductIdOrderByCreatedAtDesc(productId);
-
-        // 필터 적용
-        List<QnaPost> filteredPosts = allPosts.stream()
-                .filter(post -> {
-                    boolean hasAnswer = post.getAnswer() != null;
-                    return switch (filter) {
-                        case "answered" -> hasAnswer;
-                        case "unanswered" -> !hasAnswer;
-                        default -> true; // "all" 또는 기타 값
-                    };
-                })
-                .collect(Collectors.toList());
-
-        // 페이지네이션 적용
-        int start = page * 5;
-        int end = Math.min(start + 5, filteredPosts.size());
-
-        if (start >= filteredPosts.size()) {
-            return new ArrayList<>();
+        int offset = page * 5;
+        List<QnaPost> posts = qnaPostRepository.findByProductIdWithPaging(productId, offset, 5);
+        if (posts == null) {
+            posts = new ArrayList<>();
         }
 
-        List<QnaPost> pagedPosts = filteredPosts.subList(start, end);
+        List<QnaPostDto> result = new ArrayList<>();
 
-        // DTO 변환
-        return pagedPosts.stream()
-                .map(post -> {
-                    QnaPostDto dto = QnaPostDto.fromEntity(post);
-                    qnaAnswerRepository.findByQnaPost(post)
-                            .ifPresent(answer -> dto.setAnswer(QnaAnswerDto.fromEntity(answer)));
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        for (QnaPost post : posts) {
+            QnaPostDto dto = QnaPostDto.fromEntity(post);
+            qnaAnswerRepository.findByQnaPost(post).ifPresent(answer ->
+                    dto.setAnswer(QnaAnswerDto.fromEntity(answer))
+            );
+
+            // 필터 적용
+            boolean shouldAdd = switch (filter) {
+                case "answered" -> dto.getAnswer() != null;
+                case "unanswered" -> dto.getAnswer() == null;
+                default -> true; // "all" 또는 기타 값
+            };
+
+            if (shouldAdd) {
+                result.add(dto);
+            }
+        }
+
+        return result;
     }
 
     // 총 질문 수 (필터 적용)
     public long countByProduct(Long productId, String filter) {
         List<QnaPost> allPosts = qnaPostRepository.findByProductIdOrderByCreatedAtDesc(productId);
 
-        return allPosts.stream()
-                .filter(post -> {
-                    boolean hasAnswer = post.getAnswer() != null;
-                    return switch (filter) {
-                        case "answered" -> hasAnswer;
-                        case "unanswered" -> !hasAnswer;
-                        default -> true; // "all" 또는 기타 값
-                    };
-                })
-                .count();
+        return switch (filter) {
+            case "answered" -> allPosts.stream().filter(post -> post.getAnswer() != null).count();
+            case "unanswered" -> allPosts.stream().filter(post -> post.getAnswer() == null).count();
+            default -> allPosts.size(); // "all" 또는 기타 값
+        };
     }
 
     // QnA 답변 후 상품상세로 리다이렉트용
@@ -304,6 +292,19 @@ public class QnaPostService {
         return qnaPostRepository.findAll().stream()
                 .filter(qna -> qna.getAnswer() == null)
                 .sorted(Comparator.comparing(QnaPost::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /** 사용자가 작성한 QnA 목록 조회 */
+    public List<QnaPostDto> findByUser(Users user) {
+        return qnaPostRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
+                .stream()
+                .map(post -> {
+                    QnaPostDto dto = QnaPostDto.fromEntity(post);
+                    qnaAnswerRepository.findByQnaPost(post)
+                            .ifPresent(answer -> dto.setAnswer(QnaAnswerDto.fromEntity(answer)));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }

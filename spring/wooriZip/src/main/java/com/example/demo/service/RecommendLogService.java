@@ -13,18 +13,16 @@ public class RecommendLogService {
 
     private final RecommendLogRepository recommendLogRepository;
 
-    public void saveLog(String nickname, String gender, String ageGroup, int residence, Long productId) {
+    public void saveLog(Long userId, Long productId, Long modelId, String actionType, int weight) {
         RecommendLog log = RecommendLog.builder()
-                .nickname(nickname)
-                .gender(gender)
-                .ageGroup(ageGroup)
-                .residence(residence)
+                .userId(userId)
                 .productId(productId)
+                .modelId(modelId)
+                .actionType(actionType)
+                .weight(weight)
                 .timestamp(LocalDateTime.now())
                 .build();
-
         recommendLogRepository.save(log);
     }
-
 
 }

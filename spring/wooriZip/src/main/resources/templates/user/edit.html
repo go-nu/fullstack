@@ -25,73 +25,73 @@
 
 <main>
     <h1>회원 정보 수정</h1>
-        <form th:action="@{/user/edit}" method="post" th:object="${loginUser}">
+    <form th:action="@{/user/edit}" method="post" th:object="${loginUser}">
         <!-- 좌측 컬럼 -->
-            <div class="form-group-left">
-                <label for="email">이메일</label>
-                <input type="email" th:field="*{email}" readonly />
+        <div class="form-group-left">
+            <label for="email">이메일</label>
+            <input type="email" th:field="*{email}" readonly/>
 
-                <label for="userPw">새 비밀번호</label>
-                <input type="password" name="userPw" id="userPw" />
+            <label for="userPw">새 비밀번호</label>
+            <input type="password" name="userPw" id="userPw"/>
 
-                <label for="checkPw">비밀번호 확인</label>
-                <input type="password" name="checkPw" id="checkPw" />
-                <div id="pwCheckResult"></div>
+            <label for="checkPw">비밀번호 확인</label>
+            <input type="password" name="checkPw" id="checkPw"/>
+            <div id="pwCheckResult"></div>
 
-                <label>우편번호</label>
-                <div class="flex-group">
-                    <input type="text" th:field="*{p_code}" id="sample4_postcode" placeholder="우편번호" required />
-                    <button type="button" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
-                </div>
-
-                <input type="text" th:field="*{loadAddr}" id="sample4_roadAddress" placeholder="도로명주소" required />
-                <input type="text" th:field="*{lotAddr}" id="sample4_jibunAddress" placeholder="지번주소" required />
-                <input type="text" th:field="*{detailAddr}" id="sample4_detailAddress" placeholder="상세주소" required />
-                <input type="text" th:field="*{extraAddr}" id="sample4_extraAddress" placeholder="참고항목" hidden />
+            <label>우편번호</label>
+            <div class="flex-group">
+                <input type="text" th:field="*{p_code}" id="sample4_postcode" placeholder="우편번호" required/>
+                <button type="button" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
             </div>
 
-            <!-- 우측 컬럼 -->
-            <div class="form-group-right">
-                <label>닉네임</label>
-                <input type="text" th:field="*{nickname}" />
+            <input type="text" th:field="*{loadAddr}" id="sample4_roadAddress" placeholder="도로명주소" required/>
+            <input type="text" th:field="*{lotAddr}" id="sample4_jibunAddress" placeholder="지번주소" required/>
+            <input type="text" th:field="*{detailAddr}" id="sample4_detailAddress" placeholder="상세주소" required/>
+            <input type="text" th:field="*{extraAddr}" id="sample4_extraAddress" placeholder="참고항목" hidden/>
+        </div>
 
-                <label for="birth">생년월일</label>
-                <input type="date" th:value="${#temporals.format(loginUser.birth, 'yyyy-MM-dd')}" name="birth" />
+        <!-- 우측 컬럼 -->
+        <div class="form-group-right">
+            <label>닉네임</label>
+            <input type="text" th:field="*{nickname}"/>
 
-                <label for="phone">휴대전화</label>
-                <div class="flex-group">
-                    <input id="phone" name="phone" type="hidden" th:value="*{phone}" />
-                    <input id="phone1" name="phone1" maxlength="3" type="tel"
-                           th:value="${loginUser.phone != '' ? loginUser.phone.substring(0,3) : ''}" />
-                    <input id="phone2" name="phone2" maxlength="4" type="tel"
-                           th:value="${loginUser.phone != '' ? loginUser.phone.substring(3,7) : ''}" />
-                    <input id="phone3" name="phone3" maxlength="4" type="tel"
-                           th:value="${loginUser.phone != '' ? loginUser.phone.substring(7) : ''}" />
-                    <span id="guide" style="color:#999;display:none"></span>
-                </div>
+            <label for="birth">생년월일</label>
+            <input type="date" th:value="${#temporals.format(loginUser.birth, 'yyyy-MM-dd')}" name="birth"/>
 
-                <label>성별</label>
-                <div class="select-buttons">
-                    <input type="radio" th:field="*{gender}" value="m" id="male" hidden />
-                    <label for="male">남자</label>
-                    <input type="radio" th:field="*{gender}" value="f" id="female" hidden />
-                    <label for="female">여자</label>
-                </div>
-
-                <label>가구 유형</label>
-                <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
-                <div class="select-buttons">
-                    <input type="radio" th:field="*{residenceType}" value="1" id="res1" hidden />
-                    <label for="res1">1인가구</label>
-                    <input type="radio" th:field="*{residenceType}" value="2" id="res2" hidden />
-                    <label for="res2">다인가구</label>
-                    <input type="radio" th:field="*{residenceType}" value="0" id="res0" hidden />
-                    <label for="res0">미선택</label>
-                </div>
+            <label for="phone">휴대전화</label>
+            <div class="flex-group">
+                <input id="phone" name="phone" type="hidden" th:value="*{phone}"/>
+                <input id="phone1" name="phone1" maxlength="3" type="tel"
+                       th:value="${loginUser.phone != '' ? loginUser.phone.substring(0,3) : ''}"/>
+                <input id="phone2" name="phone2" maxlength="4" type="tel"
+                       th:value="${loginUser.phone != '' ? loginUser.phone.substring(3,7) : ''}"/>
+                <input id="phone3" name="phone3" maxlength="4" type="tel"
+                       th:value="${loginUser.phone != '' ? loginUser.phone.substring(7) : ''}"/>
+                <span id="guide" style="color:#999;display:none"></span>
             </div>
 
-            <input type="submit" value="정보 수정" />
-        </form>
+            <label>성별</label>
+            <div class="select-buttons">
+                <input type="radio" th:field="*{gender}" value="m" id="male" hidden/>
+                <label for="male">남자</label>
+                <input type="radio" th:field="*{gender}" value="f" id="female" hidden/>
+                <label for="female">여자</label>
+            </div>
+
+            <label>가구 유형</label>
+            <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
+            <div class="select-buttons">
+                <input type="radio" th:field="*{residenceType}" value="1" id="res1" hidden/>
+                <label for="res1">1인가구</label>
+                <input type="radio" th:field="*{residenceType}" value="2" id="res2" hidden/>
+                <label for="res2">다인가구</label>
+                <input type="radio" th:field="*{residenceType}" value="0" id="res0" hidden/>
+                <label for="res0">미선택</label>
+            </div>
+        </div>
+
+        <input type="submit" value="정보 수정"/>
+    </form>
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>

@@ -16,6 +16,7 @@ public class LoggingConfig implements WebMvcConfigurer {
                 "/favicon.ico", "/.well-known/**", "/user/checkEmail", "/uploads/**");
 
         registry.addInterceptor(new RecommendInterceptor())
-                .addPathPatterns("/products/**");
+                .addPathPatterns("/products/**", "/cart/**", "/order/**", "/recommend/log")
+                .excludePathPatterns("/css/**", "/js/**");
     }
 }

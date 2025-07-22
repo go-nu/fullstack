@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
-    <!--<link rel="stylesheet" href="/css/pages/user.css">-->
+    <link rel="stylesheet" href="/css/pages/user.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
@@ -75,24 +75,33 @@
                 <input id="phone2" name="phone2" maxlength="4" type="tel" required>
                 <input id="phone3" name="phone3" maxlength="4" type="tel" required>
             </div>
-
             <label>성별</label>
             <div class="select-buttons" id="genderGroup">
-                <input type="radio" name="gender" id="genderM" value="m" checked>
-                <label for="genderM">남자</label>
-                <input type="radio" name="gender" id="genderF" value="f">
-                <label for="genderF">여자</label>
+                <div>
+                    <input type="radio" name="gender" id="genderM" value="m" checked>
+                    <label for="genderM">남자</label>
+                </div>
+                <div>
+                    <input type="radio" name="gender" id="genderF" value="f">
+                    <label for="genderF">여자</label>
+                </div>
             </div>
 
             <label>가구 유형</label>
             <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
             <div class="select-buttons" id="residenceGroup">
-                <input type="radio" name="residenceType" id="res1" value="1">
-                <label for="res1">1인가구</label>
-                <input type="radio" name="residenceType" id="res2" value="2">
-                <label for="res2">다인가구</label>
-                <input type="radio" name="residenceType" id="res0" value="0" checked>
-                <label for="res0">미선택</label>
+                <div>
+                    <input type="radio" name="residenceType" id="res1" value="1">
+                    <label for="res1">1인가구</label>
+                </div>
+                <div>
+                    <input type="radio" name="residenceType" id="res2" value="2">
+                    <label for="res2">다인가구</label>
+                </div>
+                <div>
+                    <input type="radio" name="residenceType" id="res0" value="0" checked>
+                    <label for="res0">미선택</label>
+                </div>
             </div>
         </div>
 

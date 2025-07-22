@@ -79,17 +79,18 @@
                 </div>
                 <div class="card-body">
                     <form id="productDetailForm" enctype="multipart/form-data">
-                        <input type="hidden" id="productId" th:value="${product.id}" />
+                        <input type="hidden" id="productId" th:value="${product.id}"/>
 
                         <!-- 기존 상세 이미지 표시 (수정 모드일 때) -->
                         <div th:if="${productDetail != null && productDetail.detailImagePathList != null}">
                             <h5>기존 상세 이미지</h5>
                             <div id="existingImages" class="mb-3">
-                                <div th:each="imagePath : ${productDetail.detailImagePathList}" 
+                                <div th:each="imagePath : ${productDetail.detailImagePathList}"
                                      class="image-container">
                                     <img th:src="${imagePath}" class="image-preview" alt="기존 이미지"/>
-                                    <button type="button" class="remove-btn existing-remove" 
-                                            th:data-path="${imagePath}">×</button>
+                                    <button type="button" class="remove-btn existing-remove"
+                                            th:data-path="${imagePath}">×
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +98,7 @@
                         <!-- 새 이미지 업로드 -->
                         <div class="mb-3">
                             <label for="imageInput" class="form-label">상세 이미지 첨부 (최대 10장)</label>
-                            <input type="file" id="imageInput" class="form-control" 
+                            <input type="file" id="imageInput" class="form-control"
                                    accept="image/*" multiple>
                             <small class="text-muted">최대 10장의 이미지를 선택할 수 있습니다.</small>
                         </div>
@@ -108,7 +109,8 @@
                         <!-- 상품 상세정보 (단일 textarea로 통일) -->
                         <div class="mb-3">
                             <label for="detailInfo" class="form-label">상품 상세정보</label>
-                            <textarea id="detailInfo" name="detailInfo" class="form-control" rows="15" required></textarea>
+                            <textarea id="detailInfo" name="detailInfo" class="form-control" rows="15"
+                                      required></textarea>
                             <small class="text-muted">각 항목에 맞는 내용을 입력해주세요.</small>
                         </div>
 

@@ -29,11 +29,11 @@ public class InteriorPost {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private boolean isNotice = false;  // 공지사항 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")  // users 테이블의 PK 컬럼명에 맞게!
     private Users user;
-
 
     private int liked;
     private int views;

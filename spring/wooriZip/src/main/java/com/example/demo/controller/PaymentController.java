@@ -38,7 +38,6 @@ public class PaymentController {
     public String confirmPayment(@RequestBody String jsonBody, Model model, Authentication authentication) {
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        log.info("confirmPayment called with body: {}", jsonBody);  // 요청이 들어오는지 로그 확인
         JSONParser parser = new JSONParser();
         String orderId;
         String amount;
@@ -143,9 +142,11 @@ public class PaymentController {
     @GetMapping(value = "/success")
     public String paymentRequest(HttpServletRequest request, Model model, Authentication authentication) {
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
+
         String orderId = request.getParameter("orderId");
         OrderDto orderDto = orderService.getOrderByOrderId(orderId);
         model.addAttribute("orderDto", orderDto);
+        model.addAttribute("test", "테스트");
         return "order/orderComplete";
     }
 

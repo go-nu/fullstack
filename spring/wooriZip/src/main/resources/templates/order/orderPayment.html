@@ -42,36 +42,38 @@
             </tbody>
         </table>
     </div>
+    <!--
 
-    <!-- 모바일 버전 -->
-    <div class="mobile-only">
-        <div th:each="item : ${orderDto.items}">
-            <input type="hidden" name="orderId" th:value="${orderDto.orderNo}">
-            <div>
-                <img alt="상품 이미지" th:src="@{${item.getImgUrl()}}">
+        &lt;!&ndash; 모바일 버전 &ndash;&gt;
+        <div class="mobile-only">
+            <div th:each="item : ${orderDto.items}">
+                <input type="hidden" name="orderId" th:value="${orderDto.orderNo}">
                 <div>
-                    <p th:text="${item.productName}">상품 이름</p>
+                    <img alt="상품 이미지" th:src="@{${item.getImgUrl()}}">
+                    <div>
+                        <p th:text="${item.productName}">상품 이름</p>
+                    </div>
+                </div>
+                <div>
+                    <span>가격:</span>
+                    <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원
+                </div>
+                <div>
+                    <span>수량:</span>
+                    <p th:text="${item.count}"></p>
+                    <span>개</span>
+                </div>
+                <div>
+                    <span>배송비:</span>
+                    <span>0</span>원
+                </div>
+                <div>
+                    <span>합계:</span>
+                    <span th:text="${#numbers.formatDecimal(item.getPrice() * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원
                 </div>
             </div>
-            <div>
-                <span>가격:</span>
-                <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원
-            </div>
-            <div>
-                <span>수량:</span>
-                <p th:text="${item.count}"></p>
-                <span>개</span>
-            </div>
-            <div>
-                <span>배송비:</span>
-                <span>0</span>원
-            </div>
-            <div>
-                <span>합계:</span>
-                <span th:text="${#numbers.formatDecimal(item.getPrice() * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원
-            </div>
         </div>
-    </div>
+    -->
 
     <table>
         <tr>

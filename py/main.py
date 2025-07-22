@@ -1,45 +1,42 @@
 import mysql.connector
 import pandas as pd
-import numpy as np
+from lightfm.data import Dataset
 
-# MySQL 연결 설정
+# DB 연결 및 데이터 조회
 conn = mysql.connector.connect(
-    host="localhost",  # 호스트
-    port=3306,         # 포트 (기본값: 3306)
-    user="root",       # 사용자명
-    password="1234",   # 비밀번호
+    host="localhost",
+    port=3306,
+    user="root",
+    password="1234",
     database="woorizip"
 )
-
-# 커서 생성
 cursor = conn.cursor()
-
-# 예시로 쿼리 실행
-cursor.execute("SELECT * FROM recommend_log")
-
+cursor.execute("SELECT user_id, product_id, model_id, weight, timestamp FROM recommend_log")
 logs = cursor.fetchall()
-
-# 연결 종료
 cursor.close()
 conn.close()
 
 # DataFrame 생성
-df = pd.DataFrame(logs, columns=['residence_type', 'id', 'product_id', 'timestamp', 'age_group', 'gender', 'nickname'])
+df = pd.DataFrame(logs, columns=['user_id', 'product_id', 'model_id', 'weight', 'timestamp'])
 
-# 1. age_group 처리
-age_group_mapping = {'10s': 1, '20s': 2, '30s': 3, '40s': 4, '50over': 5}
-df['age_group'] = df['age_group'].map(age_group_mapping)
-
-# 2. gender 처리
-gender_mapping = {'m': 0, 'f': 1}
-df['gender'] = df['gender'].map(gender_mapping)
-
-# 3. timestamp 처리 (유닉스 타임스탬프)
+# 전처리
 df['timestamp'] = df['timestamp'].apply(lambda x: int(x.timestamp()))
+df['model_id'] = df['model_id'].fillna(0).astype(int)
 
-# 4. nickname 처리 (숫자 매핑)
-df['nickname'] = df['nickname'].astype('category').cat.codes
+# ✅ Interaction Matrix 생성
+dataset = Dataset()
+dataset.fit(
+    users=df['user_id'].unique(),
+    items=df['model_id'].unique()
+)
+
+interactions_data = [
+    (row['user_id'], row['model_id'], row['weight']) for _, row in df.iterrows()
+]
+
+(interactions, weights) = dataset.build_interactions(interactions_data)
 
 # 결과 출력
-print(df)
-
+print("Interaction matrix shape:", interactions.shape)
+print("Sample interactions (non-zero entries):")
+print(interactions)

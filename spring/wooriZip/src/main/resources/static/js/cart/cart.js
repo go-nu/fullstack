@@ -64,27 +64,22 @@ $(document).ready(function () {
             return;
         }
 
-        let form = $('<form>', {
-            'method': 'POST',
-            'action': '/order'
+        $.ajax({
+            url: '/pay/ready',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(selectedItems),
+            success: function (response) {
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    alert("결제 준비 실패");
+                }
+            },
+            error: function () {
+                alert("서버 오류 발생");
+            }
         });
-
-        selectedItems.forEach(function (item) {
-            form.append($('<input>', {
-                'type': 'hidden',
-                'name': 'cartItemIds',
-                'value': item
-            }));
-        });
-
-        form.append($('<input>', {
-            'type': 'hidden',
-            'name': 'type',
-            'value': 'cart'
-        }));
-
-        $('body').append(form);
-        form.submit();
     }
 
     // ✅ 체크된 상품 기준 결제 요약 계산 함수
@@ -93,7 +88,7 @@ $(document).ready(function () {
         let deliveryFee = 3000;
 
         $("tr").has("input.cart-item-checkbox").each(function () {
-            const priceText = $(this).find("td").eq(3).text().replace(/[^0-9]/g, "");
+            const priceText = $(this).find("td").eq(4).text().replace(/[^0-9]/g, "");
             const count = parseInt($(this).find("input[name='count']").val());
 
             const price = parseInt(priceText);
@@ -101,7 +96,7 @@ $(document).ready(function () {
                 const subtotal = price * count;
 
                 // ✅ 합계 셀 업데이트 (index 5)
-                $(this).find("td").eq(5).text(subtotal.toLocaleString() + "원");
+                $(this).find("td").eq(6).text(subtotal.toLocaleString() + "원");
 
                 // ✅ 체크된 항목만 총합 계산
                 if ($(this).find(".cart-item-checkbox").prop("checked")) {
@@ -115,5 +110,49 @@ $(document).ready(function () {
         $("#finalPaymentAmount").text((totalPrice + (totalPrice === 0 ? 0 : deliveryFee)).toLocaleString() + "원");
     }
 
+    // 선택 항목 삭제
+    $('.deleteSelected').click(function () {
+        const selectedItems = [];
 
+        // 체크된 항목의 cartItemId 수집
+        $('.cart-item-checkbox:checked').each(function () {
+            selectedItems.push($(this).val());
+        });
+
+        if (selectedItems.length === 0) {
+            alert('삭제할 항목을 선택해주세요.');
+            return;
+        }
+
+        // POST 요청 전송 (fetch 또는 jQuery AJAX 가능)
+        $.ajax({
+            type: 'POST',
+            url: '/cart/deleteSelected',
+            contentType: 'application/json',
+            data: JSON.stringify(selectedItems),
+            success: function (response) {
+                // 성공 후 페이지 새로고침 또는 삭제된 항목 제거
+                location.reload();
+            },
+            error: function (xhr) {
+                alert('선택 삭제에 실패했습니다.');
+            }
+        });
+    });
+
+    // 전체 항목 삭제
+    $('.deleteAll').click(function () {
+        if (!confirm('장바구니의 모든 상품을 삭제하시겠습니까?')) return;
+
+        $.ajax({
+            type: 'POST',
+            url: '/cart/clear',
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('전체 삭제에 실패했습니다.');
+            }
+        });
+    });
 });

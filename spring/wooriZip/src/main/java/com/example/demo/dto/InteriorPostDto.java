@@ -33,8 +33,7 @@ public class    InteriorPostDto {
     private int views;
     private int liked;
     private boolean likedByCurrentUser;
-
-
+    private boolean isNotice;
 
     public static InteriorPostDto fromEntity(InteriorPost post) {
         List<String> filePathList = null;
@@ -57,7 +56,7 @@ public class    InteriorPostDto {
                 .nickname(post.getUser().getNickname())
                 .liked(post.getLiked())
                 .views(post.getViews())
+                .isNotice(post.isNotice())
                 .build();
     }
-
 }
