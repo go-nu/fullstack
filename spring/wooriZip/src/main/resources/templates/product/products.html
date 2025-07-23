@@ -38,7 +38,7 @@
 <main>
     <h2>상품 등록</h2>
 
-    <form class="product-form" id="productForm" th:action="@{/admin/products}" method="post"
+    <form class="product-form" id="productForm" th:action="@{/admin/products/register}" method="post"
           enctype="multipart/form-data" th:object="${productForm}">
         <label>상품명: <input type="text" th:field="*{name}" required/></label><br/>
         <!--    <label>가격: <input type="number" th:field="*{price}" required /></label><br/>-->

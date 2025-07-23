@@ -7,6 +7,7 @@ import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -108,4 +109,13 @@ public class ProductForm {
         return form;
     }
 
+    public boolean hasAttributeValue(Long valueId) {
+        if (productModelDtoList == null || productModelDtoList.isEmpty()) {
+            return false;
+        }
+        return productModelDtoList.stream()
+                .map(model -> model.getAttributeValueIds())
+                .filter(Objects::nonNull)
+                .anyMatch(ids -> ids.contains(String.valueOf(valueId)));
+    }
 }

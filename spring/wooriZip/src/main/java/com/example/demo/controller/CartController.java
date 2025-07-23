@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CartDto;
+import com.example.demo.entity.Users;
 import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.CartService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +25,16 @@ import java.util.Map;
 public class CartController {
 
     private final CartService cartService;
+    private final UserService userService;
 
     // /cart 시 장바구니
     @GetMapping
     public String viewCart(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
-
+        Users loginUser = (Users) UserUtils.getUser(authentication);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("userCoupons", userService.getUserCoupons(loginUser));
         CartDto cart = cartService.getCartByEmail(email);
         // 만약 없다면 빈 객체 생성하여 전달
         if (cart == null) {

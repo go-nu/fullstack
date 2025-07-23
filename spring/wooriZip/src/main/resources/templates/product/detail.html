@@ -101,15 +101,7 @@
                     th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></h3>
             </div>
         </div>
-        <!-- 수정/삭제 버튼: 작성자만 보이게 -->
-        <div th:if="${loginUser != null and product.writerId == loginUser.id}">
-            <form th:action="@{'/products/' + ${product.id} + '/edit'}" method="get" style="display:inline;">
-                <button type="submit">수정</button>
-            </form>
-            <form th:action="@{'/products/' + ${product.id} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit">삭제</button>
-            </form>
-        </div>
+        <!-- 수정/삭제 버튼 제거 -->
 
         <!-- 🔙 목록으로 돌아가기 (항상 표시) -->
         <div style="margin-top: 20px;">

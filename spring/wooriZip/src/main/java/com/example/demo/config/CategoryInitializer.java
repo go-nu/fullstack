@@ -29,7 +29,7 @@ public class CategoryInitializer implements CommandLineRunner {
             // 2. 소분류들 + 세분류 포함 구조
             Map<String, List<String>> subWithChildren = Map.of(
                     "침대", List.of("침대프레임", "침대+매트리스", "침대부속가구"),
-                    "테이블.식탁.책상", List.of("식탁", "책상", "좌식책상"),
+                    "테이블.식탁.책상", List.of("식탁", "사무용책상", "좌식책상"),
                     "소파", List.of("일반소파", "좌식소파", "리클라이너"),
                     "서랍.수납장", List.of("서랍", "수납장", "협탁"),
                     "진열장.책장.선반", List.of("진열장", "책장", "선반"),

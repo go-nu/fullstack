@@ -148,7 +148,7 @@ if (editForm) {
             formData.append("images", file);
         });
 
-        fetch(`/products/${productData.id}/edit`, {
+        fetch(`/admin/products/${productData.id}/edit`, {
             method: "POST",
             body: formData
         })
@@ -158,7 +158,7 @@ if (editForm) {
         })
         .then(result => {
             alert("상품 수정 완료");
-            window.location.href = `/products/${productData.id}`;
+            window.location.href = `/admin/products`;
         })
         .catch(err => {
             alert("수정 실패: " + err.message);

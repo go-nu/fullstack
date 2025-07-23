@@ -69,6 +69,22 @@
         </tbody>
     </table>
 
+    <div>
+        <h5>쿠폰 적용</h5>
+        <select id="couponSelect" name="couponId">
+            <option value="">=== 쿠폰 선택 ===</option>
+            <option th:each="uc : ${userCoupons}"
+                    th:value="${uc.id}"
+                    th:data-type="${uc.coupon.type}"
+                    th:data-amount="${uc.coupon.discountAmount}"
+                    th:data-percent="${uc.coupon.discountPercent}"
+                    th:text="${uc.coupon.type == T(com.example.demo.constant.CouponType).AMOUNT
+                    ? uc.coupon.name + ' (' + uc.coupon.discountAmount + '원 할인)'
+                    : uc.coupon.name + ' (' + uc.coupon.discountPercent + '% 할인)'}">
+            </option>
+        </select>
+    </div>
+
     <div class="cart-summary">
         <h5>결제 요약</h5>
         <table class="table">
@@ -80,6 +96,10 @@
             <tr>
                 <th>배송비</th>
                 <td id="deliveryFee">0원</td>
+            </tr>
+            <tr>
+                <th>할인 금액</th>
+                <td id="appliedCoupon">0원</td>
             </tr>
             <tr>
                 <th>결제예정금액</th>

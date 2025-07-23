@@ -36,8 +36,8 @@ A/S 책임자와 전화번호: `;
     imageInput.addEventListener('change', function() {
         const newFiles = Array.from(this.files);
         
-        if (selectedFiles.length + newFiles.length > 10) {
-            alert("이미지는 최대 10장까지 첨부할 수 있습니다.");
+        if (selectedFiles.length + newFiles.length > 20) {
+            alert("이미지는 최대 20장까지 첨부할 수 있습니다.");
             return;
         }
         

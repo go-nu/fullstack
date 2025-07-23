@@ -379,4 +379,8 @@ public class ProductService {
         }
         return productRepository.findByIdIn(myWishList);
     }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
 }
