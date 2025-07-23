@@ -4,12 +4,11 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 
-# ✅ 1. 데이터셋 정의
+# ✅ 1. Dataset 정의
 class RecommendDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file)
 
-        # ✅ 특성 (입력)과 정답 (출력) 정의
         self.features = self.data[[
             'user_id', 'product_id', 'model_id',
             'gender', 'age_group', 'residence_type',
@@ -17,7 +16,6 @@ class RecommendDataset(Dataset):
             'timestamp_norm'
         ]].values.astype(float)
 
-        # ✅ label은 weight
         self.labels = self.data['weight'].values.astype(float)
 
     def __len__(self):
@@ -28,9 +26,18 @@ class RecommendDataset(Dataset):
         y = torch.tensor(self.labels[idx], dtype=torch.float32)
         return X, y
 
+# 🔧 하이퍼파라미터 설정
+embedding_dim = 8 # 4 or 8
+hidden_size = 64
+num_layers = 2
+dropout_rate = 0.2
+epochs = 10
+batch_size = 32
+learning_rate = 0.001
+
 # ✅ 2. 모델 정의
 class DeepRecModel(nn.Module):
-    def __init__(self, num_embeddings, embedding_dim=8):
+    def __init__(self, num_embeddings):
         super().__init__()
 
         self.user_emb = nn.Embedding(num_embeddings['user_id'], embedding_dim)
@@ -44,9 +51,10 @@ class DeepRecModel(nn.Module):
         self.material_emb = nn.Embedding(num_embeddings['소재'], 4)
 
         self.mlp = nn.Sequential(
-            nn.Linear(embedding_dim * 3 + 2+4+3 + 4+4+4 + 1, 64),
+            nn.Linear(embedding_dim * 3 + 2+4+3 + 4+4+4 + 1, hidden_size),
             nn.ReLU(),
-            nn.Linear(64, 1),
+            nn.Dropout(dropout_rate),
+            nn.Linear(hidden_size, 1),
             nn.Sigmoid()
         )
 
@@ -81,14 +89,11 @@ class DeepRecModel(nn.Module):
 
         return self.mlp(x).squeeze()
 
-# ✅ 3. DataFrame 로딩 (num_embeddings 계산용)
+# ✅ 3. 데이터 로딩
 df = pd.read_csv("recommend_data_encoded.csv")
-
-# ✅ 4. DataLoader 준비
 dataset = RecommendDataset("recommend_data_encoded.csv")
-train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-# ✅ 5. embedding 개수 추출
 num_embeddings = {
     'user_id': df['user_id'].nunique(),
     'product_id': df['product_id'].nunique(),
@@ -101,16 +106,13 @@ num_embeddings = {
     '소재': df['소재'].nunique(),
 }
 
-# ✅ 6. 모델 생성
 model = DeepRecModel(num_embeddings)
-print("✅ 모델 생성 완료")
-
-# ✅ 학습용 설정
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
-criterion = nn.BCELoss(reduction='none')  # 샘플별 손실 반환
-optimizer = optim.Adam(model.parameters(), lr=0.001)
-epochs = 10  # 테스트용으로 짧게
+
+# ✅ 4. 학습 루프
+criterion = nn.BCELoss(reduction='none')
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 for epoch in range(epochs):
     model.train()
@@ -118,22 +120,14 @@ for epoch in range(epochs):
 
     for X, y in train_loader:
         X, y = X.to(device), y.to(device)
-
-        # ✅ sample_weight는 label 값 자체가 갖고 있음 (1=VIEW, 3=CART, 5=BUY)
         sample_weight = y.clone()
-
-        # ✅ 예측
         pred = model(X)
-
-        # ✅ 손실 계산 + 가중치 반영
-        loss = criterion(pred, (y > 0).float())  # label을 0 또는 1로 해석
+        loss = criterion(pred, (y > 0).float())
         weighted_loss = (loss * sample_weight).mean()
 
-        # ✅ 역전파
         optimizer.zero_grad()
         weighted_loss.backward()
         optimizer.step()
-
         epoch_loss += weighted_loss.item()
 
     print(f"✅ Epoch {epoch+1}/{epochs} - Loss: {epoch_loss:.4f}")
