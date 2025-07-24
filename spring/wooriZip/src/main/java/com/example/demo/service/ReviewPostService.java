@@ -36,7 +36,7 @@ public class ReviewPostService {
     }
 
     // 리뷰 등록
-    public void saveReview(ReviewPostDto dto) throws IOException {
+    public Long saveReview(ReviewPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
@@ -63,7 +63,8 @@ public class ReviewPostService {
                 .product(product)
                 .build();
 
-        reviewPostRepository.save(post);
+        ReviewPost saved = reviewPostRepository.save(post);
+        return saved.getId();
     }
 
     // 리뷰 수정

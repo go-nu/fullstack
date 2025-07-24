@@ -3,10 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
-    <link rel="stylesheet" href="/css/pages/user.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #FFFFFF;
+            font-family: 'Arial', sans-serif;
+            color: #4A4947;
+        }
+
+        main {
+            width: 90%;
+            max-width: 1200px;
+            margin: 120px auto;
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 60px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 60px;
+        }
+
+        form.login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .login-grid {
+            display: grid;
+            grid-template-columns: auto 180px; /* 자동 너비 + 버튼 */
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 620px;
+            width: 100%;
+            place-self: start;
+        }
+
+        .inputs input {
+            padding: 20px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 14px;
+            background-color: #F9F7F0;
+            box-sizing: border-box;
+        }
+
+        .login-btn {
+            grid-row: span 2;
+            height: 90%;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 0px auto 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-login a {
+            padding: 14px 45px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .social-login a:hover {
+            transform: scale(1.05);
+            filter: brightness(1.05);
+        }
+
+        a[href*="google"] {
+            background-color: #3791db;
+            color: white;
+        }
+
+        a[href*="naver"] {
+            background-color: #03C75A;
+            color: white;
+        }
+
+        a[href*="kakao"] {
+            background-color: #FEE500;
+            color: #3c1e1e;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .bottom-buttons a,
+        .bottom-buttons button {
+            padding: 10px 20px;
+            border: 2px solid #4A4947;
+            border-radius: 999px;
+            background-color: transparent;
+            font-size: 15px;
+            font-weight: bold;
+            color: #4A4947;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-buttons a:hover,
+        .bottom-buttons button:hover {
+            background-color: #4A4947;
+            color: #F9F7F0;
+        }
+
+        .error-msg {
+            background-color: #fff4f4;
+            border: 1px solid #f5c2c2;
+            color: #d20000;
+            padding: 14px 18px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 
 <script>

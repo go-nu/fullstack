@@ -1,15 +1,14 @@
 package com.example.demo.dto;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
-
-@Getter
+@Data
 @Builder
-@ToString
 public class OrderDto {
 
     // 주문 정보 Dto

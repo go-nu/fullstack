@@ -464,8 +464,13 @@ document.addEventListener('click', function(event) {
 function handleTabFromHash() {
     const hash = window.location.hash;
     if (hash) {
-        // #qna-tab -> qna-section
-        const targetId = hash.replace('-tab', '-section');
+        let targetId = hash;
+        
+        // #qna-tab -> qna-section 변환 (기존 호환성)
+        if (hash.includes('-tab')) {
+            targetId = hash.replace('-tab', '-section');
+        }
+        
         const tabButton = document.querySelector(`.tab-button[data-target="${targetId.substring(1)}"]`);
 
         if (tabButton) {
@@ -485,10 +490,10 @@ function handleTabFromHash() {
             if (targetSection) {
                 targetSection.style.display = 'block';
 
-                // 스크롤 애니메이션
+                // 스크롤 애니메이션 (리뷰/QnA 등록/수정 후 스크롤을 위해 지연 시간 증가)
                 setTimeout(() => {
                     targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                }, 500);
             }
         }
     }
@@ -529,5 +534,26 @@ document.querySelectorAll('.tab-button').forEach(button => {
             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
+});
+
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        const params = new URLSearchParams(window.location.search);
+        const scrollTo = params.get('scrollTo');
+        const activeTab = params.get('activeTab');
+        if (scrollTo && activeTab === 'review') {
+            switchTabDirect('review-section');
+            setTimeout(() => {
+                const el = document.getElementById('review-' + scrollTo);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
+        } else if (scrollTo && activeTab === 'qna') {
+            switchTabDirect('qna-section');
+            setTimeout(() => {
+                const el = document.getElementById('qna-' + scrollTo);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
+        }
+    }, 200);
 });
 

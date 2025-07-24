@@ -18,6 +18,9 @@ FROM recommend_log
 """
 log_df = pd.read_sql(log_query, conn)
 
+# ✅ 2-0. model_id가 비어있으면 0으로 채우기
+# log_df['model_id'] = log_df['model_id'].fillna(0).astype(int)
+
 # ✅ 2-1. timestamp → Unix timestamp로 변환
 log_df['timestamp'] = pd.to_datetime(log_df['timestamp']).apply(lambda x: int(x.timestamp()))
 

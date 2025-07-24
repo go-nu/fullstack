@@ -361,7 +361,7 @@ public class OrderService {
         for (CartItemDto cartItemDto : cartDto.getItems()) {
             long modelId = cartItemDto.getModelId();
             ProductModel productModel = productModelRepository.findById(modelId)
-                            .orElseThrow(() -> new IllegalArgumentException("찾는 모델이 없습니다"));
+                    .orElseThrow(() -> new IllegalArgumentException("찾는 모델이 없습니다"));
 
             Product product = productRepository.findById(prId)
                     .orElseThrow(() -> new IllegalArgumentException("찾는 제품이 없습니다"));

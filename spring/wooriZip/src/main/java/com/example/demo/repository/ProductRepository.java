@@ -3,6 +3,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +28,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findWithCategoryTreeById(@Param("id") Long id);
 
     List<Product> findByIdIn(List<Long> myWishList);
+    
+    // 챗봇용 메서드들
+    List<Product> findByNameContainingIgnoreCase(String name);
+    
+    @Query("SELECT p FROM Product p ORDER BY p.price ASC")
+    List<Product> findTop5ByOrderByPriceAsc(Pageable pageable);
+    
+    @Query("SELECT p FROM Product p ORDER BY p.createdAt DESC")
+    List<Product> findTop5ByOrderByCreatedAtDesc(Pageable pageable);
+    
+    // 기본 메서드들 (Pageable 없이)
+    default List<Product> findTop5ByOrderByPriceAsc() {
+        return findTop5ByOrderByPriceAsc(Pageable.ofSize(5));
+    }
+    
+    default List<Product> findTop5ByOrderByCreatedAtDesc() {
+        return findTop5ByOrderByCreatedAtDesc(Pageable.ofSize(5));
+    }
 }

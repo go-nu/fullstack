@@ -96,6 +96,105 @@ function generateOptionTable() {
     document.getElementById('optionTable').style.display = '';
 }
 
+// ✅ 수동 옵션 추가: 버튼 생성 및 삽입
+const manualBtn = document.createElement('button');
+manualBtn.type = 'button';
+manualBtn.id = 'addManualOptionBtn';
+manualBtn.className = 'btn btn-outline-secondary mb-2';
+manualBtn.innerText = '수동 옵션 추가';
+document.getElementById('generateOptionsBtn')?.after(manualBtn);
+
+manualBtn.addEventListener('click', function () {
+    const tbody = document.querySelector('#optionTable tbody');
+    const index = tbody.children.length;
+
+    const tr = document.createElement('tr');
+    tr.classList.add('manual-row');
+
+    // 옵션명 입력란
+    const tdName = document.createElement('td');
+    tdName.innerHTML = `
+        <input type="hidden" class="attr-ids" value="">
+    `;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-control manual-option-input';
+    input.placeholder = '옵션명 입력 후 Enter';
+    input.required = true;
+
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = input.value.trim();
+            if (!val) {
+                alert("옵션명을 입력해주세요.");
+                return;
+            }
+            const span = document.createElement('span');
+            span.textContent = val;
+            tdName.replaceChild(span, input);
+        }
+    });
+
+    tdName.appendChild(input);
+
+    // 가격, 재고
+    const tdPrice = document.createElement('td');
+    tdPrice.innerHTML = `<input type="number" class="form-control option-price" min="0" required>`;
+
+    const tdStock = document.createElement('td');
+    tdStock.innerHTML = `<input type="number" class="form-control option-stock" min="0" required>`;
+
+    const tdDelete = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.textContent = '삭제';
+    delBtn.className = 'btn btn-sm btn-danger';
+    delBtn.addEventListener('click', () => tr.remove());
+    tdDelete.appendChild(delBtn);
+
+    tr.appendChild(tdName);
+    tr.appendChild(tdPrice);
+    tr.appendChild(tdStock);
+    tr.appendChild(tdDelete);
+    tbody.appendChild(tr);
+});
+
+// ✅ 수정 페이지: 기존 옵션 자동 렌더링 시 가격값 출력 + 수정 가능하게
+if (window.productModels && Array.isArray(window.productModels) && window.productModels.length > 0) {
+    const tbody = document.querySelector('#optionTable tbody');
+    tbody.innerHTML = '';
+    window.productModels.forEach((model, index) => {
+        const optionName = model.productModelSelect;
+        const attrIds = model.attributeValueIds || [];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <input type="hidden" class="attr-ids" value="${attrIds.join(',')}">
+                <span contenteditable="true">${optionName}</span>
+            </td>
+            <td>
+                <input type="number" class="option-price" min="0" required value="${model.price ?? ''}">
+            </td>
+            <td>
+                <input type="number" class="option-stock" min="0" required value="${model.prStock ?? ''}">
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger remove-option-btn">삭제</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('optionTable').style.display = '';
+}
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-option-btn')) {
+        const tr = e.target.closest('tr');
+        if (tr) tr.remove();
+    }
+});
+
 // 폼 제출 시 옵션 정보를 JSON으로 변환해서 전송
 const editForm = document.getElementById("editForm");
 if (editForm) {
@@ -138,9 +237,6 @@ if (editForm) {
                 .map(s => parseInt(s.trim()))
                 .filter(n => !isNaN(n));
         }
-//        if (editForm.querySelector('[name="deleteIndexes"]')) {
-//            productData.deleteIndexes = editForm.querySelector('[name="deleteIndexes"]').value;
-//        } 0722 추후 삭제고려
 
         const formData = new FormData();
         formData.append('productJson', JSON.stringify(productData));
@@ -148,7 +244,7 @@ if (editForm) {
             formData.append("images", file);
         });
 
-        fetch(`/admin/products/${productData.id}/edit`, {
+        fetch(`/admin/products/${productData.id}/update`, {
             method: "POST",
             body: formData
         })
@@ -178,6 +274,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentParentId = document.getElementById("currentParentId").value;
     const currentMiddleId = document.getElementById("currentMiddleId").value;
     const currentCategoryId = document.getElementById("currentCategoryId").value;
+
+    // ✅ 여기에 추가
+        console.log("🔍 window.productModels 확인:", window.productModels);
 
     // 1. 대분류 로딩
     fetch("/categories/parents")
@@ -293,6 +392,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 </td>
                 <td><input type="number" class="option-price" min="0" required value="${model.price ?? ''}"></td>
                 <td><input type="number" class="option-stock" min="0" required value="${model.prStock ?? ''}"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-option-btn">삭제</button>
+                </td>
             `;
             tbody.appendChild(tr);
         });

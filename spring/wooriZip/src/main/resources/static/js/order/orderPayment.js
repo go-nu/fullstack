@@ -51,6 +51,29 @@ console.log($);
             }
         });
     });
+
+        // 페이지 떠날 때 이벤트 처리
+        window.addEventListener('beforeunload', function (e) {
+            if (!isPaymentSuccess) { // 결제 한것이 아니면 cancel 로 이동
+                fetch('/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({orderId: order.orderID})
+                }).then(response => {
+                    if (!response.ok) {
+                        console.error('Failed to cancel order');
+                    }
+                }).catch(error => {
+                    console.error('Error canceling order:', error);
+                });
+
+                // 사용자에게 경고 메시지 표시
+                e.preventDefault();
+                e.returnValue = '주문을 취소합니다.';
+            }
+        });
 });
 
 // 전화번호 합치기

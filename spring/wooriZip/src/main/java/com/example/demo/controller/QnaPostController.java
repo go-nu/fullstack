@@ -39,8 +39,8 @@ public class QnaPostController {
             dto.setFiles(Arrays.asList(files));
         }
 
-        qnaPostService.saveQna(dto);
-        return String.format("redirect:/products/%d?activeTab=qna", productId);
+        Long qnaId = qnaPostService.saveQna(dto);
+        return String.format("redirect:/products/%d?activeTab=qna&scrollTo=%d#qna-section", productId, qnaId);
     }
 
     // QnA 수정
@@ -69,7 +69,7 @@ public class QnaPostController {
             return "redirect:/user/mypage";
         }
 
-        return String.format("redirect:/products/%d?activeTab=qna", dto.getProductId());
+        return String.format("redirect:/products/%d?activeTab=qna&scrollTo=%d#qna-section", dto.getProductId(), id);
     }
 
     // QnA 삭제

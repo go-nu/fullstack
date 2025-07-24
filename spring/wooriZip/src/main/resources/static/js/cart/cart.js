@@ -118,25 +118,58 @@ $(document).ready(function () {
             return;
         }
 
-        $.ajax({
-            url: '/pay/ready',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(selectedItems),
-            success: function (response) {
-                if (response.redirectUrl) {
-                    window.location.href = response.redirectUrl;
-                } else {
-                    alert("결제 준비 실패");
-                }
-            },
-            error: function () {
-                alert("서버 오류 발생");
-            }
+        let form = $('<form>', {
+            'method': 'POST',
+            'action': '/order'
         });
+
+        selectedItems.forEach(function (item) {
+            form.append($('<input>', {
+                'type': 'hidden',
+                'name': 'cartItemIds',
+                'value': item
+            }));
+        });
+
+        form.append($('<input>', {
+            'type': 'hidden',
+            'name': 'type',
+            'value': 'cart'
+        }));
+
+        $('body').append(form);
+        form.submit();
     }
 
-    // ✅ 선택 항목 삭제
+    // ✅ 체크된 상품 기준 결제 요약 계산 함수
+    function updateSummary() {
+        let totalPrice = 0;
+        let deliveryFee = 3000;
+
+        $("tr").has("input.cart-item-checkbox").each(function () {
+            const priceText = $(this).find("td").eq(3).text().replace(/[^0-9]/g, "");
+            const count = parseInt($(this).find("input[name='count']").val());
+
+            const price = parseInt(priceText);
+            if (!isNaN(price) && !isNaN(count)) {
+                const subtotal = price * count;
+
+                // ✅ 합계 셀 업데이트 (index 5)
+                $(this).find("td").eq(5).text(subtotal.toLocaleString() + "원");
+
+                // ✅ 체크된 항목만 총합 계산
+                if ($(this).find(".cart-item-checkbox").prop("checked")) {
+                    totalPrice += subtotal;
+                }
+            }
+        });
+
+        $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
+        $("#deliveryFee").text((totalPrice === 0 ? 0 : deliveryFee).toLocaleString() + "원");
+        $("#finalPaymentAmount").text((totalPrice + (totalPrice === 0 ? 0 : deliveryFee)).toLocaleString() + "원");
+    }
+
+    // 선택 항목 삭제
     $('.deleteSelected').click(function () {
         const selectedItems = [];
 

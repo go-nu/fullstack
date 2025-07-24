@@ -41,19 +41,18 @@
     <form class="product-form" id="productForm" th:action="@{/admin/products/register}" method="post"
           enctype="multipart/form-data" th:object="${productForm}">
         <label>상품명: <input type="text" th:field="*{name}" required/></label><br/>
-        <!--    <label>가격: <input type="number" th:field="*{price}" required /></label><br/>-->
 
 
         <!-- 대분류 선택 -->
         <label>대분류:
-            <select id="parentCategory" onchange="loadMiddleCategories()">
+            <select id="parentCategory">
                 <option value="">대분류 선택</option>
             </select>
         </label><br/>
 
         <!-- 중분류 선택 -->
         <label>중분류:
-            <select id="middleCategory" onchange="loadChildCategories()">
+            <select id="middleCategory">
                 <option value="">중분류 선택</option>
             </select>
         </label><br/>
@@ -96,6 +95,7 @@
                 <th>옵션명</th>
                 <th>가격</th>
                 <th>재고</th>
+                <th>삭제</th> <!-- ✅ 추가 -->
             </tr>
             </thead>
             <tbody></tbody>
@@ -105,7 +105,7 @@
         <div id="optionContainer" style="display:none;"></div>
         <button type="button" onclick="addOption()" style="display:none;">옵션 추가</button>
 
-        <label>이미지 업로드 (최대 4장):</label><br/>
+        <label>이미지 업로드 :</label><br/>
         <input type="file" id="imageInput" name="images" accept="image/*" multiple/><br/><br/>
         <div id="previewContainer"></div>
         <br/>
@@ -114,6 +114,8 @@
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>
+<div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>
+
 <script th:inline="javascript">
     window.attributeValues = [[${attributeValues}]];
 </script>

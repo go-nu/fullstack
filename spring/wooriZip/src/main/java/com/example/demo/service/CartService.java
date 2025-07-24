@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +30,20 @@ public class CartService {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
         Cart cart = cartRepository.findByUser(user);
         return cart != null ? new CartDto(cart) : null;
+    }
+
+    public List<CartItemDto> getCartItems(String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다."));
+        Cart cart = cartRepository.findByUser(user);
+
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            return List.of(); // 빈 리스트 반환
+        }
+
+        return cart.getCartItems().stream()
+                .map(CartItemDto::new)
+                .toList(); // Java 16 이상, Java 8~11이면 .collect(Collectors.toList())로 대체
     }
 
     public void addItemToCart(CartDto cartDto, String email, Long productId) {
@@ -78,10 +93,8 @@ public class CartService {
 
     }
 
-    // 비우기 메소드
-    public void clearCart(String orderId) {
-        Order order = orderRepository.findByOrderId(orderId).orElseThrow(()-> new IllegalArgumentException("주문 정보가 없습니다!"));
-        String email = order.getUsers().getEmail();
+    // 전체 삭제 메소드
+    public void clearCart(String email) {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
         Cart cart = cartRepository.findByUser(user);
         if (cart != null) {
@@ -92,7 +105,7 @@ public class CartService {
         }
     }
 
-    // 장바구니에서 삭제
+    // 장바구니에서 개별 삭제
     public void removeItemFromCart(String email, Long cartItemId) {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
         Cart cart = cartRepository.findByUser(user);
@@ -130,5 +143,24 @@ public class CartService {
         CartItem item = cartItemRepository.findById(cartItemId).orElseThrow(()->new EntityNotFoundException("찾을 수 없습니다"));
         stock = item.getProductModel().getPrStock();
         return  stock;
+    }
+
+    // 선택 삭제
+    public void deleteSelectedItems(List<Long> cartItemIds) {
+        for (Long id : cartItemIds) {
+            cartItemRepository.deleteById(id);
+        }
+    }
+
+    // 주문 완료된 장바구니 아이템 삭제
+    public void clearOrderItemFromCart(String email, Order order) {
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
+        Cart cart = cartRepository.findByUser(user);
+
+        List<OrderItem> orderedItems = order.getOrderItems();
+
+        for (OrderItem item : orderedItems) {
+//            cartItemRepository.deleteByCartAndProductId(cart, item.getProduct().getId());
+        }
     }
 }

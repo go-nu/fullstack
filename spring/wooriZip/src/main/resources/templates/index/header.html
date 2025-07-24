@@ -92,6 +92,7 @@
             <div class="gnb-group-2">
                 <a href="#">BRAND</a>
                 <a href="#">고객센터</a>
+                <a th:href="@{/chatbot}">💬 챗봇</a>
                 <a th:if="${loginUser == null}" href="/user/login">로그인</a>
                 <a th:if="${loginUser != null}" href="/user/logout">로그아웃</a>
                 <a th:if="${loginUser == null}" href="/user/signup">회원가입</a>
@@ -102,11 +103,12 @@
                     <div class="admin-menu-content">
                         <a href="/qna/answer/admin/dashboard">QnA 관리</a>
                         <a href="/admin/coupons">쿠폰 관리</a>
-                        <a href="/admin/product-details">상품 상세정보 관리</a>
-                        <a href="/admin/products">상품 등록</a>
+                        <a href="/admin/product-details">상품상세정보 관리</a>
+                        <a href="/admin/products">상품 관리</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </header>
+<div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>

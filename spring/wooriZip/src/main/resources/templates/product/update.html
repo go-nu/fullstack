@@ -44,7 +44,7 @@
 <main>
     <h2>상품 수정</h2>
 
-    <form class="product-form" id="editForm" th:action="@{'/admin/products/' + ${productForm.id} + '/edit'}" method="post" enctype="multipart/form-data">
+    <form class="product-form" id="editForm" th:action="@{'/admin/products/' + ${productForm.id} + '/update'}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" th:value="${productForm.id}"/>
         <input type="hidden" name="deleteIndexes" id="deleteIndexes"/>
         <!-- 카테고리 자동 선택용 hidden 값 -->
@@ -138,6 +138,7 @@
                 <th>옵션명</th>
                 <th>가격</th>
                 <th>재고</th>
+                <th>삭제</th>
             </tr>
             </thead>
             <tbody></tbody>

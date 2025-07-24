@@ -10,4 +10,4 @@ public class WooriZipApplication {
 		SpringApplication.run(WooriZipApplication.class, args);
 	}
 
-}
+}	

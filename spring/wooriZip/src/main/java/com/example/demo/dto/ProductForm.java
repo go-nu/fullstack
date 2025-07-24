@@ -83,6 +83,7 @@ public class ProductForm {
                     .map(model -> {
                         ProductModelDto dto = new ProductModelDto();
                         dto.setProductModelSelect(model.getProductModelSelect());
+                        dto.setPrice(model.getPrice());
                         dto.setPrStock(model.getPrStock());
                         dto.setImageUrl(model.getImageUrl());
                         // 옵션별 속성값 id 세팅

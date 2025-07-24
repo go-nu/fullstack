@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -116,5 +117,13 @@ public class CartController {
         response.put("cartItemId", cartItemId);
         response.put("count", count);
         return ResponseEntity.ok(response);
+    }
+
+    // 선택 항목 삭제
+    @PostMapping("/deleteSelected")
+    @ResponseBody
+    public ResponseEntity<?> deleteSelectedItems(@RequestBody List<Long> cartItemIds) {
+        cartService.deleteSelectedItems(cartItemIds);
+        return ResponseEntity.ok().build();
     }
 }

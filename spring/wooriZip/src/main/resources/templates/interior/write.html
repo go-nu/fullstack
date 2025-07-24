@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>글쓰기</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/interior.css}">
 </head>
 
 <script>
@@ -23,26 +25,34 @@
 <div th:replace="~{index/header :: header}"></div>
 
 <main>
-    <div class="container">
-        <h1 th:text="${param.isNotice != null and param.isNotice[0] == 'true' ? '공지사항 작성' : '인테리어 글쓰기'}">글쓰기</h1>
+    <div class="interior-container">
+        <div class="interior-header">
+            <h1 th:text="${param.isNotice != null and param.isNotice[0] == 'true' ? '공지사항 작성' : '인테리어 글쓰기'}">글쓰기</h1>
+        </div>
 
-        <form id="writeForm" enctype="multipart/form-data">
+        <form id="writeForm" class="interior-form" enctype="multipart/form-data">
             <input type="hidden" name="isNotice" th:if="${param.isNotice != null}" th:value="${param.isNotice[0]}">
 
-            <label>제목:</label>
-            <input type="text" name="title" required>
+            <div class="form-group">
+                <label>제목:</label>
+                <input type="text" name="title" required>
+            </div>
 
-            <div th:if="${loginUser != null}">
+            <div class="form-group" th:if="${loginUser != null}">
                 <label>작성자:</label>
                 <input type="text" th:value="${loginUser.nickname}" readonly>
                 <input type="hidden" name="email" th:value="${loginUser.email}">
             </div>
 
-            <label>내용:</label>
-            <textarea name="content" rows="10" required></textarea>
+            <div class="form-group">
+                <label>내용:</label>
+                <textarea name="content" rows="10" required></textarea>
+            </div>
 
-            <label>사진 첨부 (최대 8장):</label>
-            <input type="file" id="imageInput" accept="image/*">
+            <div class="form-group">
+                <label>사진 첨부 (최대 8장):</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
 
             <div id="previewContainer"></div>
 

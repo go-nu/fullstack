@@ -3,7 +3,9 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Product { // 상품
     private Long id;
 
     private String name;
+    private String description;
     private int price;
 
     private int stockQuantity; // 전체 재고 수량
@@ -34,6 +37,10 @@ public class Product { // 상품
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+    
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
     public void addProductModel(ProductModel model) {
         // 현재 리스트에 동일한 모델이 이미 존재하는지 확인

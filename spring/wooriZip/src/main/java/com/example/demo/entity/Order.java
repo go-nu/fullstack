@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-
 import com.example.demo.constant.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -79,4 +78,3 @@ public class Order {
     }
 
 }
-

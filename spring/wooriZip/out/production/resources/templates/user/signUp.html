@@ -3,13 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
-    <link rel="stylesheet" href="/css/pages/user.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF;
+            color: #4A4947;
+        }
+        main {
+            max-width: 900px;
+            margin: 120px auto 120px;
+            background-color: #fff;
+            padding: 10px 30px 20px;
+        }
+        main > h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 32px;
+        }
+        .form-group-left, .form-group-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="button"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            background-color: #F9F7F0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .flex-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .flex-group input {
+            flex: 1;
+        }
+        .flex-group button {
+            padding: 10px 14px;
+            font-size: 13px;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .flex-group button:hover {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+
+        .select-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .select-buttons label {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+        .select-buttons label:hover {
+            background-color: #ddd;
+        }
+        .select-buttons input:checked + label,
+        .select-buttons label.active {
+            background-color: #B17457;
+            color: #fff;
+            border-color: #B17457;
+        }
+
+        input[type="submit"] {
+            grid-column: 1 / 3;
+            width: 100%;
+            padding: 14px;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+
+        .success {
+            color: green;
+            font-size: 14px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        #guide {
+            font-size: 13px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            input[type="submit"] {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
@@ -21,7 +171,7 @@
             <label for="email">이메일</label>
             <div class="flex-group">
                 <input type="hidden" id="email" name="email" required>
-                <input id="email-id" name="emailId" placeholder="이메일 아이디" type="text">
+                <input id="email-id" name="emailId" placeholder="아이디" type="text">
                 @
                 <input id="email-domain" name="domain" placeholder="직접입력">
                 <select id="domain-select">
@@ -75,33 +225,24 @@
                 <input id="phone2" name="phone2" maxlength="4" type="tel" required>
                 <input id="phone3" name="phone3" maxlength="4" type="tel" required>
             </div>
+
             <label>성별</label>
             <div class="select-buttons" id="genderGroup">
-                <div>
-                    <input type="radio" name="gender" id="genderM" value="m" checked>
-                    <label for="genderM">남자</label>
-                </div>
-                <div>
-                    <input type="radio" name="gender" id="genderF" value="f">
-                    <label for="genderF">여자</label>
-                </div>
+                <input type="radio" name="gender" id="genderM" value="m" checked hidden>
+                <label for="genderM">남자</label>
+                <input type="radio" name="gender" id="genderF" value="f" hidden>
+                <label for="genderF">여자</label>
             </div>
 
             <label>가구 유형</label>
             <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
             <div class="select-buttons" id="residenceGroup">
-                <div>
-                    <input type="radio" name="residenceType" id="res1" value="1">
-                    <label for="res1">1인가구</label>
-                </div>
-                <div>
-                    <input type="radio" name="residenceType" id="res2" value="2">
-                    <label for="res2">다인가구</label>
-                </div>
-                <div>
-                    <input type="radio" name="residenceType" id="res0" value="0" checked>
-                    <label for="res0">미선택</label>
-                </div>
+                <input type="radio" name="residenceType" id="res1" value="1" hidden>
+                <label for="res1">1인가구</label>
+                <input type="radio" name="residenceType" id="res2" value="2" hidden>
+                <label for="res2">다인가구</label>
+                <input type="radio" name="residenceType" id="res0" value="0" checked hidden>
+                <label for="res0">미선택</label>
             </div>
         </div>
 

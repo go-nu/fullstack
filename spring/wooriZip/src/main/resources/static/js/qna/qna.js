@@ -149,6 +149,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(res => {
                     if (res.redirected) {
+                        // 페이지 로드 완료 후 해시 추가
+                        window.addEventListener('load', function() {
+                            window.location.hash = '#qna-section';
+                        }, { once: true });
                         window.location.href = res.url;
                     } else if (!res.ok) {
                         throw new Error('서버 오류');
@@ -272,6 +276,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => {
                 if (res.redirected) {
+                    // 페이지 로드 완료 후 해시 추가
+                    window.addEventListener('load', function() {
+                        window.location.hash = '#qna-section';
+                    }, { once: true });
                     window.location.href = res.url;
                 } else if (!res.ok) {
                     throw new Error('서버 오류');

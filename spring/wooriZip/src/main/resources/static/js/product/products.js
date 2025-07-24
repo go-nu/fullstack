@@ -106,8 +106,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 </td>
                 <td><input type="number" class="option-price" min="0" required></td>
                 <td><input type="number" class="option-stock" min="0" required></td>
+                <td><button type="button" class="remove-row-btn">삭제</button></td>
             `;
-            tbody.appendChild(tr);
+            tr.querySelector('.remove-row-btn').addEventListener('click', () => tr.remove());
+                        tbody.appendChild(tr);
         });
 
         document.getElementById('optionTable').style.display = '';
@@ -115,13 +117,72 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('generateOptionsBtn').addEventListener('click', generateOptionTable);
 
+    // ✅ 수동 옵션 추가: input → Enter 누르면 span으로 변환
+        const manualBtn = document.createElement('button');
+        manualBtn.type = 'button';
+        manualBtn.id = 'addManualOptionBtn';
+        manualBtn.innerText = '수동 옵션 추가';
+        document.getElementById('generateOptionsBtn').after(manualBtn);
+
+        manualBtn.addEventListener('click', function () {
+            const tbody = document.querySelector('#optionTable tbody');
+            const tr = document.createElement('tr');
+
+            const td = document.createElement('td');
+            td.innerHTML = `<input type="hidden" class="attr-ids" value="">`;
+
+            const input = document.createElement('input'); // ✅ 변경
+            input.type = 'text';
+            input.placeholder = '옵션명 입력 후 Enter';
+            input.required = true;
+            input.className = 'option-name-input';
+
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!input.value.trim()) {
+                        alert('옵션명을 입력해주세요.');
+                        return;
+                    }
+                    const span = document.createElement('span');
+                    span.textContent = input.value.trim();
+                    td.replaceChild(span, input); // ✅ input → span
+                }
+            });
+
+            td.appendChild(input);
+
+            const tdPrice = document.createElement('td');
+            tdPrice.innerHTML = `<input type="number" class="option-price" min="0" required>`;
+
+            const tdStock = document.createElement('td');
+            tdStock.innerHTML = `<input type="number" class="option-stock" min="0" required>`;
+
+            const tdDelete = document.createElement('td');
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.textContent = '삭제';
+            delBtn.className = 'remove-row-btn';
+            delBtn.addEventListener('click', () => tr.remove());
+            tdDelete.appendChild(delBtn);
+
+            tr.appendChild(td);
+            tr.appendChild(tdPrice);
+            tr.appendChild(tdStock);
+            tr.appendChild(tdDelete);
+
+            tbody.appendChild(tr);
+            document.getElementById('optionTable').style.display = '';
+        });
+
     // 폼 제출 시 모든 옵션을 JSON으로 변환
     function collectOptionsToJson() {
         const rows = document.querySelectorAll('#optionTable tbody tr');
         const models = [];
         rows.forEach(row => {
-            const attrIds = row.querySelector('.attr-ids').value.split(',');
-            const optionName = row.querySelector('span').innerText;
+            const attrIds = row.querySelector('.attr-ids').value.split(',').filter(Boolean);
+            const optionNameEl = row.querySelector('span') || row.querySelector('.option-name-input'); // ✅ 변경
+            const optionName = optionNameEl?.innerText || optionNameEl?.value || ''; // ✅ 변경
             const price = row.querySelector('.option-price').value;
             const prStock = row.querySelector('.option-stock').value;
             models.push({
@@ -137,8 +198,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // 4. 옵션 추가 함수
     window.addOption = function () {
         const optionCount = optionContainer.children.length;
-        if (optionCount >= 10) {
-            alert("옵션은 최대 10개까지 추가할 수 있습니다.");
+        if (optionCount >= 20) {
+            alert("옵션은 최대 20개까지 추가할 수 있습니다.");
             return;
         }
 

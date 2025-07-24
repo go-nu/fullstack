@@ -1,0 +1,24 @@
+{{>layouts/header}}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Content</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 모델에 등록된 데이터는 #을 통해서 가져옴   -->
+    {{#articleList}}
+        <tr>
+            <th>{{id}}</th>
+            <td><a href="/articles/{{id}}">{{title}}</a></td>
+            <td>{{content}}</td>
+        </tr>
+    {{/articleList}}
+
+    </tbody>
+</table>
+<a href="/articles/new">New Article</a>
+{{>layouts/footer}}

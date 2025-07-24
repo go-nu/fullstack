@@ -67,8 +67,8 @@ public class ReviewPostController {
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
             dto.setFiles(List.of(files));
         }
-        reviewPostService.saveReview(dto);
-        return "redirect:/products/" + dto.getProductId();
+        Long reviewId = reviewPostService.saveReview(dto);
+        return "redirect:/products/" + dto.getProductId() + "?activeTab=review&scrollTo=" + reviewId + "#review-section";
     }
 
     // 리뷰 수정 폼
@@ -111,7 +111,7 @@ public class ReviewPostController {
         if (Boolean.TRUE.equals(fromMyPage)) {
             return "redirect:/user/myPage";
         }
-        return "redirect:/products/" + dto.getProductId();
+        return "redirect:/products/" + dto.getProductId() + "?activeTab=review&scrollTo=" + id + "#review-section";
     }
 
     // 리뷰 삭제

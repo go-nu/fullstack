@@ -227,8 +227,8 @@ public class ProductController {
         return "product/detail";
     }
 
-    @GetMapping("/admin/products/{id}/edit")
-    public String adminEditProductForm(@PathVariable Long id, Model model, Authentication authentication) {
+    @GetMapping("/admin/products/{id}/update")
+    public String showUpdateForm(@PathVariable Long id, Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
@@ -250,23 +250,18 @@ public class ProductController {
         return "product/update";
     }
 
-    @PostMapping(value = "/admin/products/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String adminUpdateProduct(@PathVariable Long id,
-                                     @RequestParam("productJson") String productJson,
-                                     @RequestParam(value = "images", required = false) MultipartFile[] images,
-                                     Authentication authentication) {
+    @PostMapping(value = "/admin/products/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String updateProduct(@PathVariable Long id,
+                                @RequestParam("productJson") String productJson,
+                                @RequestParam(value = "images", required = false) MultipartFile[] images,
+                                Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         Users loginUser = (Users) UserUtils.getUser(authentication);
         try {
-            // JSON -> ProductForm 변환
             ObjectMapper objectMapper = new ObjectMapper();
             ProductForm form = objectMapper.readValue(productJson, ProductForm.class);
-
-            // ✅ deleteIndexes는 이제 ProductForm 안에 포함되어 있음
             List<Integer> deleteIndexes = form.getDeleteIndexes();
-
-            // 서비스 호출
             productService.updateProduct(id, form, images, deleteIndexes, loginUser);
         } catch (Exception e) {
             e.printStackTrace();

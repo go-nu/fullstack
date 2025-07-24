@@ -63,103 +63,34 @@
     </div>
     <!-- ✅ 3. 카드 갤러리 (3장 * 2줄 = 총 6장) -->
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
-        <!-- 카드 6장 반복 -->
-        <!--        <div class="col" th:each="product : ${products}">-->
-        <!--            <div class="card h-100">-->
-        <!--                <img th:src="@{${product.imageUrl}}" class="card-img-top" alt="상품 이미지">-->
-        <!--                <div class="card-body">-->
-        <!--                    <h5 class="card-title" th:text="${product.name}">상품명</h5>-->
-        <!--                    <p class="card-text" th:text="${product.description}">상품 설명</p>-->
-        <!--                </div>-->
-        <!--                <div class="card-footer text-end">-->
-        <!--                    <a th:href="@{'/products/' + ${product.id}}" class="btn btn-outline-primary">상세보기</a>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-        <!--    </div>-->
-
-        <!-- ✅ 4. 버튼 (예: 전체 상품 보기) -->
-
-        <!-- 카드 1 -->
-        <div class="col">
+        <div class="col" th:each="product : ${products}">
             <div class="card h-100">
-                <img src="https://picsum.photos/id/1015/400/300" class="card-img-top" alt="상품1">
-                <div class="card-body">
-                    <h5 class="card-title">Wireless Headphones</h5>
-                    <p class="card-text">고음질 블루투스 무선 헤드폰입니다.</p>
-                </div>
-                <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
-                </div>
-            </div>
-        </div>
+                <img th:if="${#lists.isEmpty(product.images) == false}"
+                     th:src="${product.images[0].imageUrl}"
+                     class="card-img-top" alt="상품 이미지">
 
-        <!-- 카드 2 -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://picsum.photos/id/1020/400/300" class="card-img-top" alt="상품2">
                 <div class="card-body">
-                    <h5 class="card-title">Smart Watch</h5>
-                    <p class="card-text">헬스 기능이 탑재된 스마트 워치입니다.</p>
-                </div>
-                <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
-                </div>
-            </div>
-        </div>
+                    <!-- ✅ 상품명 -->
+                    <h5 class="card-title" th:text="${product.name}">상품명</h5>
 
-        <!-- 카드 3 -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://picsum.photos/id/1039/400/300" class="card-img-top" alt="상품3">
-                <div class="card-body">
-                    <h5 class="card-title">Camera</h5>
-                    <p class="card-text">여행용 고화질 미러리스 카메라입니다.</p>
-                </div>
-                <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
-                </div>
-            </div>
-        </div>
+                    <p class="card-text">
+                        <strong>카테고리:</strong>
+                        <span th:text="${product.category.name}">카테고리명</span>
+                    </p>
 
-        <!-- 카드 4 -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://picsum.photos/id/1050/400/300" class="card-img-top" alt="상품4">
-                <div class="card-body">
-                    <h5 class="card-title">Laptop</h5>
-                    <p class="card-text">휴대성과 성능을 모두 갖춘 노트북입니다.</p>
-                </div>
-                <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
-                </div>
-            </div>
-        </div>
+                    <p class="card-text">
+                        <strong>재고:</strong>
+                        <span th:text="${product.stockQuantity}">0</span>
+                    </p>
 
-        <!-- 카드 5 -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://picsum.photos/id/1062/400/300" class="card-img-top" alt="상품5">
-                <div class="card-body">
-                    <h5 class="card-title">Sneakers</h5>
-                    <p class="card-text">편안한 착용감의 인기 운동화입니다.</p>
+                    <p class="card-text">
+                        <strong>가격:</strong>
+                        <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">0원</span>
+                    </p>
                 </div>
-                <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
-                </div>
-            </div>
-        </div>
 
-        <!-- 카드 6 -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://picsum.photos/id/1069/400/300" class="card-img-top" alt="상품6">
-                <div class="card-body">
-                    <h5 class="card-title">Backpack</h5>
-                    <p class="card-text">넉넉한 수납공간의 데일리 백팩입니다.</p>
-                </div>
                 <div class="card-footer text-end">
-                    <a href="#" class="btn btn-outline-primary">상세보기</a>
+                    <a th:href="@{'/products/' + ${product.id}}" class="btn btn-outline-primary">상세보기</a>
                 </div>
             </div>
         </div>
@@ -332,6 +263,9 @@
         </section>
     </div>
 </div>
+
+<!-- 플로팅 챗봇 버튼 추가 -->
+<div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>
 
 <main>
     <div th:replace="~{interior/board :: board}"></div>

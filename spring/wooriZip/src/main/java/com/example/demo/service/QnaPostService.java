@@ -33,7 +33,7 @@ public class QnaPostService {
 
     // Q 등록
     @Transactional
-    public void saveQna(QnaPostDto dto) throws IOException {
+    public Long saveQna(QnaPostDto dto) throws IOException {
         Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
@@ -59,7 +59,8 @@ public class QnaPostService {
                 .product(product)
                 .build();
 
-        qnaPostRepository.save(post);
+        QnaPost saved = qnaPostRepository.save(post);
+        return saved.getId();
     }
 
     // Q 수정

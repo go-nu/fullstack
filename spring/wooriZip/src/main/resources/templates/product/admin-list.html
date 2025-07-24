@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-md-4">
                         <button type="button" id="goToEditBtn" class="btn btn-primary btn-lg w-100" disabled>
-                            <i class="bi bi-pencil-square"></i> 수정하기
+                            <i class="bi bi-pencil-square"></i> 관리하기
                         </button>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                                        class="btn btn-outline-info btn-sm mb-1">
                                         <i class="bi bi-box-arrow-up-right"></i> 상품 바로가기
                                     </a>
-                                    <a th:href="@{'/admin/products/' + ${product.id} + '/edit'}"
+                                    <a th:href="@{'/admin/products/' + ${product.id} + '/update'}"
                                        class="btn btn-outline-primary btn-sm mb-1">
                                         <i class="bi bi-pencil"></i> 수정하기
                                     </a>
@@ -161,58 +161,58 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-$(document).ready(function() {
-    // 드롭다운 선택 처리
-    $('#productSelect').on('change', function() {
-        const selectedProductId = $(this).val();
-        const selectedOption = $(this).find('option:selected');
-        
-        if (selectedProductId) {
-            $('#goToEditBtn').prop('disabled', false);
-            
-            const productName = selectedOption.text();
-            $('#infoText').html(`<strong>${productName}</strong><br>상품을 수정할 수 있습니다.`);
-            $('#selectedInfo').show();
-        } else {
-            $('#goToEditBtn').prop('disabled', true);
-            $('#selectedInfo').hide();
-        }
-    });
+    $(document).ready(function() {
+        // 드롭다운 선택 처리
+        $('#productSelect').on('change', function() {
+            const selectedProductId = $(this).val();
+            const selectedOption = $(this).find('option:selected');
 
-    // 수정하기 버튼 클릭
-    $('#goToEditBtn').on('click', function() {
-        const selectedProductId = $('#productSelect').val();
-        if (selectedProductId) {
-            location.href = `/admin/products/${selectedProductId}/edit`;
-        }
-    });
-    
-    // 삭제 기능
-    $('.delete-product-btn').on('click', function(e) {
-        e.stopPropagation();
-        const productId = $(this).data('product-id');
-        const productName = $(this).data('product-name');
-        
-        if (confirm(`"${productName}" 상품을 정말 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
-            $.ajax({
-                url: `/admin/products/delete/${productId}`,
-                type: 'POST',
-                success: function(response) {
-                    if (response && response.success) {
-                        alert(response.message || '상품이 삭제되었습니다.');
-                        location.reload();
-                    } else {
-                        alert(response.message || '삭제 중 오류가 발생했습니다.');
+            if (selectedProductId) {
+                $('#goToEditBtn').prop('disabled', false);
+
+                const productName = selectedOption.text();
+                $('#infoText').html(`<strong>${productName}</strong><br>상품을 수정할 수 있습니다.`);
+                $('#selectedInfo').show();
+            } else {
+                $('#goToEditBtn').prop('disabled', true);
+                $('#selectedInfo').hide();
+            }
+        });
+
+        // 수정하기 버튼 클릭
+        $('#goToEditBtn').on('click', function() {
+            const selectedProductId = $('#productSelect').val();
+            if (selectedProductId) {
+                location.href = `/admin/products/${selectedProductId}/update`;
+            }
+        });
+
+        // 삭제 기능
+        $('.delete-product-btn').on('click', function(e) {
+            e.stopPropagation();
+            const productId = $(this).data('product-id');
+            const productName = $(this).data('product-name');
+
+            if (confirm(`"${productName}" 상품을 정말 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                $.ajax({
+                    url: `/admin/products/delete/${productId}`,
+                    type: 'POST',
+                    success: function(response) {
+                        if (response && response.success) {
+                            alert(response.message || '상품이 삭제되었습니다.');
+                            location.reload();
+                        } else {
+                            alert(response.message || '삭제 중 오류가 발생했습니다.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', {xhr, status, error});
+                        alert('삭제 요청 중 오류가 발생했습니다.');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', {xhr, status, error});
-                    alert('삭제 요청 중 오류가 발생했습니다.');
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
 </script>
 
 </body>

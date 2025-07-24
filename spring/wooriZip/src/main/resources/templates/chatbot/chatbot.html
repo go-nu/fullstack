@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>우리집 챗봇</title>
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/chatbot.css}">
+</head>
+<body>
+<div th:replace="~{index/header :: header}"></div>
+
+<div class="chatbot-container">
+    <div class="chatbot-header">
+        <h2>💬 우리집 챗봇 상담</h2>
+        <p>무엇을 도와드릴까요?</p>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+            <div class="message-content">
+                안녕하세요! 우리집 쇼핑몰 챗봇입니다. 무엇을 도와드릴까요?
+            </div>
+            <div class="message-time" id="currentTime"></div>
+        </div>
+    </div>
+
+    <div class="suggestions" id="suggestions">
+        <button class="suggestion-btn" onclick="sendMessage('가구 카테고리 보여줘')">가구 카테고리 보여줘</button>
+        <button class="suggestion-btn" onclick="sendMessage('배송 안내 알려줘')">배송 안내 알려줘</button>
+        <button class="suggestion-btn" onclick="sendMessage('반품 정책 알려줘')">반품 정책 알려줘</button>
+        <button class="suggestion-btn" onclick="sendMessage('결제 방법 알려줘')">결제 방법 알려줘</button>
+        <button class="suggestion-btn" onclick="sendMessage('이벤트 정보 알려줘')">이벤트 정보 알려줘</button>
+    </div>
+
+    <div class="chat-input-container">
+        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()" class="send-btn">전송</button>
+    </div>
+</div>
+
+<div th:replace="~{index/footer :: footer}"></div>
+<script th:src="@{/js/chatbot.js}"></script>
+</body>
+</html> 

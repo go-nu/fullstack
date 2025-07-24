@@ -142,7 +142,7 @@
     <!-- 플로팅 네비게이션 리모콘 -->
     <div class="floating-nav" id="floatingNav">
         <div class="floating-nav-toggle" onclick="toggleFloatingNav()">
-            <span class="nav-icon">🧭</span>
+            <span class="nav-icon">📋</span>
             <span class="nav-text">메뉴</span>
         </div>
         <div class="floating-nav-menu" id="floatingNavMenu">
@@ -170,7 +170,7 @@
 <style>
     .floating-nav {
         position: fixed;
-        bottom: 30px;
+        bottom: 100px;
         right: 30px;
         z-index: 1000;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -295,6 +295,9 @@
         }
     }
 </style>
+
+<!-- 플로팅 챗봇 버튼 추가 (기존 리모컨과 함께) -->
+<div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:inline="javascript">

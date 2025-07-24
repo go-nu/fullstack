@@ -2,18 +2,19 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
+from data_loader import load_training_data
 import pandas as pd
 
 # ✅ 1. Dataset 정의
 class RecommendDataset(Dataset):
-    def __init__(self, csv_file):
-        self.data = pd.read_csv(csv_file)
+    def __init__(self, dataframe):
+        self.data = dataframe.copy()
 
-        self.features = self.data[[
+        self.features = self.data[[  # 필요한 열만 추출
             'user_id', 'product_id', 'model_id',
             'gender', 'age_group', 'residence_type',
             '색상', '사이즈', '소재',
-            'timestamp_norm'
+            'timestamp'
         ]].values.astype(float)
 
         self.labels = self.data['weight'].values.astype(float)

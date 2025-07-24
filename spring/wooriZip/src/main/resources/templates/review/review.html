@@ -135,7 +135,7 @@
 
     <!-- 리뷰 목록 -->
     <div>
-        <div th:each="review : ${reviewPage.content}" class="card mb-3">
+        <div th:each="review : ${reviewPage.content}" class="card mb-3" th:id="'review-' + ${review.id}">
             <div class="card-body">
                 <h6 class="card-title">
                     평점: <span class="fw-bold" th:text="${review.rating}"
