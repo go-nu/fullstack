@@ -230,31 +230,6 @@
             </select>
 
             <div id="modelInfo" style="margin-top:10px;"></div>
-
-            <div id="optionAttributes">
-                <label>색상:
-                    <select id="colorSelect">
-                        <option value="">색상 선택</option>
-                    </select>
-                </label>
-                <label>사이즈:
-                    <select id="sizeSelect">
-                        <option value="">사이즈 선택</option>
-                    </select>
-                </label>
-                <label>소재:
-                    <select id="materialSelect">
-                        <option value="">소재 선택</option>
-                    </select>
-                </label>
-            </div>
-        </div>
-
-        <!-- 수량 -->
-        <div class="product-qty" style="margin-top:12px;">
-            <label>수량
-                <input type="number" name="count" id="count" value="1" min="1" style="width:60px; margin-left:8px;" />
-            </label>
         </div>
 
         <!-- 찜/장바구니/구매 -->
@@ -262,15 +237,23 @@
             <input type="hidden" id="productId" name="productId" th:value="${product.id}" />
             <input type="hidden" id="actionType" name="actionType" value="cart" />
 
+            <div>
+                <div>수량</div>
+                <input type="number" name="count" id="count" value="1" min="1"/>
+            </div>
+
             <div class="product-actions">
-                <button type="button" onclick="submitForm('cart')">장바구니 추가</button>
-                <button type="button" onclick="submitForm('buy')">구매하기</button>
+                <button type="button" id="cartButton" onclick="submitForm('cart')">장바구니 추가</button>
+                <button type="button" id="buyButton" onclick="submitForm('buy')">구매하기</button>
                 <button type="submit" th:text="${product.liked} ? '찜 취소' : '찜하기'"></button>
             </div>
         </form>
 
+
+
+
         <!-- 결제 가격 -->
-        <div style="margin-top:10px;">
+        <div style="display:none;">
             <span id="selectedPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"
                   th:data-initial-price="${product.price}"></span>
         </div>
@@ -287,6 +270,7 @@
             <button type="button" onclick="scrollToSection('qna-section')">문의</button>
         </div>
 
+        <!-- 🔙 목록으로 돌아가기 (항상 표시) -->
         <div style="margin-top: 20px;">
             <a th:href="@{/products}">
                 <button type="button">목록으로 돌아가기</button>
@@ -489,4 +473,3 @@
 <script src="/js/qna/qna.js" defer></script>
 </body>
 </html>
-

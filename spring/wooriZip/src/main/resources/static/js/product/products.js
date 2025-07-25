@@ -198,8 +198,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // 4. 옵션 추가 함수
     window.addOption = function () {
         const optionCount = optionContainer.children.length;
-        if (optionCount >= 20) {
-            alert("옵션은 최대 20개까지 추가할 수 있습니다.");
+        if (optionCount >= 50) {
+            alert("옵션은 최대 10개까지 추가할 수 있습니다.");
             return;
         }
 

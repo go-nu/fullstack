@@ -188,17 +188,17 @@
                 </a>
             </div>
             <div class="product-price" th:text="'₩' + ${product.price}"></div>
-        </div>
-        <!-- 평균 평점 표시 -->
-        <div class="rating-display" th:if="${product.averageRating > 0}">
-            <span class="stars">
-                <i th:each="i : ${#numbers.sequence(1, 5)}" 
-                   th:class="${i <= product.averageRating} ? 'bi bi-star-fill text-warning' : 'bi bi-star text-muted'"></i>
-            </span>
-            <span class="rating-text" th:text="${#numbers.formatDecimal(product.averageRating, 1, 1)}">4.5</span>
-        </div>
-        <div class="rating-display" th:if="${product.averageRating == 0}">
-            <span class="text-muted">평점 없음</span>
+            <div class="rating-display" th:if="${product.averageRating > 0}">
+                <span class="stars">
+                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                          th:text="${i <= product.averageRating} ? '★' : '☆'"
+                          style="color: #FFC107; font-size: 14px;"></span>
+                </span>
+                <span class="rating-text" th:text="${#numbers.formatDecimal(product.averageRating, 1, 1)}">4.5</span>
+            </div>
+            <div class="rating-display" th:if="${product.averageRating == 0}">
+                <span class="text-muted">평점 없음</span>
+            </div>
         </div>
     </div>
 </main>

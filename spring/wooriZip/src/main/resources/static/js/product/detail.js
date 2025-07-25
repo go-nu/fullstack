@@ -47,25 +47,31 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceDisplay.innerText = (currentPrice * count).toLocaleString() + '원';
 
         // 모델 정보 표시 업데이트
-        if (currentPrice > 0) {
-            modelInfo.innerText = `모델명: ${modelName}, 가격: ${currentPrice.toLocaleString()}원, 재고: ${currentStock}`;
-            if (currentStock <= 0) {
-                modelInfo.innerText += ' (품절)';
-                // TODO: 품절 시 장바구니/구매 버튼 비활성화 로직 추가
-                // 예: document.getElementById('cartButton').disabled = true;
-                // 예: document.getElementById('buyButton').disabled = true;
-            } else {
-                 // TODO: 재고가 있을 경우 버튼 활성화 로직 추가
-                 // 예: document.getElementById('cartButton').disabled = false;
-                 // 예: document.getElementById('buyButton').disabled = false;
-            }
+        if (!modelName || currentPrice === 0) {
+        // 초기 상태 또는 모델명 없이 price만 있는 경우
+        modelInfo.innerText = '옵션을 선택하세요.';
+        document.getElementById('cartButton').disabled = true;
+        document.getElementById('buyButton').disabled = true;
         } else {
-            modelInfo.innerText = '모델/옵션을 선택하세요.';
-            // TODO: 기본 상태에서 버튼 비활성화 (모델 선택 필요)
-            // 예: document.getElementById('cartButton').disabled = true;
-            // 예: document.getElementById('buyButton').disabled = true;
+        modelInfo.innerText = `모델명: ${modelName} 가격: ${currentPrice.toLocaleString()}원, 재고: ${currentStock}`;
+
+        if (currentStock <= 0) {
+        modelInfo.innerText += ' (품절)';
+         // TODO: 품절 시 장바구니/구매 버튼 비활성화 로직 추가
+        document.getElementById('cartButton').disabled = true;
+        document.getElementById('buyButton').disabled = true;
+        } else {
+        // TODO: 기본 상태에서 버튼 비활성화 (모델 선택 필요)
+        document.getElementById('cartButton').disabled = false;
+        document.getElementById('buyButton').disabled = false;
         }
     }
+    }
+
+    function submitForm(actionType) {
+            document.getElementById('actionType').value = actionType;
+            document.getElementById('productForm').submit();
+        }
 
     // =====================================================================
     // 2. 개별 속성 드롭다운 (색상, 사이즈, 소재) 동적 채우기 및 선택 표시
