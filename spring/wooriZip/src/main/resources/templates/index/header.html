@@ -5,6 +5,7 @@
             position: fixed;
             top: 0;
             width: 100%;
+            height: 63px;
             background-color: transparent;
             transition: all 0.3s ease;
             z-index: 1000;
@@ -78,6 +79,90 @@
             background-color: #e9e5dc;
         }
     </style>
+    <style>
+        body { padding-top: 63px !important; }
+<!-- templates/index/header.html -->
+<header class="header" th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
+    <style>
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: transparent;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            height: 100px;
+            line-height: 100px;
+        }
+        .header.scrolled {
+            background-color: #F9F7F0;
+        }
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo a {
+            font-size: 35px;
+            font-family: "Stardos Stencil", system-ui;
+            font-weight: 700;
+            font-style: normal;
+            color: #B17457;
+            text-decoration: none;
+        }
+        .gnb-wrap {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .divider {
+            width: 1px;
+            height: 16px;
+            background-color: #F9F7F0;
+            margin: 0 5px;
+        }
+        .gnb-group-1 a {
+            color: #4A4947;
+            font-size: 18px;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .gnb-group-2 a {
+            color: #4A4947;
+            font-size: 15px;
+            margin: 0 5px;
+            text-decoration: none;
+        }
+        .admin-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .admin-menu-content {
+            display: none;
+            position: absolute;
+            background-color: #F9F7F0;
+            min-width: 200px;
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+        .admin-menu:hover .admin-menu-content {
+            display: block;
+        }
+        .admin-menu-content a {
+            color: #4A4947;
+            padding: 5px 5px;
+            text-decoration: none;
+            display: block;
+        }
+        .admin-menu-content a:hover {
+            background-color: #e9e5dc;
+        }
+    </style>
     <div class="header-inner">
         <h1 class="logo">
             <a href="/">WooriZIP</a>
@@ -90,8 +175,6 @@
             </div>
             <div class="divider"></div>
             <div class="gnb-group-2">
-                <a href="#">BRAND</a>
-                <a href="#">고객센터</a>
                 <a th:href="@{/chatbot}">💬 챗봇</a>
                 <a th:if="${loginUser == null}" href="/user/login">로그인</a>
                 <a th:if="${loginUser != null}" href="/user/logout">로그아웃</a>

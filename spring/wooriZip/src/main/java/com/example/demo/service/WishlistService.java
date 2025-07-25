@@ -17,7 +17,6 @@ public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
 
-
     public void toggleWishlist(Users user, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품 없음"));

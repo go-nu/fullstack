@@ -156,16 +156,28 @@ public class ProductService {
 
     // ✅ 상품 목록 조회
     public List<Product> findProducts(Long categoryId) {
+        List<Product> products;
         if (categoryId == null) {
-            return productRepository.findAll(); // 아무 카테고리도 선택 안 했을 경우
-        }
-
+            products = productRepository.findAll(); // 아무 카테고리도 선택 안 했을 경우
+        } else {
         // 선택한 카테고리와 그 하위 카테고리 포함하여 검색
         List<Long> idsToSearch = new ArrayList<>();
         idsToSearch.add(categoryId);
         idsToSearch.addAll(getChildCategoryIds(categoryId));
-
-        return productRepository.findByCategoryIdIn(idsToSearch);
+            products = productRepository.findByCategoryIdIn(idsToSearch);
+        }
+        
+        // 각 상품의 평균 평점 계산 및 업데이트
+        for (Product product : products) {
+            double avgRating = reviewPostRepository.findByProductId(product.getId())
+                    .stream()
+                    .mapToInt(ReviewPost::getRating)
+                    .average()
+                    .orElse(0.0);
+            product.setAverageRating(avgRating);
+        }
+        
+        return products;
     }
 
     // 선택된 카테고리의 모든 하위 카테고리 ID를 재귀적으로 가져옴
@@ -187,7 +199,15 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
-        // 2. 사용자가 찜한 상품 여부 체크
+        // 2. 평균 평점 계산 및 업데이트
+        double avgRating = reviewPostRepository.findByProductId(productId)
+                .stream()
+                .mapToInt(ReviewPost::getRating)
+                .average()
+                .orElse(0.0);
+        product.setAverageRating(avgRating);
+
+        // 3. 사용자가 찜한 상품 여부 체크
         boolean liked = user != null && wishlistRepository.existsByUserAndProduct(user, product);
 
         // 3. productId로 모든 ProductModel 조회

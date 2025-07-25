@@ -26,6 +26,8 @@
 
 <main>
     <h2 class="mb-4">장바구니</h2>
+    <button class="btn btn-primary deleteAll">전체삭제</button>
+    <button class="btn btn-success deleteSelected">선택삭제</button>
 
     <div th:if="${cart.items == null or #lists.isEmpty(cart.items)}">
         <p class="text-center">장바구니가 비어 있습니다.</p>
@@ -78,11 +80,13 @@
                     th:data-type="${uc.coupon.type}"
                     th:data-amount="${uc.coupon.discountAmount}"
                     th:data-percent="${uc.coupon.discountPercent}"
+                    th:data-min-order-price="${uc.coupon.minOrderPrice}"
                     th:text="${uc.coupon.type == T(com.example.demo.constant.CouponType).AMOUNT
-                    ? uc.coupon.name + ' (' + uc.coupon.discountAmount + '원 할인)'
-                    : uc.coupon.name + ' (' + uc.coupon.discountPercent + '% 할인)'}">
+                    ? uc.coupon.name + ' (' + uc.coupon.discountAmount + '원 할인, 최소주문금액: ' + uc.coupon.minOrderPrice + '원)'
+                    : uc.coupon.name + ' (' + uc.coupon.discountPercent + '% 할인, 최소주문금액: ' + uc.coupon.minOrderPrice + '원)'}">
             </option>
         </select>
+        <div id="couponMessage" class="mt-2" style="display: none;"></div>
     </div>
 
     <div class="cart-summary">

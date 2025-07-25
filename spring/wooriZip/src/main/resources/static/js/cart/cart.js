@@ -83,29 +83,34 @@ $(document).ready(function () {
         });
 
         // ✅ 쿠폰 할인 계산
-        const selectedCoupon = $("#couponSelect").find("option:selected");
-        const type = selectedCoupon.data("type");
-        const amount = parseInt(selectedCoupon.data("amount")) || 0;
-        const percent = parseInt(selectedCoupon.data("percent")) || 0;
+                const selectedCoupon = $("#couponSelect").find("option:selected");
+                const type = selectedCoupon.data("type");
+                const amount = parseInt(selectedCoupon.data("amount")) || 0;
+                const percent = parseInt(selectedCoupon.data("percent")) || 0;
+                const minOrderPrice = parseInt(selectedCoupon.data("min-order-price")) || 0;
 
-        if (type === "AMOUNT") {
-            appliedCouponAmount = amount;
-            $("#appliedCoupon").text(amount.toLocaleString() + "원");
-        } else if (type === "PERCENT") {
+                if (type && minOrderPrice > 0 && totalPrice < minOrderPrice) {
+                    appliedCouponAmount = 0;
+                    $("#appliedCoupon").text("0원 (최소주문금액 미달)");
+                } else if (type === "AMOUNT") {
+                    appliedCouponAmount = amount;
+                    $("#appliedCoupon").text(amount.toLocaleString() + "원");
+                        } else if (type === "PERCENT") {
             appliedCouponAmount = Math.floor(totalPrice * percent / 100);
-            $("#appliedCoupon").text(percent + "% (" + appliedCouponAmount.toLocaleString() + "원)");
-        } else {
-            appliedCouponAmount = 0;
-            $("#appliedCoupon").text("0원");
-        }
+            $("#appliedCoupon").text(appliedCouponAmount.toLocaleString() + "원 (" + percent + "% 할인)");
+                } else {
+                    appliedCouponAmount = 0;
+                    $("#appliedCoupon").text("0원");
+                }
 
-        const appliedDeliveryFee = totalPrice === 0 ? 0 : deliveryFee;
-        const finalAmount = totalPrice + appliedDeliveryFee - appliedCouponAmount;
+                // 5만원 미만일 때만 배송비 적용
+                const appliedDeliveryFee = totalPrice >= 50000 ? 0 : deliveryFee;
+                const finalAmount = totalPrice + appliedDeliveryFee - appliedCouponAmount;
 
-        $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
-        $("#deliveryFee").text(appliedDeliveryFee.toLocaleString() + "원");
-        $("#finalPaymentAmount").text(finalAmount.toLocaleString() + "원");
-    }
+                $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
+                $("#deliveryFee").text(appliedDeliveryFee.toLocaleString() + "원");
+                $("#finalPaymentAmount").text(finalAmount.toLocaleString() + "원");
+            }
 
     // ✅ 선택된 항목 기반 주문 전송 함수
     function sendOrderRequest() {
@@ -137,36 +142,18 @@ $(document).ready(function () {
             'value': 'cart'
         }));
 
+        // 선택된 쿠폰 정보 추가
+        const selectedCouponId = $("#couponSelect").val();
+        if (selectedCouponId) {
+            form.append($('<input>', {
+                'type': 'hidden',
+                'name': 'couponId',
+                'value': selectedCouponId
+            }));
+        }
+
         $('body').append(form);
         form.submit();
-    }
-
-    // ✅ 체크된 상품 기준 결제 요약 계산 함수
-    function updateSummary() {
-        let totalPrice = 0;
-        let deliveryFee = 3000;
-
-        $("tr").has("input.cart-item-checkbox").each(function () {
-            const priceText = $(this).find("td").eq(3).text().replace(/[^0-9]/g, "");
-            const count = parseInt($(this).find("input[name='count']").val());
-
-            const price = parseInt(priceText);
-            if (!isNaN(price) && !isNaN(count)) {
-                const subtotal = price * count;
-
-                // ✅ 합계 셀 업데이트 (index 5)
-                $(this).find("td").eq(5).text(subtotal.toLocaleString() + "원");
-
-                // ✅ 체크된 항목만 총합 계산
-                if ($(this).find(".cart-item-checkbox").prop("checked")) {
-                    totalPrice += subtotal;
-                }
-            }
-        });
-
-        $("#finalTotalPrice").text(totalPrice.toLocaleString() + "원");
-        $("#deliveryFee").text((totalPrice === 0 ? 0 : deliveryFee).toLocaleString() + "원");
-        $("#finalPaymentAmount").text((totalPrice + (totalPrice === 0 ? 0 : deliveryFee)).toLocaleString() + "원");
     }
 
     // 선택 항목 삭제

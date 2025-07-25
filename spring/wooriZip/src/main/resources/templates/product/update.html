@@ -7,22 +7,166 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .image-preview { width: 120px; height: 120px; object-fit: cover; margin: 5px; }
-        .image-container { display: inline-block; position: relative; }
-        .remove-btn {
-            position: absolute; top: 0; right: 0;
-            background: red; color: white; border: none;
-            border-radius: 50%; width: 20px; height: 20px; cursor: pointer;
+        body {
+            background: #fff;
+            color: #4A4947;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            width: 100%;
         }
-        .img-box {
+        main {
+            max-width: 1100px;
+            width: 100%;
+            margin: 60px auto 60px auto;
+            background-color: #FFF;
+            border: 1px solid #FFF;
+            border-radius: 0;
+            padding: 40px 40px 30px 40px;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #B17457;
+            margin-bottom: 32px;
+            letter-spacing: -1px;
+        }
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #4A4947;
+            font-weight: 500;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
+            background: #F9F7F0;
+            color: #4A4947;
+            margin-bottom: 18px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border: 1.5px solid #B17457;
+            background: #fff;
+        }
+        .image-container {
             display: inline-block;
-            margin: 10px;
             position: relative;
+            margin: 0 8px 8px 0;
         }
-        .img-box img {
-            width: 150px;
-            height: auto;
-            border: 1px solid #ccc;
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 1px solid #E0E0E0;
+            background: #F9F7F0;
+            border-radius: 0;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 0; right: 0;
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .remove-btn:hover {
+            background: #4A4947;
+        }
+        .product-form {
+            width: 100%;
+        }
+        .product-form label {
+            margin-bottom: 4px;
+        }
+        .product-form input[type="file"] {
+            margin-bottom: 18px;
+        }
+        .product-form button[type="button"], .product-form button[type="submit"] {
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 18px;
+            margin-right: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .product-form button[type="button"]:hover, .product-form button[type="submit"]:hover {
+            background: #4A4947;
+        }
+        #optionTable {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-top: 18px !important;
+            background: #fff !important;
+            font-size: 1rem !important;
+        }
+        #optionTable th, #optionTable td {
+            border: 1px solid #E0E0E0 !important;
+            padding: 10px 8px !important;
+            text-align: center !important;
+        }
+        #optionTable th {
+            background: #F9F7F0 !important;
+            color: #B17457 !important;
+            font-weight: 600 !important;
+        }
+        #optionTable td button {
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 6px 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #optionTable td button:hover {
+            background: #4A4947;
+        }
+        /* 옵션 체크박스 그룹 */
+        .product-form > div {
+            margin-bottom: 12px;
+        }
+        .product-form input[type="checkbox"] {
+            margin-right: 6px;
+            accent-color: #B17457;
+        }
+        /* 카테고리 셀렉트 라벨 간격 */
+        .product-form label + label {
+            margin-top: 12px;
+        }
+        @media (max-width: 1200px) {
+            main {
+                max-width: 98vw;
+                padding: 24px 8px;
+            }
+        }
+        @media (max-width: 700px) {
+            main {
+                padding: 12px 2vw;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+            .image-preview {
+                width: 80px; height: 80px;
+            }
         }
     </style>
 </head>

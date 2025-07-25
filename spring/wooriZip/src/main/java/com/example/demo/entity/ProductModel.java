@@ -58,5 +58,16 @@ public class ProductModel {
         return Objects.hash(productModelSelect, price, prStock);
     }
 
-
+//    public void removeStock(int prStock){
+//        int restStock = this.prStock - prStock;
+//        if(restStock < 0){
+//            throw new OutOfStockException("상품의 재고가 부족합니다. " +
+//                    "(현재 재고 수량 : "+ this.prStock + ")" );
+//        }
+//        this.prStock = restStock;
+//    }
+//
+//    public void addStock(int prStock){
+//        this.prStock += prStock;
+//    }
 }

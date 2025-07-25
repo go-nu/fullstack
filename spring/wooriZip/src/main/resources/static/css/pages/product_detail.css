@@ -216,3 +216,29 @@
         flex-direction: column;
     }
 }
+
+/* 상품 평점 표시 스타일 */
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-rating .stars {
+    display: flex;
+    gap: 2px;
+}
+
+.product-rating .stars i {
+    font-size: 18px;
+}
+
+.product-rating .rating-text {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.product-rating .text-muted {
+    font-size: 14px;
+}

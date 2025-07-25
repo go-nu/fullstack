@@ -44,7 +44,6 @@
             <p><strong>결제정보</strong></p>
             <p><strong>최종결제금액 :</strong> <span
                     th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원</p>
-            <p><strong>결제수단 :</strong> <span th:text="${orderDto.getPayInfo()}"></span></p>
         </div>
 
         <div class="pc-only">

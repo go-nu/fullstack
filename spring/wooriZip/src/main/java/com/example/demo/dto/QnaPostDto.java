@@ -36,6 +36,16 @@ public class QnaPostDto {
     // 답변 포함 (DTO로)
     private QnaAnswerDto answer;
 
+    private boolean answered;
+    private String productName;
+
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
+    }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     public static QnaPostDto fromEntity(QnaPost post) {
         List<String> filePathList = null;
         if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {

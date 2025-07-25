@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CartDto;
 import com.example.demo.entity.Users;
-import com.example.demo.oauth2.CustomOAuth2User;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.CartService;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,37 +57,6 @@ public class CartController {
         }
     }
 
-    // 카트 아이템 삭제 메소드
-    @PostMapping("/remove")
-    public String removeItemFromCart(@RequestParam Long cartItemId, Authentication authentication, Model model) {
-        String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
-
-        try {
-            cartService.removeItemFromCart(email, cartItemId);
-            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
-        } catch (Exception e) {
-            log.error("Error removing item from cart", e);
-            model.addAttribute("error", "Failed to remove item from cart");
-            return "error";
-        }
-    }
-
-//    @PostMapping("/clear")
-    public String clearCart(Authentication authentication, Model model) {
-        String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
-
-        try {
-            cartService.clearCart(email);
-            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
-        } catch (Exception e) {
-            log.error("Error clearing cart", e);
-            model.addAttribute("error", "Failed to clear cart");
-            return "error";
-        }
-    }
-
     // 업데이트
     @PostMapping("/update")
     @ResponseBody
@@ -117,6 +83,38 @@ public class CartController {
         response.put("cartItemId", cartItemId);
         response.put("count", count);
         return ResponseEntity.ok(response);
+    }
+
+    // 카트 아이템 개별 삭제 메소드
+    @PostMapping("/remove")
+    public String removeItemFromCart(@RequestParam Long cartItemId, Authentication authentication, Model model) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
+
+        try {
+            cartService.removeItemFromCart(email, cartItemId);
+            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
+        } catch (Exception e) {
+            log.error("Error removing item from cart", e);
+            model.addAttribute("error", "Failed to remove item from cart");
+            return "error";
+        }
+    }
+    
+    // 전체 삭제
+    @PostMapping("/clear")
+    public String clearCart(Authentication authentication, Model model) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
+
+        try {
+            cartService.clearCart(email);
+            return "redirect:/cart"; // 장바구니 페이지로 리다이렉션
+        } catch (Exception e) {
+            log.error("Error clearing cart", e);
+            model.addAttribute("error", "Failed to clear cart");
+            return "error";
+        }
     }
 
     // 선택 항목 삭제

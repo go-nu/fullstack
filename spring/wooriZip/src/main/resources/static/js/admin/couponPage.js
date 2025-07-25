@@ -19,3 +19,29 @@ function toggleDiscountInputs() {
 }
 
 window.onload = toggleDiscountInputs;
+
+// ✅ 쿠폰 활성화/비활성화 상태 토글 함수 (boolean 사용)
+function toggleCouponStatus(checkbox) {
+    const couponId = checkbox.getAttribute('data-id');
+    const isActive = checkbox.checked;  // true 또는 false
+
+    fetch(`/admin/coupons/${couponId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isActive: isActive })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('상태 변경 실패');
+        return response.json();
+    })
+    .then(data => {
+        console.log("쿠폰 상태 변경 완료:", data);
+    })
+    .catch(error => {
+        alert('오류 발생: ' + error.message);
+        checkbox.checked = !checkbox.checked; // 되돌리기
+    });
+}
+

@@ -56,7 +56,7 @@ public class UserController {
 
         if (loginUser != null) {
             model.addAttribute("loginUser", loginUser);
-            model.addAttribute("userCoupons", userService.getUserCoupons(loginUser));
+            model.addAttribute("userCoupons", userService.getAllUserCoupons(loginUser));
 
             // 내가 작성한 게시글 목록
             List<InteriorPostDto> interiorPosts = interiorPostService.findByUser(loginUser);

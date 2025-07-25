@@ -1,83 +1,229 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>쿠폰 등록</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #fff;
+            color: #4A4947;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            width: 100%;
+        }
+        .admin-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 0 80px 0;
+            box-sizing: border-box;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #B17457;
+            margin-bottom: 32px;
+        }
+        form {
+            background: #F9F7F0;
+            border: 1px solid #F9F7F0;
+            border-radius: 0;
+            padding: 32px 32px 24px 32px;
+            margin-bottom: 40px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #4A4947;
+            font-weight: 500;
+        }
+        input[type="text"], input[type="number"], input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
+            background: #fff;
+            color: #4A4947;
+            margin-bottom: 0;
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="datetime-local"]:focus {
+            border: 1.5px solid #B17457;
+            background: #F9F7F0;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .input-group input[type="text"] {
+            flex: 1;
+        }
+        .brand-btn, button[type="submit"] {
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .brand-btn:hover, button[type="submit"]:hover {
+            background: #4A4947;
+        }
+        .radio-group {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+        .radio-group label {
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+        input[type="radio"] {
+            accent-color: #B17457;
+            margin-right: 6px;
+        }
+        input[type="checkbox"] {
+            accent-color: #B17457;
+            margin-right: 6px;
+        }
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: #B17457;
+            margin-bottom: 18px;
+            margin-top: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            font-size: 1rem;
+        }
+        th, td {
+            border: 1px solid #E0E0E0;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        th {
+            background: #F9F7F0;
+            color: #B17457;
+            font-weight: 600;
+        }
+        .empty-row td {
+            color: #aaa;
+            background: #F9F7F0;
+        }
+        @media (max-width: 1200px) {
+            .admin-container {
+                max-width: 98vw;
+                padding: 24px 0 40px 0;
+            }
+            form {
+                padding: 16px 4vw 12px 4vw;
+            }
+        }
+        @media (max-width: 700px) {
+            .admin-container {
+                padding: 8px 0 20px 0;
+            }
+            form {
+                padding: 8px 2vw 8px 2vw;
+            }
+            .page-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
-<body class="p-4">
-<div class="container">
-    <h3 class="mb-3">쿠폰등록 🎫</h3>
+<body>
+<div th:replace="~{index/header :: header}"></div>
+
+<div class="admin-container">
+    <h2 class="page-title">쿠폰 등록 🎫</h2>
 
     <form th:action="@{/admin/coupons/add}" method="post">
-        <div class="mb-3">
-            <label for="name" class="form-label">쿠폰 이름</label>
-            <input type="text" class="form-control" id="name" name="name" required/>
+        <div class="form-group">
+            <label for="name">쿠폰 이름</label>
+            <input type="text" id="name" name="name" required/>
         </div>
 
-        <div class="mb-3">
-            <label for="code" class="form-label">쿠폰 코드</label>
+        <div class="form-group">
+            <label for="code">쿠폰 코드</label>
             <div class="input-group">
-                <input type="text" class="form-control" id="code" name="code" required/>
-                <button type="button" class="btn btn-outline-secondary" onclick="generateRandomCode()">랜덤 생성</button>
+                <input type="text" id="code" name="code" required/>
+                <button type="button" class="brand-btn" onclick="generateRandomCode()">랜덤 생성</button>
             </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label d-block">쿠폰 타입</label>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="typeAmount" value="AMOUNT"
-                       onclick="toggleDiscountInputs()" checked>
-                <label class="form-check-label" for="typeAmount">정액 할인</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="typePercent" value="PERCENT"
-                       onclick="toggleDiscountInputs()">
-                <label class="form-check-label" for="typePercent">퍼센트 할인</label>
+        <div class="form-group">
+            <label>쿠폰 타입</label>
+            <div class="radio-group">
+                <label><input type="radio" name="type" value="AMOUNT" onclick="toggleDiscountInputs()" checked>정액 할인</label>
+                <label><input type="radio" name="type" value="PERCENT" onclick="toggleDiscountInputs()">퍼센트 할인</label>
             </div>
         </div>
 
-        <div class="mb-3" id="amountInput">
-            <label class="form-label">정액 할인 금액 (₩)</label>
-            <input type="number" class="form-control" name="discountAmount" placeholder="예: 3000"/>
+        <div class="form-group" id="amountInput">
+            <label>정액 할인 금액 (₩)</label>
+            <input type="number" name="discountAmount" placeholder="예: 3000"/>
         </div>
 
-        <div class="mb-3" id="percentInput" style="display:none;">
-            <label class="form-label">퍼센트 할인율 (%)</label>
-            <input type="number" class="form-control" name="discountPercent" placeholder="예: 10"/>
+        <div class="form-group" id="percentInput" style="display:none;">
+            <label>퍼센트 할인율 (%)</label>
+            <input type="number" name="discountPercent" placeholder="예: 10"/>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">사용 기간</label>
-            <div class="d-flex gap-2">
-                <input type="datetime-local" class="form-control" name="startDate" required/>
-                <span class="align-self-center">~</span>
-                <input type="datetime-local" class="form-control" name="endDate" required/>
+        <div class="form-group">
+            <label>사용 기간</label>
+            <div class="date-range">
+                <input type="datetime-local" name="startDate" required/>
+                <span>~</span>
+                <input type="datetime-local" name="endDate" required/>
             </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">최소 주문 금액</label>
-            <input type="number" class="form-control" name="minOrderPrice" placeholder="예: 20000"/>
+        <div class="form-group">
+            <label>최소 주문 금액</label>
+            <input type="number" name="minOrderPrice" placeholder="예: 20000"/>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">사용 가능 횟수</label>
-            <input type="number" class="form-control" name="usageLimit" value="1"/>
+        <div class="form-group">
+            <label>사용 가능 횟수</label>
+            <input type="number" name="usageLimit" value="1"/>
         </div>
 
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="isActive" id="isActive" checked/>
-            <label class="form-check-label" for="isActive">활성화 여부</label>
+        <div class="form-group">
+            <input type="hidden" name="isActive" value="false"/>
+            <input type="checkbox" name="isActive" id="isActive" value="true" checked/>
+            <label for="isActive">활성화 여부</label>
         </div>
 
-        <button type="submit" class="btn btn-primary">등록하기</button>
+        <button type="submit">등록하기</button>
     </form>
 
-    <div class="mt-5">
-        <h3>쿠폰 목록</h3>
-        <table class="table table-bordered table-striped">
-            <thead class="table-light">
+    <div>
+        <h3 class="section-title">쿠폰 목록</h3>
+        <table>
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>쿠폰 이름</th>
@@ -86,6 +232,7 @@
                 <th>날짜 (시작 ~ 종료)</th>
                 <th>최소 금액</th>
                 <th>수량</th>
+                <th>활성화</th>
             </tr>
             </thead>
             <tbody>
@@ -93,14 +240,12 @@
                 <td th:text="${coupon.id}"></td>
                 <td th:text="${coupon.name}"></td>
                 <td th:text="${coupon.code}"></td>
-
                 <td>
                     <span th:if="${coupon.type.name() == 'AMOUNT'}"
                           th:text="${#numbers.formatInteger(coupon.discountAmount, 3)} + '원'"></span>
                     <span th:if="${coupon.type.name() == 'PERCENT'}"
-                          th:text="${coupon.discountPercent} + '%'"></span>
+                          th:text="${coupon.discountPercent} + '%' "></span>
                 </td>
-
                 <td>
                     <span th:text="${#temporals.format(coupon.startDate, 'yyyy-MM-dd HH:mm')}"></span>
                     <br/>~
@@ -108,15 +253,30 @@
                 </td>
                 <td th:text="${coupon.minOrderPrice}"></td>
                 <td th:text="${coupon.usageLimit}"></td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               role="switch"
+                               th:checked="${coupon.isActive}"
+                               th:attr="data-id=${coupon.id}"
+                               onchange="toggleCouponStatus(this)">
+                        <label class="form-check-label">
+                            <span th:text="${coupon.isActive ? '활성화' : '비활성화'}"></span>
+                        </label>
+                    </div>
+                </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(coupons)}">
-                <td colspan="5" class="text-center">등록된 쿠폰이 없습니다.</td>
+            <tr th:if="${#lists.isEmpty(coupons)}" class="empty-row">
+                <td colspan="7">등록된 쿠폰이 없습니다.</td>
             </tr>
             </tbody>
         </table>
     </div>
 
 </div>
+
+<div th:replace="~{index/footer :: footer}"></div>
 <script src="/js/admin/couponPage.js"></script>
 </body>
 </html>

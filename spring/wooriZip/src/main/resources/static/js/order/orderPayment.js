@@ -1,5 +1,57 @@
 $(document).ready(function () {
 console.log($);
+    let appliedCouponAmount = 0; // 전역 할인 금액 저장
+
+    // ✅ 쿠폰 선택 시 할인 금액 계산 및 반영
+    $("#couponSelect").on("change", function () {
+        updateSummary(); // 쿠폰 선택도 요약 재계산에 포함
+    });
+
+    // ✅ 페이지 진입 시 최초 1회 결제 요약 계산
+    updateSummary();
+
+    // ✅ 결제 요약 계산 함수
+    function updateSummary() {
+        // 총 상품금액을 가져올 때 콤마 제거 후 숫자로 변환
+        let totalPriceText = $("#finalTotalPrice").text().trim();
+        let totalPrice = parseInt(totalPriceText.replace(/,/g, "")) || 0;
+        let deliveryFee = 3000; // 기본 배송비
+
+        // ✅ 5만원 미만일 때만 배송비 적용
+        if (totalPrice >= 50000) {
+            deliveryFee = 0;
+        }
+
+        // ✅ 쿠폰 할인 계산
+        const selectedCoupon = $("#couponSelect").find("option:selected");
+        const type = selectedCoupon.data("type");
+        const amount = parseInt(selectedCoupon.data("amount")) || 0;
+        const percent = parseInt(selectedCoupon.data("percent")) || 0;
+        const minOrderPrice = parseInt(selectedCoupon.data("min-order-price")) || 0;
+
+        if (type && minOrderPrice > 0 && totalPrice < minOrderPrice) {
+            appliedCouponAmount = 0;
+            $("#appliedCoupon").text("0 (최소주문금액 미달)");
+        } else if (type === "AMOUNT") {
+            appliedCouponAmount = amount;
+            $("#appliedCoupon").text(amount.toLocaleString() + "원");
+        } else if (type === "PERCENT") {
+            appliedCouponAmount = Math.floor(totalPrice * percent / 100);
+            $("#appliedCoupon").text(appliedCouponAmount.toLocaleString() + "원 (" + percent + "% 할인)");
+        } else {
+            appliedCouponAmount = 0;
+            $("#appliedCoupon").text("0");
+        }
+
+        const finalAmount = totalPrice + deliveryFee - appliedCouponAmount;
+
+        // ✅ 모든 금액 표시 업데이트 (HTML에 이미 "원"이 있으므로 숫자만 업데이트)
+        $("#deliveryFee").text(deliveryFee.toLocaleString());
+        $("#deliveryFeeDisplay").text(deliveryFee.toLocaleString());
+        $("#totalWithDelivery").text((totalPrice + deliveryFee).toLocaleString());
+        $("#finalPaymentAmount").text(finalAmount.toLocaleString());
+    }
+
     // 상품 수량 변동에 따른 처리
     $('.item-count').on('change', function () {
         let $input = $(this);
@@ -33,14 +85,20 @@ console.log($);
     $('#submit-orderDto').on('click', function (e) {
         e.preventDefault();
 
+        const orderId = $('input[name="orderId"]').val();
+        const couponId = $('#couponSelect').val(); // 선택된 쿠폰 ID
+
         $.ajax({
             url: '/pay/checkout',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({orderId: $('input[name="orderId"]').val()}),
+            data: JSON.stringify({
+                orderId: orderId,
+                couponId: couponId // 추가!
+            }),
             success: function (response) {
                 if (response.success) {
-                    window.location.href = response.redirectUrl; // 토스 결제 페이지로 리다이렉트
+                    window.location.href = response.redirectUrl;
                 } else {
                     alert('오류: ' + response.message);
                 }

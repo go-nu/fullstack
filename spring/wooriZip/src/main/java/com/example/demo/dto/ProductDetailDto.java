@@ -54,7 +54,9 @@ public class ProductDetailDto {
         return product.getUser();
     }
 
-
+    public double getAverageRating() {
+        return product.getAverageRating();
+    }
 
 
 }

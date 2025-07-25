@@ -119,6 +119,33 @@
     color: #000;
 }
 
+/* 평점 표시 스타일 */
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.rating-display .stars {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-display .stars i {
+    font-size: 14px;
+}
+
+.rating-display .rating-text {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.rating-display .text-muted {
+    font-size: 12px;
+}
+
 /* -------------------- */
 /* 반응형 미디어 쿼리 추가 */
 /* -------------------- */

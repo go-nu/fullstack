@@ -8,7 +8,7 @@ import com.example.demo.dto.AttributeValueDto;
 import com.example.demo.dto.ProductModelDto;
 import com.example.demo.repository.AttributeRepository;
 import com.example.demo.repository.AttributeValueRepository;
-import com.example.demo.service.ProductService;
+import com.example.demo.service.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 import com.example.demo.dto.ProductDetailDto;
 import com.example.demo.dto.ProductDetailInfoDto;
-import com.example.demo.service.ProductDetailService;
-import com.example.demo.service.QnaPostService;
-import com.example.demo.service.ReviewPostService;
 import com.example.demo.dto.ReviewPostDto;
 import com.example.demo.entity.ReviewPost;
 import com.example.demo.entity.QnaPost;
@@ -40,6 +37,7 @@ public class ProductController {
     private final ProductDetailService productDetailService;
     private final QnaPostService qnaPostService;
     private final ReviewPostService reviewPostService;
+    private final WishlistService wishlistService;
 
     @GetMapping("/admin/products")
     public String adminProductList(Model model, Authentication authentication) {
@@ -47,7 +45,7 @@ public class ProductController {
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        List<Product> products = productService.findAll();
+        List<Product> products = productService.findProducts(null); // null = 모든 상품 조회
         model.addAttribute("products", products);
         return "product/admin-list";
     }
@@ -107,8 +105,8 @@ public class ProductController {
     public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,
                                   Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        model.addAttribute("loginUser", loginUser);
         List<Product> productList = productService.findProducts(categoryId);
         model.addAttribute("products", productList);
         return "product/list";
@@ -200,7 +198,8 @@ public class ProductController {
 
         Page<ReviewPost> reviewPage = reviewPostService.getReviews(id, reviewPageNum, sort);
         Map<Integer, Long> ratingSummary = reviewPostService.getRatingDistribution(id);
-        Double averageRating = reviewPostService.getAverageRating(id);
+        // Product 엔티티의 averageRating 필드 사용
+        Double averageRating = dto.getAverageRating();
         boolean hasWritten = (user != null && user.getEmail() != null)
                 && reviewPostService.hasWrittenReview(id, user.getEmail());
 
@@ -225,6 +224,16 @@ public class ProductController {
         model.addAttribute("qnaFilter", qnaFilter);
 
         return "product/detail";
+    }
+
+    @PostMapping("/wishlist/toggle")
+    public String toggleWishlist(@RequestParam Long productId,
+                                 Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
+        Users user = (Users) UserUtils.getUser(authentication);
+        wishlistService.toggleWishlist(user, productId);
+        return "redirect:/products/" + productId;
     }
 
     @GetMapping("/admin/products/{id}/update")

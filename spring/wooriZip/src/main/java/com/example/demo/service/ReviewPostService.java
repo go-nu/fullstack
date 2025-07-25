@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.example.demo.entity.Users;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,7 @@ public class ReviewPostService {
                 .build();
 
         ReviewPost saved = reviewPostRepository.save(post);
+        updateProductAverageRating(product.getId());
         return saved.getId();
     }
 
@@ -89,7 +91,7 @@ public class ReviewPostService {
                     deleteFile(pathToDelete);  // 실제 파일 삭제
                     currentPaths.remove(index);
                     if (index < currentNames.size()) {
-                        currentNames.remove(index);
+                        currentNames.remove(index); 
                     }
                 }
             }
@@ -118,6 +120,7 @@ public class ReviewPostService {
         post.setUpdatedAt(LocalDateTime.now());
 
         reviewPostRepository.save(post);
+        updateProductAverageRating(post.getProduct().getId());
     }
 
     // 리뷰 삭제
@@ -126,6 +129,7 @@ public class ReviewPostService {
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
         deleteFiles(post.getFilePaths());
         reviewPostRepository.delete(post);
+        updateProductAverageRating(post.getProduct().getId());
     }
 
     // 파일 저장
@@ -206,5 +210,19 @@ public class ReviewPostService {
     // 최신 리뷰 목록 조회
     public Page<ReviewPost> findLatestReviews(Pageable pageable) {
         return reviewPostRepository.findAll(pageable);
+    }
+
+    // 상품 평균 평점 업데이트
+    @Transactional
+    public void updateProductAverageRating(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+        
+        List<ReviewPost> reviews = reviewPostRepository.findByProductId(productId);
+        double averageRating = reviews.isEmpty() ? 0.0 : 
+            reviews.stream().mapToInt(ReviewPost::getRating).average().orElse(0.0);
+        
+        product.setAverageRating(averageRating);
+        productRepository.save(product);
     }
 }

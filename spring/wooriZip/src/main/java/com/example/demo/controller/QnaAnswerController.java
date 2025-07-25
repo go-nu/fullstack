@@ -80,6 +80,11 @@ public class QnaAnswerController {
     public String adminDashboard(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
+
+        // 로그인 사용자 정보 추가
+        Users loginUser = (Users) UserUtils.getUser(authentication);
+        model.addAttribute("loginUser", loginUser);
+
         // 전체 통계
         Map<String, Long> statistics = qnaPostService.getQnaStatistics();
         model.addAttribute("statistics", statistics);
@@ -87,6 +92,9 @@ public class QnaAnswerController {
         // 카테고리별 QnA 목록 (답변/미답변)
         Map<String, Map<String, Object>> categoryStats = qnaPostService.getQnaByCategoryWithStatus();
         model.addAttribute("categoryStats", categoryStats);
+
+        // QnA 전체 flat 리스트 for card view
+        model.addAttribute("qnaList", qnaPostService.getAllQnaForAdminDashboard());
 
         return "qna/dashboard";
     }
@@ -96,6 +104,11 @@ public class QnaAnswerController {
     public String getUnansweredQna(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
+
+        // 로그인 사용자 정보 추가
+        Users loginUser = (Users) UserUtils.getUser(authentication);
+        model.addAttribute("loginUser", loginUser);
+
         model.addAttribute("unansweredQna", qnaPostService.getUnansweredQna());
         return "qna/admin/unanswered";
     }

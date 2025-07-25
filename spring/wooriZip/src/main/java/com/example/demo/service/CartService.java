@@ -152,15 +152,9 @@ public class CartService {
         }
     }
 
-    // 주문 완료된 장바구니 아이템 삭제
-    public void clearOrderItemFromCart(String email, Order order) {
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
-        Cart cart = cartRepository.findByUser(user);
-
-        List<OrderItem> orderedItems = order.getOrderItems();
-
-        for (OrderItem item : orderedItems) {
-//            cartItemRepository.deleteByCartAndProductId(cart, item.getProduct().getId());
+    public void removeItemsFromCart(String email, List<Long> cartItemIds) {
+        for (Long id : cartItemIds) {
+            removeItemFromCart(email, id);
         }
     }
 }

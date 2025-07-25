@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -16,7 +18,9 @@ public class ChatbotController {
     private final ChatbotService chatbotService;
 
     @GetMapping("/chatbot")
-    public String chatbotPage() {
+    public String chatbotPage(Model model, Authentication authentication) {
+        String email = com.example.demo.controller.UserUtils.getEmail(authentication);
+        model.addAttribute("loginUser", email != null ? (com.example.demo.entity.Users) com.example.demo.controller.UserUtils.getUser(authentication) : null);
         return "chatbot/chatbot";
     }
 

@@ -2,128 +2,225 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>상품 상세정보 관리</title>
+    <title>상품 상세정보 수정</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .image-container {
-            position: relative;
-            display: inline-block;
-            margin: 5px;
+      :root {
+        --color-bg: #FFFFFF;
+        --color-text: #4A4947;
+        --color-point-bg: #F9F7F0;
+        --color-point: #B17457;
+      }
+      body {
+        background: var(--color-bg);
+        color: var(--color-text);
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+      }
+      .container-outer {
+        max-width: 1440px;
+        margin: 0 auto;
+        width: 100%;
+        min-height: 100vh;
+        background: var(--color-bg);
+      }
+      main {
+        max-width: 700px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 40px 0 80px 0;
+        box-sizing: border-box;
+        background: var(--color-bg);
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        box-shadow: none;
+        margin-bottom: 32px;
+      }
+      .card-header {
+        background: var(--color-point-bg);
+        border-radius: 12px 12px 0 0;
+        padding: 20px 24px 12px 24px;
+        border-bottom: 1px solid #eee;
+      }
+      .card-header h3 {
+        color: var(--color-point);
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 0;
+      }
+      .card-body {
+        padding: 24px 24px 18px 24px;
+      }
+      .form-label {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--color-text);
+        display: block;
+      }
+      input[type="file"], input[type="text"], textarea {
+        width: 100%;
+        padding: 12px 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+        margin-bottom: 8px;
+        color: var(--color-text);
+        background: #fff;
+      }
+      textarea.detail-info-textarea, textarea#detailInfo {
+        min-height: 300px;
+        resize: vertical;
+      }
+      .image-container {
+        position: relative;
+        display: inline-block;
+        margin: 5px;
+      }
+      .image-preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .remove-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: #e57373;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 22px;
+        padding: 0;
+      }
+      .remove-btn:hover {
+        background: #b71c1c;
+      }
+      .btn-box {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .btn-box button {
+        padding: 12px 32px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: background 0.2s, color 0.2s;
+      }
+      #saveBtn {
+        background-color: var(--color-point);
+        color: white;
+      }
+      #saveBtn:hover {
+        background-color: #8d5a41;
+      }
+      #cancelBtn {
+        background-color: #F9F7F0;
+        color: var(--color-point);
+        border: 1px solid var(--color-point);
+      }
+      #cancelBtn:hover {
+        background-color: var(--color-point);
+        color: #fff;
+      }
+      .text-muted {
+        color: #4A4947;
+        opacity: 0.7;
+        font-size: 0.97rem;
+      }
+      @media (max-width: 900px) {
+        main, .card {
+          max-width: 98vw;
+          padding: 12px 2vw;
+        }
+        .card-header, .card-body {
+          padding: 12px 8px;
         }
         .image-preview {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .remove-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-        }
-        .btn-box {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+          width: 100px;
+          height: 100px;
         }
         .btn-box button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+          padding: 10px 0;
+          width: 100%;
         }
-        #saveBtn {
-            background-color: #007bff;
-            color: white;
-        }
-        #saveBtn:hover {
-            background-color: #0056b3;
-        }
-        #cancelBtn {
-            background-color: #6c757d;
-            color: white;
-        }
-        #cancelBtn:hover {
-            background-color: #545b62;
-        }
-        .detail-info-textarea {
-            min-height: 300px;
-        }
+      }
     </style>
 </head>
 
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0">
-                        <span th:text="${product.name}">상품명</span> - 상세정보 관리
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <form id="productDetailForm" enctype="multipart/form-data">
-                        <input type="hidden" id="productId" th:value="${product.id}"/>
+<div class="container-outer">
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <span th:text="${product.name}">상품명</span> - 상세정보 관리
+                </h3>
+            </div>
+            <div class="card-body">
+                <form id="productDetailForm" enctype="multipart/form-data">
+                    <input type="hidden" id="productId" th:value="${product.id}"/>
 
-                        <!-- 기존 상세 이미지 표시 (수정 모드일 때) -->
-                        <div th:if="${productDetail != null && productDetail.detailImagePathList != null}">
-                            <h5>기존 상세 이미지</h5>
-                            <div id="existingImages" class="mb-3">
-                                <div th:each="imagePath : ${productDetail.detailImagePathList}"
-                                     class="image-container">
-                                    <img th:src="${imagePath}" class="image-preview" alt="기존 이미지"/>
-                                    <button type="button" class="remove-btn existing-remove"
-                                            th:data-path="${imagePath}">×
-                                    </button>
-                                </div>
+                    <!-- 기존 상세 이미지 표시 (수정 모드일 때) -->
+                    <div th:if="${productDetail != null && productDetail.detailImagePathList != null}">
+                        <h5>기존 상세 이미지</h5>
+                        <div id="existingImages" class="mb-3">
+                            <div th:each="imagePath : ${productDetail.detailImagePathList}"
+                                 class="image-container">
+                                <img th:src="${imagePath}" class="image-preview" alt="기존 이미지"/>
+                                <button type="button" class="remove-btn existing-remove"
+                                        th:data-path="${imagePath}">×
+                                </button>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 새 이미지 업로드 -->
-                        <div class="mb-3">
-                            <label for="imageInput" class="form-label">상세 이미지 첨부 (최대 10장)</label>
-                            <input type="file" id="imageInput" class="form-control"
-                                   accept="image/*" multiple>
-                            <small class="text-muted">최대 10장의 이미지를 선택할 수 있습니다.</small>
-                        </div>
+                    <!-- 새 이미지 업로드 -->
+                    <div class="mb-3">
+                        <label for="imageInput" class="form-label">상세 이미지 첨부 (최대 10장)</label>
+                        <input type="file" id="imageInput" class="form-control"
+                               accept="image/*" multiple>
+                        <small class="text-muted">최대 10장의 이미지를 선택할 수 있습니다.</small>
+                    </div>
 
-                        <!-- 새 이미지 미리보기 -->
-                        <div id="previewContainer" class="mb-3"></div>
+                    <!-- 새 이미지 미리보기 -->
+                    <div id="previewContainer" class="mb-3"></div>
 
-                        <!-- 상품 상세정보 (단일 textarea로 통일) -->
-                        <div class="mb-3">
-                            <label for="detailInfo" class="form-label">상품 상세정보</label>
-                            <textarea id="detailInfo" name="detailInfo" class="form-control" rows="15"
-                                      required></textarea>
-                            <small class="text-muted">각 항목에 맞는 내용을 입력해주세요.</small>
-                        </div>
+                    <!-- 상품 상세정보 (단일 textarea로 통일) -->
+                    <div class="mb-3">
+                        <label for="detailInfo" class="form-label">상품 상세정보</label>
+                        <textarea id="detailInfo" name="detailInfo" class="form-control detail-info-textarea" rows="15"
+                                  required></textarea>
+                        <small class="text-muted">각 항목에 맞는 내용을 입력해주세요.</small>
+                    </div>
 
-                        <!-- 버튼 영역 -->
-                        <div class="btn-box">
-                            <button type="button" id="saveBtn">저장</button>
-                            <button type="button" id="cancelBtn">취소</button>
-                        </div>
-                    </form>
-                </div>
+                    <!-- 버튼 영역 -->
+                    <div class="btn-box">
+                        <button type="button" id="saveBtn">저장</button>
+                        <button type="button" id="cancelBtn">취소</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <!-- 기존 상세정보를 JavaScript로 전달 -->

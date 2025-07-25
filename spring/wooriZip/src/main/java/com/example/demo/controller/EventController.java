@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.CouponDto;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.EventService;
+import com.example.demo.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,20 @@ public class EventController {
     @GetMapping()
     public String eventPAge(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        model.addAttribute("loginUser", loginUser);
 
         List<CouponDto> allCoupons = couponService.getAllCoupons();
         model.addAttribute("coupons", allCoupons);
+
+        // 쿠폰별로 이미 받았는지 여부를 map으로 전달
+        java.util.Map<Long, Boolean> receivedMap = new java.util.HashMap<>();
+        if (loginUser != null) {
+            for (CouponDto coupon : allCoupons) {
+                receivedMap.put(coupon.getId(), couponService.hasUserReceivedCoupon(coupon.getId(), loginUser));
+            }
+        }
+        model.addAttribute("receivedMap", receivedMap);
         return "/event/event";
     }
 
@@ -49,6 +59,5 @@ public class EventController {
 
         return "redirect:/event";
     }
-
 
 }

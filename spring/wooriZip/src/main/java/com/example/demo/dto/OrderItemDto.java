@@ -19,13 +19,15 @@ public class OrderItemDto {
     private int price; // 가격
     private String imgUrl;
 
+    private Long cartItemId;
+
     public OrderItemDto(OrderItem orderItem) {
         this.productId = orderItem.getProduct().getId();
         this.orderItemId = orderItem.getId();
         this.productName = orderItem.getProduct().getName();
         this.modelId =  orderItem.getProductModel().getId();
         this.count = orderItem.getCount();
-        this.price = orderItem.getProduct().getPrice();
+        this.price = orderItem.getProductModel().getPrice(); // 옵션별 가격으로 수정
         // 대표사진만 필요
         this.imgUrl = orderItem.getProduct().getImages().get(0).getImageUrl();
     }

@@ -44,7 +44,7 @@ public class OrderItem {
         orderItem.setProduct(product);
         orderItem.setProductModel(productModel);
         orderItem.setCount(count);
-        orderItem.setOrderPrice(product.getPrice());
+        orderItem.setOrderPrice(productModel.getPrice()); // 옵션별 가격으로 저장
         //productModel.removeStock(count);
         return orderItem;
     }

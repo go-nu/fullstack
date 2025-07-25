@@ -23,7 +23,7 @@ public class CouponDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    private boolean isActive;
+    private boolean isActive = true;
     private int minOrderPrice;
     private int usageLimit;
 

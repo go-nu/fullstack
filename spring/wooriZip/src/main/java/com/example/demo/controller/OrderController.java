@@ -5,6 +5,7 @@ import com.example.demo.dto.OrderDto;
 import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +30,23 @@ public class OrderController {
     // 로그 수집
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
+    private final UserService userService;
 
     @GetMapping
-    public String order(Authentication authentication, Model model) {
+    public String order(Authentication authentication, Model model,
+                        @RequestParam(value = "selectedCouponId", required = false) Long selectedCouponId) {
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             OrderDto orderDto = orderService.getOrder(userDetails.getUser().getEmail());
             model.addAttribute("loginUser", userDetails.getUser());
             model.addAttribute("orderDto", orderDto);
+            model.addAttribute("userCoupons", userService.getUserCoupons(userDetails.getUser()));
+            model.addAttribute("selectedCouponId", selectedCouponId);
         } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
             OrderDto orderDto = orderService.getOrder(oauth2User.getUser().getEmail());
             model.addAttribute("loginUser", oauth2User.getUser());
             model.addAttribute("orderDto", orderDto);
+            model.addAttribute("userCoupons", userService.getUserCoupons(oauth2User.getUser()));
+            model.addAttribute("selectedCouponId", selectedCouponId);
         }
         return "order/orderPayment";
     }
@@ -48,19 +55,26 @@ public class OrderController {
     @PostMapping
     public String processOrder(@RequestParam("type") String orderType,
                                @RequestParam("cartItemIds") List<Long> cartItemIds,
+                               @RequestParam(value = "couponId", required = false) Long couponId,
                                Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
 
         log.info("들어온 값 : {}", cartItemIds);
         log.info("들어온 타입 : {}", orderType);
+        log.info("선택된 쿠폰 : {}", couponId);
 
         OrderDto orderDto;
         if (orderType.equals("cart")) {
-            orderDto = orderService.createOrder(email, cartItemIds);
+            orderDto = orderService.createOrder(email, cartItemIds, couponId);
             model.addAttribute("orderDto", orderDto);
         }
-        return "redirect:/order";
+        // 주문 생성 후 쿠폰 사용 처리 코드 완전 삭제
+        if (couponId != null) {
+            return "redirect:/order?selectedCouponId=" + couponId;
+        } else {
+            return "redirect:/order";
+        }
     }
 
 

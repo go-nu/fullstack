@@ -44,6 +44,11 @@ public class Order {
     @Column(name = "order_id", nullable = false, unique = true)
     private String orderId; // 주문 고유 ID
 
+    // 적용 쿠폰
+    @ManyToOne
+    @JoinColumn(name = "user_coupon_id")
+    private UserCoupon userCoupon;
+
     // 주문 목록
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();

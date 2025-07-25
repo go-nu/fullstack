@@ -10,4 +10,5 @@ import java.util.List;
 public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> {
     boolean existsByUserAndCoupon(Users user, Coupon coupon);
     List<UserCoupon> findByUser(Users user);
+    List<UserCoupon> findByUserAndUsedFalse(Users user);
 }

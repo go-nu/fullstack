@@ -308,4 +308,17 @@ public class QnaPostService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<com.example.demo.dto.QnaPostDto> getAllQnaForAdminDashboard() {
+        List<QnaPost> allQna = qnaPostRepository.findAll();
+        List<com.example.demo.dto.QnaPostDto> result = new java.util.ArrayList<>();
+        for (QnaPost post : allQna) {
+            com.example.demo.dto.QnaPostDto dto = com.example.demo.dto.QnaPostDto.fromEntity(post);
+            dto.setAnswered(qnaAnswerRepository.existsByQnaPost(post));
+            dto.setProductId(post.getProduct().getId());
+            dto.setProductName(post.getProduct().getName());
+            result.add(dto);
+        }
+        return result;
+    }
 }

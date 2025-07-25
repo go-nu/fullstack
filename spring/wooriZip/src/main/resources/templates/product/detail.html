@@ -2,11 +2,160 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>상품 상세</title>
-    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #fff;
+            color: #222;
+            font-family: 'Arial', sans-serif;
+        }
+        main {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 16px 80px 16px;
+            box-sizing: border-box;
+        }
+        .product-detail-main {
+            display: flex;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        .product-detail-images {
+            flex: 1.2;
+            background: #fafafa;
+            border: 1px solid #eee;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 320px;
+        }
+        .main-image-box {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .main-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+        .product-detail-info {
+            flex: 1.8;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            justify-content: flex-start;
+        }
+        .product-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            color: #B17457;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+        .product-options select, .product-options input[type=number] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .product-actions button {
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 4px;
+            background: #B17457;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .product-actions button:hover {
+            background: #8d5a41;
+        }
+        .product-nav-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .product-nav-links button {
+            background: #eee;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .product-nav-links button:hover {
+            background: #B17457;
+            color: #fff;
+        }
+        .product-detail-section, .tab-section-placeholder {
+            margin-top: 48px;
+        }
+        .tab-menu {
+            border-bottom: 2px solid #eee;
+            margin-top: 48px;
+        }
+        .tab-button.active {
+            color: #B17457;
+            border-bottom: 2px solid #B17457;
+        }
+        @media (max-width: 900px) {
+            main {
+                padding: 16px 2vw 40px 2vw;
+            }
+            .product-detail-main {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .product-detail-images {
+                min-width: 0;
+                width: 100%;
+            }
+            .main-image-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
 </head>
 
 <script>
@@ -24,92 +173,127 @@
 <div th:replace="~{index/header :: header}"></div>
 
 <main>
-    <div>
-        <h2 th:text="${product.name}">상품 이름</h2>
+<div class="product-detail-main">
+    <!-- 좌측: 이미지 영역 -->
+    <div class="product-detail-images">
+        <div class="main-image-box">
+            <img th:if="${product.images != null && #lists.size(product.images) > 0}"
+                 th:src="${product.images[0].imageUrl}" alt="상품 이미지" />
+            <div th:if="${product.images == null || #lists.size(product.images) == 0}" class="main-image-placeholder">
+                상품 이미지
+            </div>
+        </div>
 
-        <!-- 이미지 여러 장 지원 (썸네일/리스트) -->
+        <!-- 썸네일 이미지 리스트 -->
         <div th:if="${product.images != null && #lists.size(product.images) > 0}">
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <img th:each="img : ${product.images}" th:src="${img.imageUrl}" alt="상품 이미지" width="200"
-                     style="border:1px solid #ccc; border-radius:8px;"/>
+                <img th:each="img : ${product.images}"
+                     th:src="${img.imageUrl}"
+                     alt="상품 이미지"
+                     width="200"
+                     style="border:1px solid #ccc; border-radius:8px;" />
             </div>
         </div>
-        <div th:if="${product.images == null || #lists.size(product.images) == 0}">
-            <p>이미지가 없습니다.</p>
+    </div>
+
+    <!-- 우측: 상품 정보 영역 -->
+    <div class="product-detail-info">
+        <div class="product-title" th:text="${product.name}">상품 이름</div>
+
+        <!-- 평균 평점 표시 -->
+        <div class="product-rating mb-3" th:if="${product.averageRating > 0}">
+            <span class="stars">
+                <i th:each="i : ${#numbers.sequence(1, 5)}"
+                   th:class="${i <= product.averageRating} ? 'bi bi-star-fill text-warning' : 'bi bi-star text-muted'"></i>
+            </span>
+            <span class="rating-text" th:text="${#numbers.formatDecimal(product.averageRating, 1, 1)}">4.5</span>
+            <span class="text-muted">평균 평점</span>
+        </div>
+        <div class="product-rating mb-3" th:if="${product.averageRating == 0}">
+            <span class="text-muted">평점 없음</span>
         </div>
 
-        <!-- 옵션/모델 셀렉트 박스 -->
-        <!-- 옵션별 속성값 id 리스트를 data-attr에 저장 (문자열로 변환) -->
-        <h4>모델/옵션 선택</h4>
-        <select id="modelSelect" class="form-select" style="max-width:300px;">
-            <option value="">옵션을 선택하세요</option>
-            <option th:each="model : ${product.productModels}"
-                    th:value="${model.id}"
-                    th:data-attr="${model.attributeValueIdsStr}"
-                    th:data-price="${model.price}"
-                    th:data-stock="${model.prStock}"
-                    th:text="|${model.productModelSelect} / ${#numbers.formatInteger(model.price, 3, 'COMMA')}원 / 재고:${model.prStock}|">
-            </option>
-        </select>
-        <div id="modelInfo" style="margin-top:10px;"></div>
+        <div class="product-price" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}">가격</div>
 
-        <!-- 옵션별 속성값 드롭다운: JS로 동적 채움 -->
-        <div id="optionAttributes">
-            <label>색상:
-                <select id="colorSelect">
-                    <option value="">색상 선택</option>
-                </select>
-            </label>
-            <label>사이즈:
-                <select id="sizeSelect">
-                    <option value="">사이즈 선택</option>
-                </select>
-            </label>
-            <label>소재:
-                <select id="materialSelect">
-                    <option value="">소재 선택</option>
-                </select>
-            </label>
-        </div>
+        <!-- 옵션 선택 영역 -->
+        <div class="product-options">
+            <h4>모델/옵션 선택</h4>
+            <select id="modelSelect" class="form-select" style="max-width:300px;">
+                <option value="">옵션을 선택하세요</option>
+                <option th:each="model : ${product.productModels}"
+                        th:value="${model.id}"
+                        th:data-attr="${model.attributeValueIdsStr}"
+                        th:data-price="${model.price}"
+                        th:data-stock="${model.prStock}"
+                        th:text="|${model.productModelSelect} / ${#numbers.formatInteger(model.price, 3, 'COMMA')}원 / 재고:${model.prStock}|">
+                </option>
+            </select>
 
-        <!-- 찜/장바구니/구매 Form -->
-        <form th:action="@{/wishlist/toggle}" method="post" id="productForm">
-            <input type="hidden" id="productId" name="productId" th:value="${product.id}"/>
-            <input type="hidden" id="actionType" name="actionType" value="cart"/>
-            <button type="submit" th:text="${product.liked} ? '찜 취소' : '찜하기'"></button>
+            <div id="modelInfo" style="margin-top:10px;"></div>
 
-            <div>
-                <div>수량</div>
-                <input type="number" name="count" id="count" value="1" min="1"/>
+            <div id="optionAttributes">
+                <label>색상:
+                    <select id="colorSelect">
+                        <option value="">색상 선택</option>
+                    </select>
+                </label>
+                <label>사이즈:
+                    <select id="sizeSelect">
+                        <option value="">사이즈 선택</option>
+                    </select>
+                </label>
+                <label>소재:
+                    <select id="materialSelect">
+                        <option value="">소재 선택</option>
+                    </select>
+                </label>
             </div>
+        </div>
 
-            <div>
+        <!-- 수량 -->
+        <div class="product-qty" style="margin-top:12px;">
+            <label>수량
+                <input type="number" name="count" id="count" value="1" min="1" style="width:60px; margin-left:8px;" />
+            </label>
+        </div>
+
+        <!-- 찜/장바구니/구매 -->
+        <form th:action="@{/wishlist/toggle}" method="post" id="productForm" style="margin-top:12px;">
+            <input type="hidden" id="productId" name="productId" th:value="${product.id}" />
+            <input type="hidden" id="actionType" name="actionType" value="cart" />
+
+            <div class="product-actions">
                 <button type="button" onclick="submitForm('cart')">장바구니 추가</button>
                 <button type="button" onclick="submitForm('buy')">구매하기</button>
+                <button type="submit" th:text="${product.liked} ? '찜 취소' : '찜하기'"></button>
             </div>
         </form>
 
-        <div>
-            <div>
-                <input type="hidden" id="price" name="price" th:value="${product.price}"/>
-                <span id="selectedPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"
-                      th:data-initial-price="${product.price}"></span>
-            </div>
-            <div>
-                <h5>결제 금액</h5>
-                <h3 name="totalPrice" id="totalPrice"
-                    th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></h3>
-            </div>
+        <!-- 결제 가격 -->
+        <div style="margin-top:10px;">
+            <span id="selectedPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}"
+                  th:data-initial-price="${product.price}"></span>
         </div>
-        <!-- 수정/삭제 버튼 제거 -->
 
-        <!-- 🔙 목록으로 돌아가기 (항상 표시) -->
+        <div style="margin-top:10px;">
+            <h5>결제 금액</h5>
+            <h3 id="totalPrice" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></h3>
+        </div>
+
+        <!-- 탭 네비게이션 -->
+        <div class="product-nav-links">
+            <button type="button" onclick="scrollToSection('product-detail-section')">상세정보</button>
+            <button type="button" onclick="scrollToSection('review-section')">리뷰</button>
+            <button type="button" onclick="scrollToSection('qna-section')">문의</button>
+        </div>
+
         <div style="margin-top: 20px;">
             <a th:href="@{/products}">
                 <button type="button">목록으로 돌아가기</button>
             </a>
         </div>
     </div>
+</div>
 
     <!-- 상품 상세정보 섹션 -->
     <div id="product-detail-section">
@@ -136,9 +320,6 @@
             <div id="qna-content" th:replace="~{qna/qna :: qnaboard}"></div>
         </div>
     </div>
-
-    <div th:replace="~{index/footer :: footer}"></div>
-
     <!-- 플로팅 네비게이션 리모콘 -->
     <div class="floating-nav" id="floatingNav">
         <div class="floating-nav-toggle" onclick="toggleFloatingNav()">
@@ -308,3 +489,4 @@
 <script src="/js/qna/qna.js" defer></script>
 </body>
 </html>
+

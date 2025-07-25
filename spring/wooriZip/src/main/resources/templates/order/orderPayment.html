@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/css/order/orderPayment.css">
 </head>
 <body>
 <div th:replace="~{index/header :: header}"></div>
@@ -27,7 +26,7 @@
             </thead>
             <tbody>
             <tr th:each="item : ${orderDto.items}">
-                <th scope="row"><input type="hidden" name="orderId" th:value="${orderDto.orderNo}"></th>
+                <th scope="row"><input type="hidden" name="orderId" th:value="${orderDto.orderId}"></th>
                 <td><img alt="상품 이미지" th:src="@{${item.getImgUrl()}}" width="300px"></td>
                 <td><p th:text="${item.productName}">상품 이름</p></td>
                 <td><p><span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원</p></td>
@@ -78,13 +77,32 @@
     <table>
         <tr>
             <th>[<span>기본배송</span>]</th>
-            <td>상품 <span th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
+            <td>상품 <span id="totalProductPrice" th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
                 +
-                배송비 <span>0</span>원 =
-                합계 <span th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
+                배송비 <span id="deliveryFeeDisplay">0</span>원 =
+                합계 <span id="totalWithDelivery" th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
             </td>
         </tr>
     </table>
+
+    <div class="coupon-section">
+        <h5>쿠폰 적용</h5>
+        <select id="couponSelect" name="couponId">
+            <option value="">=== 쿠폰 선택 ===</option>
+            <option th:each="uc : ${userCoupons}"
+                    th:value="${uc.id}"
+                    th:data-type="${uc.coupon.type}"
+                    th:data-amount="${uc.coupon.discountAmount}"
+                    th:data-percent="${uc.coupon.discountPercent}"
+                    th:data-min-order-price="${uc.coupon.minOrderPrice}"
+                    th:selected="${selectedCouponId != null and selectedCouponId == uc.id}"
+                    th:text="${uc.coupon.type == T(com.example.demo.constant.CouponType).AMOUNT
+                    ? uc.coupon.name + ' (' + uc.coupon.discountAmount + '원 할인, 최소주문금액: ' + uc.coupon.minOrderPrice + '원)'
+                    : uc.coupon.name + ' (' + uc.coupon.discountPercent + '% 할인, 최소주문금액: ' + uc.coupon.minOrderPrice + '원)'}">
+            </option>
+        </select>
+        <div id="couponMessage" class="mt-2" style="display: none;"></div>
+    </div>
 
     <div>
         <div>
@@ -145,16 +163,18 @@
                 <tr>
                     <th>총 상품금액</th>
                     <th>총 배송비</th>
+                    <th>할인 금액</th>
                     <th>결제예정금액</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <th><span
+                    <th><span id="finalTotalPrice"
                             th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
                     </th>
-                    <td><span>0</span>원</td>
-                    <td><span
+                    <td><span id="deliveryFee">0</span>원</td>
+                    <td><span id="appliedCoupon">0</span></td>
+                    <td><span id="finalPaymentAmount"
                             th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
                     </td>
                 </tr>

@@ -22,9 +22,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 @Controller
@@ -113,10 +111,20 @@ public class PaymentController {
 
                 log.info("성공 로그: paymentMethod={}, payInfo={}", paymentMethod, payInfo);
 
-                // 검증시작
+                // 검증시작 - 쿠폰 할인이 적용된 실제 결제 금액으로 검증
                 if (orderService.validatePayment(orderId, Integer.parseInt(amount))) {
                     orderService.updateOrderWithPaymentInfo(orderId, paymentMethod, payInfo);
-                    cartService.clearCart(orderId);
+                    // ✅ 주문에 포함된 cartItemId를 모두 조회
+                    OrderDto orderDto = orderService.getOrderByOrderId(orderId);
+                    List<Long> cartItemIds = orderDto.getItems().stream()
+                            .map(OrderItemDto::getCartItemId)
+                            .filter(Objects::nonNull)
+                            .toList();
+
+                    // ✅ 장바구니에서 해당 항목 제거
+                    String email = UserUtils.getEmail(authentication);
+                    cartService.removeItemsFromCart(email, cartItemIds);
+                    log.info("주문에 포함된 cartItemIds: {}", cartItemIds);
                     return "redirect:/success?orderId=" + orderId + "&amount=" + amount + "&paymentKey=" + paymentKey;
                 } else {
                     log.error("Payment validation failed for orderId: {}", orderId);
@@ -146,7 +154,6 @@ public class PaymentController {
         String orderId = request.getParameter("orderId");
         OrderDto orderDto = orderService.getOrderByOrderId(orderId);
         model.addAttribute("orderDto", orderDto);
-        model.addAttribute("test", "테스트");
         return "order/orderComplete";
     }
 
@@ -154,11 +161,19 @@ public class PaymentController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> initiatePayment(@RequestBody InitiatePaymentRequestDto dto, Authentication authentication) {
         String orderId = dto.getOrderId();
+        Long couponId = dto.getCouponId();
         String email = UserUtils.getEmail(authentication);
 
         try {
+            // 결제 직전 쿠폰 연결(선택된 경우)
+            if (couponId != null) {
+                orderService.applyCouponToOrder(orderId, couponId, email);
+            }
+            orderService.markCouponUsedForOrder(orderId);
+            // 쿠폰 할인이 적용된 실제 결제 금액 사용
+            int finalAmount = orderService.getFinalPaymentAmount(email);
+            String amount = String.valueOf(finalAmount);
             OrderDto orderDto = orderService.getOrder(email);
-            String amount = String.valueOf(orderDto.getTotalPrice());
             String paymentKey = orderDto.getOrderId();
 
             Map<String, String> response = new HashMap<>();
@@ -173,6 +188,9 @@ public class PaymentController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+
+            log.error("결제 요청 중 오류: {}", e.getMessage(), e); // 서버 콘솔에 전체 스택트레이스와 메시지 출력
+            
             Map<String, String> response = new HashMap<>();
             response.put("success", "false");
             response.put("message", "결제 요청 중 오류가 발생했습니다.");

@@ -71,6 +71,10 @@ public class UserService {
     }
 
     public List<UserCoupon> getUserCoupons(Users user) {
+        return userCouponRepository.findByUserAndUsedFalse(user);
+    }
+
+    public List<UserCoupon> getAllUserCoupons(Users user) {
         return userCouponRepository.findByUser(user);
     }
 
