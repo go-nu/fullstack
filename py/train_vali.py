@@ -1,3 +1,4 @@
+
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -6,47 +7,41 @@ from torch.utils.data import Dataset, DataLoader
 import mysql.connector
 from datetime import datetime
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 # ✅ 속성 개수를 DB에서 자동 조회하여 embedding_dim으로 사용
 def get_embedding_dims_from_db(conn):
-    query = """
+    query = '''
     SELECT a.name AS attribute_name, COUNT(av.id) AS count
     FROM attribute a
     JOIN attribute_value av ON a.id = av.attribute_id
     GROUP BY a.name
-    """
+    '''
     df = pd.read_sql(query, conn)
     return {row['attribute_name']: row['count'] for _, row in df.iterrows()}
 
 # ✅ DB에서 전체 학습 데이터 로딩 및 병합
 def load_training_data(conn):
-    # 1. 추천 로그 불러오기
     log_df = pd.read_sql("""
         SELECT user_id, model_id, product_id, weight, timestamp
         FROM recommend_log
     """, conn)
     log_df['timestamp'] = pd.to_datetime(log_df['timestamp']).apply(lambda x: int(x.timestamp()))
-
-    # Min-Max 정규화
     ts_min = log_df['timestamp'].min()
     ts_max = log_df['timestamp'].max()
     log_df['timestamp'] = (log_df['timestamp'] - ts_min) / (ts_max - ts_min + 1e-9)
 
-    # 2. 사용자 정보 불러오기
     user_df = pd.read_sql("""
         SELECT id AS user_id, gender, birth, residence_type
         FROM users
     """, conn)
     current_year = datetime.now().year
     user_df['age'] = current_year - pd.to_datetime(user_df['birth']).dt.year
-    user_df['age_group'] = pd.cut(user_df['age'], bins=[-1, 9, 19, 29, 39, 49, 150], labels=[0, 1, 2, 3, 4, 5]).astype(
-        int)
+    user_df['age_group'] = pd.cut(user_df['age'], bins=[-1,9,19,29,39,49,150], labels=[0,1,2,3,4,5]).astype(int)
     user_df.drop(['birth', 'age'], axis=1, inplace=True)
 
-    # 3. 제품 정보 불러오기
     product_df = pd.read_sql("SELECT id AS product_id, category_id FROM product", conn)
 
-    # 4. 모델 속성 정보 (색상, 사이즈, 소재)
     model_attr_df = pd.read_sql("""
         SELECT pma.product_model_id AS model_id, a.name AS attribute_type, av.value AS attribute_value
         FROM product_model_attribute pma
@@ -60,32 +55,22 @@ def load_training_data(conn):
         aggfunc='first'
     ).reset_index()
 
-    # 병합
-    df = log_df \
-        .merge(user_df, on='user_id', how='left') \
-        .merge(product_df, on='product_id', how='left') \
-        .merge(model_pivot, on='model_id', how='left')
+    df = log_df         .merge(user_df, on='user_id', how='left')         .merge(product_df, on='product_id', how='left')         .merge(model_pivot, on='model_id', how='left')
 
-    # 🔐 결측치 제거 (추천 로그에 존재하지만, users/product/model에 없는 경우 제거)
     df = df.dropna(subset=[
         'user_id', 'product_id', 'model_id',
         'gender', 'residence_type', 'age_group',
         '색상', '사이즈', '소재'
     ])
 
-    # 🔄 범주형 변수 정수 인코딩 (nan 방지)
     for col in ['user_id', 'product_id', 'model_id',
                 'gender', 'residence_type', '색상', '사이즈', '소재']:
         df[col] = df[col].astype(str)
         df[col] = LabelEncoder().fit_transform(df[col])
-
-    # age_group은 이미 int라 그대로 사용
     df['age_group'] = df['age_group'].astype(int)
 
     return df
 
-
-# ✅ PyTorch Dataset 정의
 class RecommendDataset(Dataset):
     def __init__(self, dataframe):
         self.data = dataframe.copy()
@@ -104,14 +89,12 @@ class RecommendDataset(Dataset):
         y = torch.tensor(self.labels[idx], dtype=torch.float32)
         return X, y
 
-# ✅ 딥러닝 모델 정의
-
 class DeepRecModel(nn.Module):
     def __init__(self, num_embeddings, embedding_dims):
         super().__init__()
-        self.user_emb = nn.Embedding(num_embeddings['user_id'] + 1, 8)
-        self.product_emb = nn.Embedding(num_embeddings['product_id'] + 1, 8)
-        self.model_emb = nn.Embedding(num_embeddings['model_id'] + 1, 8)
+        self.user_emb = nn.Embedding(num_embeddings['user_id'] + 1, 4)
+        self.product_emb = nn.Embedding(num_embeddings['product_id'] + 1, 4)
+        self.model_emb = nn.Embedding(num_embeddings['model_id'] + 1, 4)
         self.gender_emb = nn.Embedding(num_embeddings['gender'] + 1, 2)
         self.age_emb = nn.Embedding(num_embeddings['age_group'] + 1, 4)
         self.residence_emb = nn.Embedding(num_embeddings['residence_type'] + 1, 3)
@@ -120,15 +103,19 @@ class DeepRecModel(nn.Module):
         self.material_emb = nn.Embedding(embedding_dims['소재'] + 1, embedding_dims['소재'])
 
         total_input_dim = (
-            8*3 + 2 + 4 + 3 +
+            4*3 + 2 + 4 + 3 +
             embedding_dims['색상'] + embedding_dims['사이즈'] + embedding_dims['소재'] + 1
         )
 
         self.mlp = nn.Sequential(
-            nn.Linear(total_input_dim, 64),
+            nn.Linear(total_input_dim, 8),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(64, 1),
+            nn.Linear(8, 1),
+            # nn.Linear(16, 8),
+            # nn.ReLU(),
+            # nn.Dropout(0.1),
+            # nn.Linear(8, 1),
             nn.Sigmoid()
         )
 
@@ -144,45 +131,39 @@ class DeepRecModel(nn.Module):
         mat = x[:, 8].long()
         time = x[:, 9].unsqueeze(1)
 
-        try:
-            x = torch.cat([
-                self.user_emb(uid), self.product_emb(pid), self.model_emb(mid),
-                self.gender_emb(gender), self.age_emb(age), self.residence_emb(res),
-                self.color_emb(color), self.size_emb(size), self.material_emb(mat),
-                time
-            ], dim=-1)
-        except IndexError as e:
-            print("🔥 IndexError 발생! 아래 인덱스들을 확인하세요")
-            print("user_id:", uid.tolist())
-            print("product_id:", pid.tolist())
-            print("model_id:", mid.tolist())
-            print("gender:", gender.tolist())
-            print("age_group:", age.tolist())
-            print("residence_type:", res.tolist())
-            print("색상:", color.tolist())
-            print("사이즈:", size.tolist())
-            print("소재:", mat.tolist())
-            raise e
+        x = torch.cat([
+            self.user_emb(uid), self.product_emb(pid), self.model_emb(mid),
+            self.gender_emb(gender), self.age_emb(age), self.residence_emb(res),
+            self.color_emb(color), self.size_emb(size), self.material_emb(mat),
+            time
+        ], dim=-1)
 
         return self.mlp(x).squeeze()
 
-# ✅ 학습 시작
 if __name__ == "__main__":
     conn = mysql.connector.connect(
-        host="localhost",
-        port=3306,
-        user="root",
-        password="1234",
+        host="localhost", port=3306,
+        user="root", password="1234",
         database="woorizip"
     )
 
-    # 자동 임베딩 크기 추출
     embedding_dims = get_embedding_dims_from_db(conn)
     df = load_training_data(conn)
     conn.close()
 
-    dataset = RecommendDataset(df)
-    train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+    # df.to_csv("train_data.csv", index=False)
+    # print("📁 train_data.csv 저장 완료 (업로드하여 Colab에서 사용 가능)")
+
+    # ✅ 사용자 기준 train/val 분리
+    user_ids = df['user_id'].unique()
+    train_user_ids, val_user_ids = train_test_split(user_ids, test_size=0.2, random_state=42)
+    train_df = df[df['user_id'].isin(train_user_ids)].reset_index(drop=True)
+    val_df = df[df['user_id'].isin(val_user_ids)].reset_index(drop=True)
+
+    train_dataset = RecommendDataset(train_df)
+    val_dataset = RecommendDataset(val_df)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
     num_embeddings = {
         'user_id': int(df['user_id'].max()) + 1,
@@ -197,40 +178,118 @@ if __name__ == "__main__":
     }
 
     model = DeepRecModel(num_embeddings, embedding_dims)
-    device = torch.device("cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
 
     criterion = nn.BCELoss(reduction='none')
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    for epoch in range(10):
+    for epoch in range(20):
         model.train()
         total_loss = 0
         total_correct = 0
         total_samples = 0
-
         for X, y in train_loader:
             X, y = X.to(device), y.to(device)
             sample_weight = y.clone()
             pred = model(X)
-
-            # ⬇️ accuracy 계산
             predicted_labels = (pred > 0.5).float()
             correct = (predicted_labels == (y > 0).float()).sum().item()
             total_correct += correct
             total_samples += y.size(0)
-
-            # loss 계산
             loss = criterion(pred, (y > 0).float())
             weighted_loss = (loss * sample_weight).mean()
-
             optimizer.zero_grad()
             weighted_loss.backward()
             optimizer.step()
             total_loss += weighted_loss.item()
-
         acc = total_correct / total_samples if total_samples else 0
-        print(f"Epoch {epoch + 1}/10 - Loss: {total_loss:.4f} - Accuracy: {acc:.4f}")
+        print(f"[Train] Epoch {epoch + 1} - Loss: {total_loss:.4f} - Acc: {acc:.4f}")
 
-    # 필요 시 모델 저장
-    # torch.save(model.state_dict(), "deeprec_model.pt")
+        model.eval()
+        val_loss = 0
+        val_correct = 0
+        val_samples = 0
+        with torch.no_grad():
+            for X, y in val_loader:
+                X, y = X.to(device), y.to(device)
+                pred = model(X)
+                predicted_labels = (pred > 0.5).float()
+                correct = (predicted_labels == (y > 0).float()).sum().item()
+                val_correct += correct
+                val_samples += y.size(0)
+                loss = criterion(pred, (y > 0).float())
+                weighted_loss = (loss * y).mean()
+                val_loss += weighted_loss.item()
+        val_acc = val_correct / val_samples if val_samples else 0
+        print(f"[Valid] Epoch {epoch + 1} - Loss: {val_loss:.4f} - Acc: {val_acc:.4f}")
+
+    torch.save(model.state_dict(), "deeprec_model.pt")
+
+    # ✅ PyTorch 모델 Precision@5, AUC 계산 함수
+    from sklearn.metrics import roc_auc_score
+
+
+    def get_pytorch_precision_at_k(model, df, k=5):
+        model.eval()
+        user_ids = df['user_id'].unique()
+        item_ids = df['model_id'].unique()
+        precisions = []
+
+        with torch.no_grad():
+            for user_id in user_ids:
+                user_data = df[df['user_id'] == user_id]
+                seen_items = set(user_data['model_id'].values)
+                candidate_items = [i for i in item_ids if i not in seen_items]
+
+                if not candidate_items:
+                    continue
+
+                rows = []
+                for item_id in candidate_items:
+                    base = user_data.iloc[0].copy()
+                    base['model_id'] = item_id
+                    base['product_id'] = df[df['model_id'] == item_id]['product_id'].values[0]
+                    rows.append(base)
+
+                input_df = pd.DataFrame(rows)
+                X = input_df[['user_id', 'product_id', 'model_id', 'gender', 'age_group',
+                              'residence_type', '색상', '사이즈', '소재', 'timestamp']].values
+                X_tensor = torch.tensor(X, dtype=torch.float32)
+                X_tensor = X_tensor.to(device)
+                preds = model(X_tensor).cpu().numpy()  # GPU→CPU 변환 후 numpy
+
+                top_k_idx = preds.argsort()[::-1][:k]
+                top_k_items = input_df.iloc[top_k_idx]['model_id'].values
+                relevant_items = set(df[(df['user_id'] == user_id) & (df['weight'] > 0)]['model_id'])
+
+                hit = sum([1 for item in top_k_items if item in relevant_items])
+                precisions.append(hit / k)
+
+        return sum(precisions) / len(precisions)
+
+
+    def get_pytorch_auc(model, dataset):
+        model.eval()
+        y_true, y_score = [], []
+        with torch.no_grad():
+            for X, y in DataLoader(dataset, batch_size=64):
+                X, y = X.to(device), y.to(device)
+                pred = model(X).cpu().numpy()
+
+                y_score.extend(pred)
+                y_true.extend((y > 0).int().cpu().numpy())
+
+
+        try:
+            auc = roc_auc_score(y_true, y_score)
+        except:
+            auc = 0.0
+        return auc
+
+
+    # ✅ 평가 실행
+    pt_precision = get_pytorch_precision_at_k(model, df, k=5)
+    pt_auc = get_pytorch_auc(model, RecommendDataset(df))
+    print(f"📊 Precision@5: {pt_precision:.4f}")
+    print(f"📊 AUC Score: {pt_auc:.4f}")
