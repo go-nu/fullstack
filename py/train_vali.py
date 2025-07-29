@@ -1,4 +1,3 @@
-
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -8,46 +7,61 @@ import mysql.connector
 from datetime import datetime
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+import numpy as np
+import random
+
+def set_seed(seed=0):
+    random.seed(seed)                          # Python random 모듈
+    np.random.seed(seed)                       # NumPy
+    torch.manual_seed(seed)                    # PyTorch CPU
+    torch.cuda.manual_seed(seed)               # PyTorch GPU (단일)
+    torch.cuda.manual_seed_all(seed)           # PyTorch GPU (멀티)
+    torch.backends.cudnn.deterministic = True  # 연산 결과 고정
+    torch.backends.cudnn.benchmark = False     # 성능 대신 일관성 우선
 
 # ✅ 속성 개수를 DB에서 자동 조회하여 embedding_dim으로 사용
 def get_embedding_dims_from_db(conn):
     query = '''
-    SELECT a.name AS attribute_name, COUNT(av.id) AS count
-    FROM attribute a
-    JOIN attribute_value av ON a.id = av.attribute_id
-    GROUP BY a.name
-    '''
+            SELECT a.name AS attribute_name, COUNT(av.id) AS count
+            FROM attribute a
+                JOIN attribute_value av
+            ON a.id = av.attribute_id
+            GROUP BY a.name \
+            '''
     df = pd.read_sql(query, conn)
     return {row['attribute_name']: row['count'] for _, row in df.iterrows()}
 
 # ✅ DB에서 전체 학습 데이터 로딩 및 병합
 def load_training_data(conn):
     log_df = pd.read_sql("""
-        SELECT user_id, model_id, product_id, weight, timestamp
-        FROM recommend_log
-    """, conn)
+                         SELECT user_id, model_id, product_id, weight, timestamp
+                         FROM recommend_log
+                         """, conn)
     log_df['timestamp'] = pd.to_datetime(log_df['timestamp']).apply(lambda x: int(x.timestamp()))
     ts_min = log_df['timestamp'].min()
     ts_max = log_df['timestamp'].max()
     log_df['timestamp'] = (log_df['timestamp'] - ts_min) / (ts_max - ts_min + 1e-9)
 
     user_df = pd.read_sql("""
-        SELECT id AS user_id, gender, birth, residence_type
-        FROM users
-    """, conn)
+                          SELECT id AS user_id, gender, birth, residence_type
+                          FROM users
+                          """, conn)
     current_year = datetime.now().year
     user_df['age'] = current_year - pd.to_datetime(user_df['birth']).dt.year
-    user_df['age_group'] = pd.cut(user_df['age'], bins=[-1,9,19,29,39,49,150], labels=[0,1,2,3,4,5]).astype(int)
+    user_df['age_group'] = pd.cut(user_df['age'], bins=[-1, 9, 19, 29, 39, 49, 150], labels=[0, 1, 2, 3, 4, 5]).astype(
+        int)
     user_df.drop(['birth', 'age'], axis=1, inplace=True)
 
     product_df = pd.read_sql("SELECT id AS product_id, category_id FROM product", conn)
 
     model_attr_df = pd.read_sql("""
-        SELECT pma.product_model_id AS model_id, a.name AS attribute_type, av.value AS attribute_value
-        FROM product_model_attribute pma
-        JOIN attribute_value av ON pma.attribute_value_id = av.id
-        JOIN attribute a ON av.attribute_id = a.id
-    """, conn)
+                                SELECT pma.product_model_id AS model_id,
+                                       a.name               AS attribute_type,
+                                       av.value             AS attribute_value
+                                FROM product_model_attribute pma
+                                         JOIN attribute_value av ON pma.attribute_value_id = av.id
+                                         JOIN attribute a ON av.attribute_id = a.id
+                                """, conn)
     model_pivot = model_attr_df.pivot_table(
         index='model_id',
         columns='attribute_type',
@@ -55,7 +69,8 @@ def load_training_data(conn):
         aggfunc='first'
     ).reset_index()
 
-    df = log_df         .merge(user_df, on='user_id', how='left')         .merge(product_df, on='product_id', how='left')         .merge(model_pivot, on='model_id', how='left')
+    df = log_df.merge(user_df, on='user_id', how='left').merge(product_df, on='product_id', how='left').merge(
+        model_pivot, on='model_id', how='left')
 
     df = df.dropna(subset=[
         'user_id', 'product_id', 'model_id',
@@ -70,6 +85,7 @@ def load_training_data(conn):
     df['age_group'] = df['age_group'].astype(int)
 
     return df
+
 
 class RecommendDataset(Dataset):
     def __init__(self, dataframe):
@@ -89,6 +105,7 @@ class RecommendDataset(Dataset):
         y = torch.tensor(self.labels[idx], dtype=torch.float32)
         return X, y
 
+
 class DeepRecModel(nn.Module):
     def __init__(self, num_embeddings, embedding_dims):
         super().__init__()
@@ -103,8 +120,8 @@ class DeepRecModel(nn.Module):
         self.material_emb = nn.Embedding(embedding_dims['소재'] + 1, embedding_dims['소재'])
 
         total_input_dim = (
-            4*3 + 2 + 4 + 3 +
-            embedding_dims['색상'] + embedding_dims['사이즈'] + embedding_dims['소재'] + 1
+                4 * 3 + 2 + 4 + 3 +
+                embedding_dims['색상'] + embedding_dims['사이즈'] + embedding_dims['소재'] + 1
         )
 
         self.mlp = nn.Sequential(
@@ -112,10 +129,6 @@ class DeepRecModel(nn.Module):
             nn.ReLU(),
             nn.Dropout(0.2),
             nn.Linear(8, 1),
-            # nn.Linear(16, 8),
-            # nn.ReLU(),
-            # nn.Dropout(0.1),
-            # nn.Linear(8, 1),
             nn.Sigmoid()
         )
 
@@ -139,6 +152,7 @@ class DeepRecModel(nn.Module):
         ], dim=-1)
 
         return self.mlp(x).squeeze()
+
 
 if __name__ == "__main__":
     conn = mysql.connector.connect(
@@ -272,19 +286,29 @@ if __name__ == "__main__":
     def get_pytorch_auc(model, dataset):
         model.eval()
         y_true, y_score = [], []
+
         with torch.no_grad():
             for X, y in DataLoader(dataset, batch_size=64):
                 X, y = X.to(device), y.to(device)
                 pred = model(X).cpu().numpy()
 
+                # weight가 3(구매)인 경우만 1로 처리하고, 나머지는 0으로 처리
+                y_true.extend((y == 3).int().cpu().numpy())  # 3이면 1, 아니면 0
                 y_score.extend(pred)
-                y_true.extend((y > 0).int().cpu().numpy())
 
+        y_true = np.array(y_true)
+        y_score = np.array(y_score)
+
+        if len(np.unique(y_true)) < 2:  # 클래스가 하나만 있을 경우
+            print("⚠️ AUC 계산 불가: y_true에 클래스가 하나뿐입니다.")
+            return 0.0  # AUC 계산 불가
 
         try:
             auc = roc_auc_score(y_true, y_score)
-        except:
+        except Exception as e:
+            print(f"⚠️ AUC 계산 중 오류: {e}")
             auc = 0.0
+
         return auc
 
 

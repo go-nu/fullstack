@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ProductDetailDto;
 import com.example.demo.dto.ProductForm;
+import com.example.demo.dto.ProductListDto;
 import com.example.demo.dto.ProductModelDto;
+
 import com.example.demo.entity.*;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductImageRepository;
@@ -30,7 +32,12 @@ import org.springframework.data.repository.query.Param;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -155,29 +162,94 @@ public class ProductService {
     }
 
     // ✅ 상품 목록 조회
-    public List<Product> findProducts(Long categoryId) {
+//    public List<Product> findProducts(Long categoryId) {
+//        List<Product> products;
+//        if (categoryId == null) {
+//            products = productRepository.findAll(); // 아무 카테고리도 선택 안 했을 경우
+//        } else {
+//        // 선택한 카테고리와 그 하위 카테고리 포함하여 검색
+//        List<Long> idsToSearch = new ArrayList<>();
+//        idsToSearch.add(categoryId);
+//        idsToSearch.addAll(getChildCategoryIds(categoryId));
+//            products = productRepository.findByCategoryIdIn(idsToSearch);
+//        }
+//
+//        // 각 상품의 평균 평점 계산 및 업데이트
+//        for (Product product : products) {
+//            double avgRating = reviewPostRepository.findByProductId(product.getId())
+//                    .stream()
+//                    .mapToInt(ReviewPost::getRating)
+//                    .average()
+//                    .orElse(0.0);
+//            product.setAverageRating(avgRating);
+//        }
+//
+//        return products;
+//    }
+
+    // ✅ 상품 목록 조회
+    public List<ProductListDto> findProducts(Long categoryId) {
         List<Product> products;
         if (categoryId == null) {
-            products = productRepository.findAll(); // 아무 카테고리도 선택 안 했을 경우
+            products = productRepository.findAll();
         } else {
-        // 선택한 카테고리와 그 하위 카테고리 포함하여 검색
-        List<Long> idsToSearch = new ArrayList<>();
-        idsToSearch.add(categoryId);
-        idsToSearch.addAll(getChildCategoryIds(categoryId));
+            List<Long> idsToSearch = new ArrayList<>();
+            idsToSearch.add(categoryId);
+            idsToSearch.addAll(getChildCategoryIds(categoryId));
             products = productRepository.findByCategoryIdIn(idsToSearch);
         }
-        
-        // 각 상품의 평균 평점 계산 및 업데이트
-        for (Product product : products) {
+
+        // 평균 평점, 리뷰 수 포함하여 DTO 변환
+        return products.stream().map(product -> {
             double avgRating = reviewPostRepository.findByProductId(product.getId())
                     .stream()
                     .mapToInt(ReviewPost::getRating)
                     .average()
                     .orElse(0.0);
-            product.setAverageRating(avgRating);
-        }
+
+            int reviewCount = reviewPostRepository.countByProductId(product.getId());
+
+            return new ProductListDto(product, avgRating, reviewCount);
+        }).toList();
+    }
+
+    // ✅ 페이징을 지원하는 상품 목록 조회
+    public Page<ProductListDto> findProductsWithPaging(Long categoryId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Product> productPage;
         
-        return products;
+        if (categoryId == null) {
+            productPage = productRepository.findAll(pageable);
+        } else {
+            List<Long> idsToSearch = new ArrayList<>();
+            idsToSearch.add(categoryId);
+            idsToSearch.addAll(getChildCategoryIds(categoryId));
+            // 페이징을 위한 커스텀 쿼리가 필요할 수 있지만, 일단 전체 조회 후 페이징 처리
+            List<Product> allProducts = productRepository.findByCategoryIdIn(idsToSearch);
+            int start = (page - 1) * size;
+            int end = Math.min(start + size, allProducts.size());
+            List<Product> pagedProducts = allProducts.subList(start, end);
+            productPage = new PageImpl<>(pagedProducts, pageable, allProducts.size());
+        }
+
+        // 평균 평점, 리뷰 수 포함하여 DTO 변환
+        List<ProductListDto> dtoList = productPage.getContent().stream().map(product -> {
+            double avgRating = reviewPostRepository.findByProductId(product.getId())
+                    .stream()
+                    .mapToInt(ReviewPost::getRating)
+                    .average()
+                    .orElse(0.0);
+
+            int reviewCount = reviewPostRepository.countByProductId(product.getId());
+
+            return new ProductListDto(product, avgRating, reviewCount);
+        }).toList();
+
+        return new PageImpl<>(dtoList, pageable, productPage.getTotalElements());
+    }
+
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
     }
 
     // 선택된 카테고리의 모든 하위 카테고리 ID를 재귀적으로 가져옴
@@ -249,89 +321,75 @@ public class ProductService {
 
     // ✅ 상품 수정
     @Transactional
-//    public void updateProduct(Long productId, ProductForm form, MultipartFile[] images, String deleteIndexes, Users loginUser) {
     public void updateProduct(Long productId, ProductForm form, MultipartFile[] images, List<Integer> deleteIndexes, Users loginUser) {
         Product product = productRepository.findById(productId).orElseThrow();
 
-        // 권한 확인
+        // 권한 체크
         if (!product.getUser().getId().equals(loginUser.getId())) {
             throw new AccessDeniedException("권한 없음");
         }
 
-        // 기존 이미지 삭제 0722
-//        if (deleteIndexes != null && !deleteIndexes.isEmpty()) {
-//            List<ProductImage> currentImages = product.getImages();
-//            List<Integer> indexesToDelete = Arrays.stream(deleteIndexes.split(","))
-//                    .map(Integer::parseInt)
-//                    .sorted(Comparator.reverseOrder())
-//                    .collect(Collectors.toList());
-//            for (Integer idx : indexesToDelete) {
-//                if (idx >= 0 && idx < currentImages.size()) {
-//                    ProductImage removed = currentImages.remove((int) idx);
-//                    deleteFile(removed.getImageUrl());
-//                    imageRepository.delete(removed);
-//                }
-//            }
-//        }
+        // ✅ 이미지 삭제 + 업로드는 동일하게 처리
 
-        // ✅ 기존 이미지 삭제
-        if (deleteIndexes != null && !deleteIndexes.isEmpty()) {
-            List<ProductImage> currentImages = product.getImages();
-            deleteIndexes.stream()
-                    .sorted(Comparator.reverseOrder())
-                    .forEach(idx -> {
-                        if (idx >= 0 && idx < currentImages.size()) {
-                            ProductImage removed = currentImages.remove((int) idx);
-                            deleteFile(removed.getImageUrl());
-                            imageRepository.delete(removed);
-                        }
-                    });
-        }
-
-        // ✅ 새 이미지 업로드
-        if (images != null) {
-            List<String> imagePaths = handleAndReturnFiles(images);
-            for (String path : imagePaths) {
-                ProductImage image = new ProductImage();
-                image.setImageUrl(path);
-                image.setProduct(product);
-                product.getImages().add(image);
-            }
-        }
-
-        // ✅ 상품 정보 업데이트
         product.setName(form.getName());
         product.setPrice(form.getPrice());
 
-        // ✅ 카테고리 변경
         if (form.getCategoryId() != null) {
             Category category = categoryRepository.findById(form.getCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리 ID"));
             product.setCategory(category);
         }
 
-        // ✅ 기존 모델 삭제
-        if (product.getProductModels() != null && !product.getProductModels().isEmpty()) {
-            productModelRepository.deleteAll(product.getProductModels());
-            product.getProductModels().clear();
-        }
-        product.setStockQuantity(0); // 재고 초기화
+        // ✅ 기존 옵션 Map으로 구성
+        Map<Long, ProductModel> existingModelMap = product.getProductModels().stream()
+                .collect(Collectors.toMap(ProductModel::getId, pm -> pm));
 
-        // ✅ 새 모델 추가
-        if (form.getProductModelDtoList() != null) {
+        if (form.getProductModelDtoList() != null && !form.getProductModelDtoList().isEmpty()) {
+
+            // ✅ 삭제 대상 추출을 위한 ID Set 생성
+            Set<Long> incomingModelIds = form.getProductModelDtoList().stream()
+                    .map(ProductModelDto::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            // ✅ 삭제 대상 추출
+            for (ProductModel existingModel : new ArrayList<>(product.getProductModels())) {
+                Long id = existingModel.getId();
+                if (!incomingModelIds.contains(id)) {
+                    if (orderItemRepository.existsByProductModelId(id)) {
+                        existingModel.setDeleted(true);  // soft delete
+                    } else {
+                        product.getProductModels().remove(existingModel);  // 관계 제거
+                        productModelRepository.delete(existingModel);      // 실제 삭제
+                    }
+                }
+            }
+
+            // ✅ 수량 초기화 후 재계산
+            product.setStockQuantity(0);
+
+            // ✅ 업데이트 또는 새로 추가
             for (ProductModelDto dto : form.getProductModelDtoList()) {
-                ProductModel model = new ProductModel();
-                model.setProductModelSelect(dto.getProductModelSelect());
-                model.setPrice(dto.getPrice());
-                model.setPrStock(dto.getPrStock());
-                model.setProduct(product);
-                // TODO: dto.getAttributeValueIds() → ProductModelAttribute 설정 추가 가능
-
-                product.addProductModel(model);
-                product.setStockQuantity(product.getStockQuantity() + dto.getPrStock());
+                if (dto.getId() != null) {
+                    ProductModel existing = existingModelMap.get(dto.getId());
+                    if (existing != null) {
+                        existing.setProductModelSelect(dto.getProductModelSelect());
+                        existing.setPrice(dto.getPrice());
+                        existing.setPrStock(dto.getPrStock());
+                        existing.setDeleted(false); // soft-delete 복구 가능성
+                        product.setStockQuantity(product.getStockQuantity() + dto.getPrStock());
+                    }
+                } else {
+                    ProductModel newModel = new ProductModel();
+                    newModel.setProductModelSelect(dto.getProductModelSelect());
+                    newModel.setPrice(dto.getPrice());
+                    newModel.setPrStock(dto.getPrStock());
+                    newModel.setProduct(product);
+                    product.addProductModel(newModel);
+                    product.setStockQuantity(product.getStockQuantity() + dto.getPrStock());
+                }
             }
         }
-
         productRepository.save(product);
     }
 

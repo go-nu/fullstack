@@ -82,6 +82,7 @@ public class ProductForm {
             List<ProductModelDto> modelDtoList = product.getProductModels().stream()
                     .map(model -> {
                         ProductModelDto dto = new ProductModelDto();
+                        dto.setId(model.getId()); // ✅ 꼭 필요
                         dto.setProductModelSelect(model.getProductModelSelect());
                         dto.setPrice(model.getPrice());
                         dto.setPrStock(model.getPrStock());

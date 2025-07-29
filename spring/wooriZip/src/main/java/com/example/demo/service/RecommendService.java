@@ -104,6 +104,10 @@ public class RecommendService {
         return 3;
     }
 
+    public List<Product> getBestProducts() {
+        return productRepository.findTopRecommendedProducts();
+    }
+
     public static class RecommendResult {
         private Long product_id;
         private double score;

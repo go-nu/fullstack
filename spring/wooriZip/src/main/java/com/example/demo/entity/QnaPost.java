@@ -23,6 +23,8 @@ public class QnaPost {
     private String email;
     private String nickname;
 
+    private boolean isSecret = false; // 비밀글 여부 (기본값: false)
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

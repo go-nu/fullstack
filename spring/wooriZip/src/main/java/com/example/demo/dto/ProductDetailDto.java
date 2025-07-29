@@ -18,7 +18,7 @@ public class ProductDetailDto {
     private boolean liked;
 
     private List<ProductModelDto> productModels;  // 각 모델 (옵션) 정보
-
+    
     public ProductDetailDto(Product product, boolean liked) {
         this.product = product;
         this.liked = liked;

@@ -23,27 +23,12 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public CartDto getCartByEmail(String email) {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
         Cart cart = cartRepository.findByUser(user);
         return cart != null ? new CartDto(cart) : null;
-    }
-
-    public List<CartItemDto> getCartItems(String email) {
-        Users user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다."));
-        Cart cart = cartRepository.findByUser(user);
-
-        if (cart == null || cart.getCartItems().isEmpty()) {
-            return List.of(); // 빈 리스트 반환
-        }
-
-        return cart.getCartItems().stream()
-                .map(CartItemDto::new)
-                .toList(); // Java 16 이상, Java 8~11이면 .collect(Collectors.toList())로 대체
     }
 
     public void addItemToCart(CartDto cartDto, String email, Long productId) {

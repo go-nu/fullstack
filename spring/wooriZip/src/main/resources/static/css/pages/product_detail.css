@@ -126,6 +126,14 @@
     color: white;
 }
 
+button:disabled,
+.btn-disabled {
+    background-color: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
 .btn-wish:hover {
     background-color: #ddd;
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Users;
 import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ public class UserUtils {
         return null;
     }
 
-    public static Object getUser(Authentication authentication) {
+    public static Users getUser(Authentication authentication) {
         if (authentication == null) return null;
 
         Object principal = authentication.getPrincipal();

@@ -5,6 +5,8 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ReviewPost;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.ReviewPostRepository;
+import com.example.demo.repository.OrderRepository;
+import com.example.demo.constant.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,7 @@ public class ReviewPostService {
 
     private final ReviewPostRepository reviewPostRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
 
@@ -189,6 +192,11 @@ public class ReviewPostService {
     // 1인 1리뷰 제한 확인
     public boolean hasWrittenReview(Long productId, String email) {
         return reviewPostRepository.existsByProductIdAndEmail(productId, email);
+    }
+
+    // 사용자가 해당 상품을 구매했는지 확인
+    public boolean hasPurchasedProduct(Long productId, String email) {
+        return orderRepository.existsByUsersEmailAndOrderStatusAndOrderItemsProductId(email, OrderStatus.ORDER, productId);
     }
 
     // 사용자가 작성한 리뷰 목록 조회

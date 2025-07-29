@@ -7,14 +7,16 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.entity.PasswordResetToken;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
-import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -46,17 +48,11 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPage(Authentication authentication, Model model) {
-        Users loginUser = null;
-
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            loginUser = userDetails.getUser();
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            loginUser = oauth2User.getUser();
-        }
+        Users loginUser = UserUtils.getUser(authentication);
 
         if (loginUser != null) {
             model.addAttribute("loginUser", loginUser);
-            model.addAttribute("userCoupons", userService.getAllUserCoupons(loginUser));
+            model.addAttribute("userCoupons", userService.getUserCoupons(loginUser));
 
             // 내가 작성한 게시글 목록
             List<InteriorPostDto> interiorPosts = interiorPostService.findByUser(loginUser);
@@ -77,32 +73,34 @@ public class UserController {
 
     @GetMapping("/edit")
     public String editForm(Authentication authentication, Model model) {
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            model.addAttribute("loginUser", userService.findById(userDetails.getId()));
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            model.addAttribute("loginUser", userService.findById(oauth2User.getUser().getId()));
-        }
+        Users loginUser = UserUtils.getUser(authentication);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("isSocial", loginUser.getSocial() != null);
+
         return "/user/edit";
     }
 
     @PostMapping("/edit")
     public String editInfo(@ModelAttribute UserDto dto,
                            Authentication authentication) {
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            userService.edit(dto, userDetails.getId());
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            userService.edit(dto, oauth2User.getUser().getId());
-        }
+        Users loginUser = UserUtils.getUser(authentication);
+        userService.edit(dto, loginUser.getId());
+        Users updatedUser = userService.findById(loginUser.getId()); // 최신 정보 다시 불러오기
+
+        // Authentication 객체 갱신
+        CustomUserDetails userDetails = new CustomUserDetails(updatedUser);
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                userDetails, authentication.getCredentials(), userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
         return "redirect:/user/mypage";
     }
 
     @PostMapping("/delete")
     public String delete(Authentication authentication) {
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            userService.delete(userDetails.getId());
-        } else if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User oauth2User) {
-            userService.delete(oauth2User.getUser().getId());
-        }
+        Users loginUser = UserUtils.getUser(authentication);
+        userService.delete(loginUser.getId());
         return "redirect:/logout";
     }
 
@@ -135,23 +133,20 @@ public class UserController {
     }
 
     @PostMapping("/findPw")
-    public String findUserPw(@RequestParam String email, @RequestParam String phone,Model model) {
-
+    public String findUserPw(@RequestParam String email, @RequestParam String phone, RedirectAttributes redirectAttributes) {
         Optional<Users> findUser = userService.findByEmailAndPhone(email, phone);
 
         if (findUser.isPresent()) {
-            // 토큰 생성
             String token = passwordResetService.createToken(email);
-            // 이메일 전송
             emailService.sendResetPasswordLink(email, token);
-            // 모달에 보일 메시지 전달
-            model.addAttribute("resetMailSent", "입력하신 이메일로 비밀번호 재설정 링크를 전송했습니다.");
+            redirectAttributes.addFlashAttribute("resetMailSent", "입력하신 이메일로 비밀번호 재설정 링크를 전송했습니다.");
         } else {
-            model.addAttribute("error", "일치하는 회원 정보가 없습니다.");
+            redirectAttributes.addFlashAttribute("error", "일치하는 회원 정보가 없습니다.");
         }
 
-        return "user/findPW";
+        return "redirect:/user/findPw";
     }
+
 
     @GetMapping("/resetPw")
     public String showResetPwForm(@RequestParam("token") String token, Model model) {

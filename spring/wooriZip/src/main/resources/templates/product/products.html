@@ -2,21 +2,255 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>상품 등록</title>
-    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        .img-box {
-            display: inline-block;
-            margin: 10px;
-            position: relative;
+        :root {
+            --brand-bg: #FFFFFF;
+            --brand-text: #4A4947;
+            --brand-point-bg: #F9F7F0;
+            --brand-point: #B17457;
         }
-        .img-box img {
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--brand-bg);
+            color: var(--brand-text);
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px 80px 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--brand-text);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .product-form {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .product-form label {
+            display: block;
+            font-weight: 500;
+            color: var(--brand-text);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .product-form input[type="text"],
+        .product-form select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: var(--brand-point-bg);
+            color: var(--brand-text);
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .product-form input[type="text"]:focus,
+        .product-form select:focus {
+            outline: none;
+            border-color: var(--brand-point);
+            background: #fff;
+        }
+
+        .product-form div {
+            margin-bottom: 20px;
+        }
+
+        .product-form span {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 8px;
+        }
+
+        .product-form input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--brand-point);
+            margin-right: 6px;
+        }
+
+        .product-form button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 8px 8px 8px 0;
+        }
+
+        .product-form button[type="submit"] {
+            background: var(--brand-point);
+            color: #fff;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .product-form button[type="submit"]:hover {
+            background: #8d5a41;
+        }
+
+        .product-form button[type="button"] {
+            background: var(--brand-point-bg);
+            color: var(--brand-text);
+            border: 1px solid #ddd;
+        }
+
+        .product-form button[type="button"]:hover {
+            background: #e8e6df;
+        }
+
+        #generateOptionsBtn {
+            background: var(--brand-point);
+            color: #fff;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+
+        #generateOptionsBtn:hover {
+            background: #8d5a41;
+        }
+
+        .product-form table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .product-form table th,
+        .product-form table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .product-form table th {
+            background: var(--brand-point-bg);
+            font-weight: 600;
+            color: var(--brand-text);
+        }
+
+        .product-form table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .product-form input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: var(--brand-point-bg);
+            color: var(--brand-text);
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .product-form input[type="file"]:hover {
+            border-color: var(--brand-point);
+        }
+
+        #previewContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .img-box {
+            position: relative;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
             width: 150px;
-            height: auto;
-            border: 1px solid #ccc;
+            height: 150px;
+            margin: 0 auto;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            main {
+                padding: 20px 16px 60px 16px;
+            }
+
+            .product-form {
+                padding: 20px;
+            }
+
+            .product-form span {
+                display: block;
+                margin-bottom: 8px;
+            }
+
+            .product-form button {
+                width: 100%;
+                margin: 8px 0;
+            }
+
+            #previewContainer {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .img-box {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .product-form {
+                padding: 16px;
+            }
+
+            .img-box {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
@@ -117,7 +351,7 @@
 <div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>
 
 <script th:inline="javascript">
-    window.attributeValues = [[${attributeValues}]];
+    window.attributeValues = /*[[${attributeValues}]]*/ [];
 </script>
 <script src="/js/product/products.js" defer></script>
 </body>

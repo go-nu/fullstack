@@ -1,22 +1,11 @@
-const resetMailSent = [[${resetMailSent != null}]] ? [[${resetMailSent}]] : null;
-const error = [[${error != null}]] ? [[${error}]] : null;
-
-window.onload = function () {
-    if (resetMailSent !== "null") {
-        showModal(resetMailSent);
-    } else if (error !== "null") {
-        showModal(error);
-    }
-};
-
 function showModal(message) {
-   document.getElementById("resultMessage").innerText = message;
-   document.getElementById("resultModal").style.display = "block";
+    document.getElementById("resultMessage").innerText = message;
+    document.getElementById("resultModal").classList.add("active");  // display: flex로 보이게
+}
+function closeModal() {
+    document.getElementById("resultModal").classList.remove("active");
 }
 
-function closeModal() {
-   document.getElementById("resultModal").style.display = "none";
-}
 // 전화번호 합치기
 function updatePhoneValue() {
    const phone1 = document.getElementById("phone1").value;

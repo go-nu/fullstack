@@ -26,6 +26,7 @@ public class QnaPostController {
     public String create(@RequestParam("productId") Long productId,
                          @ModelAttribute QnaPostDto dto,
                          @RequestParam(value = "files", required = false) MultipartFile[] files,
+                         @RequestParam(value = "isSecret", required = false) String isSecret,
                          Authentication authentication) throws IOException {
 
         String email = UserUtils.getEmail(authentication);
@@ -34,6 +35,9 @@ public class QnaPostController {
         dto.setProductId(productId);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
+        
+        // 비밀글 설정
+        dto.setSecret("true".equals(isSecret));
 
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
             dto.setFiles(Arrays.asList(files));
@@ -48,6 +52,7 @@ public class QnaPostController {
     public String update(@PathVariable Long id,
                          @ModelAttribute QnaPostDto dto,
                          @RequestParam(value = "files", required = false) MultipartFile[] files,
+                         @RequestParam(value = "isSecret", required = false) String isSecret,
                          @RequestParam(required = false) Integer qnaPage,
                          @RequestParam(required = false) String qnaFilter,
                          @RequestParam(required = false) Boolean fromMyPage,
@@ -58,6 +63,9 @@ public class QnaPostController {
         Users user = (Users) UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
+        
+        // 비밀글 설정
+        dto.setSecret("true".equals(isSecret));
 
         if (files != null && files.length > 0 && !files[0].isEmpty()) {
             dto.setFiles(Arrays.asList(files));

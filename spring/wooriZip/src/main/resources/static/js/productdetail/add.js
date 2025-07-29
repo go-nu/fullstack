@@ -3,6 +3,7 @@ let removedExistingImages = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     const imageInput = document.getElementById('imageInput');
+    const imageUploadArea = document.getElementById('imageUploadArea');
     const previewContainer = document.getElementById('previewContainer');
     const saveBtn = document.getElementById('saveBtn');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -32,16 +33,40 @@ A/S 책임자와 전화번호: `;
         detailInfoTextarea.value = defaultTemplate;
     }
 
-    // 새 이미지 선택 시 처리 (인테리어 게시판 방식)
-    imageInput.addEventListener('change', function() {
-        const newFiles = Array.from(this.files);
+    // 이미지 업로드 영역 클릭 이벤트
+    imageUploadArea.addEventListener('click', function() {
+        imageInput.click();
+    });
+
+    // 드래그 앤 드롭 기능
+    imageUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+    });
+
+    imageUploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+    });
+
+    imageUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
         
-        if (selectedFiles.length + newFiles.length > 20) {
-            alert("이미지는 최대 20장까지 첨부할 수 있습니다.");
+        const files = Array.from(e.dataTransfer.files);
+        handleFiles(files);
+    });
+
+    // 파일 처리 함수
+    function handleFiles(files) {
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        
+        if (selectedFiles.length + imageFiles.length > 10) {
+            alert("이미지는 최대 10장까지 첨부할 수 있습니다.");
             return;
         }
         
-        newFiles.forEach(file => {
+        imageFiles.forEach(file => {
             selectedFiles.push(file);
             
             const reader = new FileReader();
@@ -72,6 +97,12 @@ A/S 책임자와 전화번호: `;
             };
             reader.readAsDataURL(file);
         });
+    }
+
+    // 새 이미지 선택 시 처리
+    imageInput.addEventListener('change', function() {
+        const files = Array.from(this.files);
+        handleFiles(files);
         
         // input 초기화
         this.value = '';
@@ -103,7 +134,7 @@ A/S 책임자와 전화번호: `;
         formData.append('productId', productId);
         formData.append('detailInfo', detailInfo);
 
-        // 새로운 파일들 추가 (인테리어 게시판 방식)
+        // 새로운 파일들 추가
         selectedFiles.forEach(file => {
             formData.append('files', file);
         });

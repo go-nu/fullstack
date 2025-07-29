@@ -62,6 +62,12 @@ public class ReviewPostController {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         Users user = (Users) UserUtils.getUser(authentication);
+        
+        // 구매 여부 확인
+        if (!reviewPostService.hasPurchasedProduct(dto.getProductId(), user.getEmail())) {
+            return "redirect:/products/" + dto.getProductId() + "?activeTab=review&error=purchase_required#review-section";
+        }
+        
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
         if (files != null && files.length > 0 && !files[0].isEmpty()) {

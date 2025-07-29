@@ -23,7 +23,7 @@ window.onload = toggleDiscountInputs;
 // ✅ 쿠폰 활성화/비활성화 상태 토글 함수 (boolean 사용)
 function toggleCouponStatus(checkbox) {
     const couponId = checkbox.getAttribute('data-id');
-    const isActive = checkbox.checked;  // true 또는 false
+    const isActive = checkbox.checked;
 
     fetch(`/admin/coupons/${couponId}/status`, {
         method: 'POST',
@@ -37,11 +37,16 @@ function toggleCouponStatus(checkbox) {
         return response.json();
     })
     .then(data => {
-        console.log("쿠폰 상태 변경 완료:", data);
+        // ✅ 상태 텍스트를 즉시 변경
+        const labelSpan = checkbox.closest('td').querySelector('.form-check-label span');
+        if (labelSpan) {
+            labelSpan.textContent = isActive ? '활성화' : '비활성화';
+        }
     })
     .catch(error => {
         alert('오류 발생: ' + error.message);
-        checkbox.checked = !checkbox.checked; // 되돌리기
+        checkbox.checked = !checkbox.checked; // 실패 시 원상복구
     });
 }
+
 

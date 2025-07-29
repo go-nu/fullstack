@@ -2,108 +2,153 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>공지/이벤트</title>
-    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        .coupon-container {
-            max-width: 1200px;
+        body {
+            margin: 0;
+            background: #fff;
+            color: #4A4947;
+            font-family: 'Arial', sans-serif;
+        }
+        main {
+            max-width: 1100px;
+            width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 32px 0 64px 0;
+            box-sizing: border-box;
+        }
+        .coupon-container {
+            width: 100%;
+        }
+        .page-title {
+            text-align: center;
+            color: #B17457;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 32px 0 40px 0;
         }
         .coupon-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
         }
         .coupon-card {
-            background: white;
-            border: 2px solid #B17457;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
+            padding: 24px;
+            transition: border 0.2s;
             position: relative;
             overflow: hidden;
         }
         .coupon-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border: 1px solid #B17457;
         }
-
         .coupon-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
         .coupon-name {
-            font-size: 18px;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #4A4947;
             margin: 0;
         }
         .coupon-code {
             background: #F9F7F0;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 0;
+            font-size: 0.9rem;
             color: #B17457;
-            font-weight: bold;
+            font-weight: 600;
         }
         .coupon-discount {
-            font-size: 24px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #B17457;
-            margin: 10px 0;
+            margin: 16px 0;
         }
         .coupon-details {
-            margin: 15px 0;
+            margin: 20px 0;
         }
         .coupon-detail {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 8px 0;
+            font-size: 0.95rem;
             color: #666;
         }
         .coupon-detail strong {
             color: #4A4947;
+            font-weight: 600;
         }
         .coupon-button {
             width: 100%;
             background: #B17457;
-            color: white;
+            color: #fff;
             border: none;
+            border-radius: 0;
             padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s;
         }
         .coupon-button:hover {
-            background: #9a5f45;
+            background: #4A4947;
         }
         .coupon-button:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
-        .page-title {
-            text-align: center;
-            color: #4A4947;
-            font-size: 32px;
-            font-weight: bold;
-            margin: 40px 0 20px 0;
-        }
         .no-coupons {
             text-align: center;
             color: #666;
-            font-size: 18px;
-            margin: 50px 0;
+            font-size: 1.1rem;
+            margin: 60px 0;
+            padding: 40px;
+            background: #F9F7F0;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
+        }
+        @media (max-width: 1200px) {
+            main {
+                padding: 24px 2vw 40px 2vw;
+            }
+            .coupon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+        }
+        @media (max-width: 700px) {
+            main {
+                padding: 16px 2vw 32px 2vw;
+            }
+            .page-title {
+                font-size: 1.5rem;
+                margin: 24px 0 32px 0;
+            }
+            .coupon-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .coupon-card {
+                padding: 20px;
+            }
+            .coupon-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .coupon-detail {
+                flex-direction: column;
+                gap: 4px;
+            }
         }
     </style>
 </head>
@@ -119,7 +164,7 @@
     });
 </script>
 
-<body class="event-page">
+<body>
 <div th:replace="~{index/header :: header}"></div>
 
 <main>
@@ -149,10 +194,10 @@
                         <strong>최소 주문금액:</strong>
                         <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3)} + '원'"></span>
                     </div>
-                    <div class="coupon-detail">
-                        <strong>남은 수량:</strong>
-                        <span th:text="${coupon.usageLimit} + '개'"></span>
-                    </div>
+<!--                    <div class="coupon-detail">-->
+<!--                        <strong>남은 수량:</strong>-->
+<!--                        <span th:text="${coupon.usageLimit} + '개'"></span>-->
+<!--                    </div>-->
                 </div>
 
                 <form th:action="@{/event/coupons/get}" method="post">

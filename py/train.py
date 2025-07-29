@@ -125,10 +125,13 @@ class DeepRecModel(nn.Module):
         )
 
         self.mlp = nn.Sequential(
-            nn.Linear(total_input_dim, 64),
+            nn.Linear(total_input_dim, 16),
             nn.ReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(64, 1),
+            nn.Dropout(0.1),
+            nn.Linear(16, 4),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+            nn.Linear(4, 1),
             nn.Sigmoid()
         )
 
@@ -180,6 +183,9 @@ if __name__ == "__main__":
     embedding_dims = get_embedding_dims_from_db(conn)
     df = load_training_data(conn)
     conn.close()
+
+    df.to_csv("train_data.csv", index=False)
+    print("📁 train_data.csv 저장 완료 (업로드하여 Colab에서 사용 가능)")
 
     dataset = RecommendDataset(df)
     train_loader = DataLoader(dataset, batch_size=32, shuffle=True)

@@ -1,7 +1,6 @@
-// orderComplete.js
-
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
+
     async function confirm() {
         let requestData = {
             paymentKey: urlParams.get("paymentKey"),

@@ -7,7 +7,9 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Data
+@Getter
 @Builder
 public class OrderDto {
 
@@ -19,6 +21,10 @@ public class OrderDto {
     private List<OrderItemDto> items;
     private int totalPrice;    // 총  결제 금액
     private int count; // 개수
+
+    private int discountAmount;
+    private int deliveryFee;
+    private int finalAmount;
 
     // form 에서 받을 데이터
     // 주문 고객 정보를 담을것

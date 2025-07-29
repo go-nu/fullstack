@@ -89,7 +89,11 @@ function handleBotResponse(response) {
     
     // 링크가 있는 경우
     if (link) {
-        responseContent += `<br><a href="${link}" class="chat-link" target="_blank">자세히 보기</a>`;
+        let linkText = "상품 목록 보기";
+        if (link === "/event") {
+            linkText = "공지/이벤트 보기";
+        }
+        responseContent += `<br><a href="${link}" class="chat-link">${linkText}</a>`;
     }
     
     // 봇 메시지 추가

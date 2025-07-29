@@ -1,21 +1,23 @@
 package com.example.demo.entity;
 
 
+import com.example.demo.exception.OutOfStockException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
+@Where(clause = "is_deleted = false")
 public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // private ProductModelSelect productModelSelect; // 옵션
     private String productModelSelect; // 옵션명(자유입력)
     private Integer price;  // 옵션별 가격
     private Integer prStock; // 재고 수량
@@ -25,6 +27,9 @@ public class ProductModel {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "productModel", cascade = CascadeType.ALL, orphanRemoval = true)
     /**
@@ -58,16 +63,24 @@ public class ProductModel {
         return Objects.hash(productModelSelect, price, prStock);
     }
 
-//    public void removeStock(int prStock){
-//        int restStock = this.prStock - prStock;
-//        if(restStock < 0){
-//            throw new OutOfStockException("상품의 재고가 부족합니다. " +
-//                    "(현재 재고 수량 : "+ this.prStock + ")" );
-//        }
-//        this.prStock = restStock;
-//    }
-//
-//    public void addStock(int prStock){
-//        this.prStock += prStock;
-//    }
+    public void removeStock(int prStock){
+        int restStock = this.prStock - prStock;
+        if(restStock < 0){
+            throw new OutOfStockException("상품의 재고가 부족합니다. " +
+                    "(현재 재고 수량 : "+ this.prStock + ")" );
+        }
+        this.prStock = restStock;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void addStock(int prStock){
+        this.prStock += prStock;
+    }
 }

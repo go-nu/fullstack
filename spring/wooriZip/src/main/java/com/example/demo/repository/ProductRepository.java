@@ -46,4 +46,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     default List<Product> findTop5ByOrderByCreatedAtDesc() {
         return findTop5ByOrderByCreatedAtDesc(Pageable.ofSize(5));
     }
+
+    @Query(value = """
+        SELECT p.* FROM product p
+        JOIN (
+            SELECT product_id, COUNT(*) AS cnt
+            FROM recommend_log
+            WHERE product_id IS NOT NULL
+            GROUP BY product_id
+            ORDER BY cnt DESC
+            LIMIT 6
+        ) AS top ON p.id = top.product_id
+        """, nativeQuery = true)
+    List<Product> findTopRecommendedProducts();
 }

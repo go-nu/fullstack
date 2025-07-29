@@ -30,6 +30,8 @@ public class QnaPostDto {
     private String nickname;
     private Long productId;
 
+    private boolean isSecret = false; // 비밀글 여부
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -38,6 +40,7 @@ public class QnaPostDto {
 
     private boolean answered;
     private String productName;
+    private boolean purchased; // 구매 여부
 
     public void setAnswered(boolean answered) {
         this.answered = answered;
@@ -75,9 +78,11 @@ public class QnaPostDto {
                 .email(post.getEmail())
                 .nickname(post.getNickname())
                 .productId(post.getProduct().getId())
+                .isSecret(post.isSecret())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .answer(answerDto)
+                .answered(post.getAnswer() != null)
                 .build();
     }
 }

@@ -56,15 +56,19 @@ document.addEventListener("DOMContentLoaded", function () {
         modelInfo.innerText = `모델명: ${modelName} 가격: ${currentPrice.toLocaleString()}원, 재고: ${currentStock}`;
 
         if (currentStock <= 0) {
-        modelInfo.innerText += ' (품절)';
+                    modelInfo.innerText += ' (품절)';
+                    cartButton.disabled = true;
+                    cartButton.classList.add("btn-disabled");
          // TODO: 품절 시 장바구니/구매 버튼 비활성화 로직 추가
-        document.getElementById('cartButton').disabled = true;
-        document.getElementById('buyButton').disabled = true;
-        } else {
+        buyButton.disabled = true;
+                    buyButton.classList.add("btn-disabled");
+                } else {
+                    cartButton.disabled = false;
+                    cartButton.classList.remove("btn-disabled");
         // TODO: 기본 상태에서 버튼 비활성화 (모델 선택 필요)
-        document.getElementById('cartButton').disabled = false;
-        document.getElementById('buyButton').disabled = false;
-        }
+        buyButton.disabled = false;
+                    buyButton.classList.remove("btn-disabled");
+                }
     }
     }
 
@@ -348,6 +352,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 추천 로그 정보
         const productId = window.location.pathname.split("/").pop();
+
+        const productInput = document.createElement("input");
+        productInput.type = "hidden";
+        productInput.name = "items[0].productId"; // 반드시 이 형태로
+        productInput.value = productId;
+        form.appendChild(productInput);
+
         const actionType = action === 'cart' ? 'CART' : 'BUY';
         const weight = actionType === 'CART' ? 3 : 5;
 
@@ -362,6 +373,7 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({
                 productId: productId,
                 modelId: selectedModelId,
+                count: count,
                 actionType: actionType,
                 weight: weight
             })

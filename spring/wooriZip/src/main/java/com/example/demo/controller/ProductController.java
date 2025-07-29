@@ -1,13 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ProductForm;
+import com.example.demo.dto.*;
 import com.example.demo.entity.AttributeValue;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
-import com.example.demo.dto.AttributeValueDto;
-import com.example.demo.dto.ProductModelDto;
 import com.example.demo.repository.AttributeRepository;
 import com.example.demo.repository.AttributeValueRepository;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.ReviewPostRepository;
 import com.example.demo.service.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import com.example.demo.dto.ProductDetailDto;
-import com.example.demo.dto.ProductDetailInfoDto;
-import com.example.demo.dto.ReviewPostDto;
+
 import com.example.demo.entity.ReviewPost;
+import java.util.ArrayList;
 import com.example.demo.entity.QnaPost;
-import com.example.demo.dto.QnaPostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 
@@ -39,14 +37,36 @@ public class ProductController {
     private final ReviewPostService reviewPostService;
     private final WishlistService wishlistService;
 
+    private final ProductRepository productRepository;
+    private final ReviewPostRepository reviewPostRepository;
+
+    //    @GetMapping("/admin/products")
+//    public String adminProductList(Model model, Authentication authentication) {
+//        String email = UserUtils.getEmail(authentication);
+//        if (email == null) return "redirect:/user/login";
+//        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+//
+//        List<Product> products = productService.findProducts(null); // null = 모든 상품 조회
+//        model.addAttribute("products", products);
+//        return "product/admin-list";
+//    }
     @GetMapping("/admin/products")
     public String adminProductList(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        List<Product> products = productService.findProducts(null); // null = 모든 상품 조회
-        model.addAttribute("products", products);
+        // 관리자는 원본 Product 목록이 필요할 수
+        // DTO로 변환 (평균 평점 + 리뷰 수 + 재고 합계 포함)
+        List<ProductListDto> dtoList = productRepository.findAll().stream()
+                .map(product -> {
+                    double avgRating = reviewPostRepository.findByProductId(product.getId())
+                            .stream().mapToInt(ReviewPost::getRating).average().orElse(0.0);
+                    int reviewCount = reviewPostRepository.countByProductId(product.getId());
+                    return new ProductListDto(product, avgRating, reviewCount);
+                }).toList();
+
+        model.addAttribute("products", dtoList);  // ← 반드시 DTO 리스트를 넘겨야 함!
         return "product/admin-list";
     }
 
@@ -101,14 +121,36 @@ public class ProductController {
         return "redirect:/products";
     }
 
+//    @GetMapping("/products")
+//    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,
+//                                  Model model, Authentication authentication) {
+//        String email = UserUtils.getEmail(authentication);
+//        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+//        model.addAttribute("loginUser", loginUser);
+//        List<Product> productList = productService.findProducts(categoryId);
+//        model.addAttribute("products", productList);
+//        return "product/list";
+//    }
+
     @GetMapping("/products")
     public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,
+                                  @RequestParam(defaultValue = "1") int page,
                                   Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
         model.addAttribute("loginUser", loginUser);
-        List<Product> productList = productService.findProducts(categoryId);
-        model.addAttribute("products", productList);
+
+        // 페이징 처리 (한 페이지당 9개)
+        int pageSize = 9;
+        Page<ProductListDto> productPage = productService.findProductsWithPaging(categoryId, page, pageSize);
+        
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalElements", productPage.getTotalElements());
+        model.addAttribute("hasNext", productPage.hasNext());
+        model.addAttribute("hasPrevious", productPage.hasPrevious());
+        
         return "product/list";
     }
 
@@ -202,6 +244,8 @@ public class ProductController {
         Double averageRating = dto.getAverageRating();
         boolean hasWritten = (user != null && user.getEmail() != null)
                 && reviewPostService.hasWrittenReview(id, user.getEmail());
+        boolean hasPurchased = (user != null && user.getEmail() != null)
+                && reviewPostService.hasPurchasedProduct(id, user.getEmail());
 
         // ReviewPost를 ReviewPostDto로 변환
         Page<ReviewPostDto> reviewDtoPage = reviewPage.map(ReviewPostDto::fromEntity);
@@ -210,6 +254,7 @@ public class ProductController {
         model.addAttribute("ratingSummary", ratingSummary != null ? ratingSummary : new HashMap<>());
         model.addAttribute("averageRating", averageRating != null ? averageRating : 0.0);
         model.addAttribute("hasWritten", hasWritten);
+        model.addAttribute("hasPurchased", hasPurchased);
         model.addAttribute("sort", sort);
         model.addAttribute("productId", id);
 
@@ -217,6 +262,14 @@ public class ProductController {
         int qnaPageNum = Math.max(qnaPage - 1, 0);
         List<QnaPostDto> qnaList = qnaPostService.getQnaPostDtoList(id, qnaPageNum, qnaFilter);
         long qnaTotal = qnaPostService.countByProduct(id, qnaFilter);
+
+        // QnA 작성자들의 구매 여부 확인
+        if (qnaList != null) {
+            for (QnaPostDto qnaDto : qnaList) {
+                boolean isPurchased = qnaPostService.hasPurchasedProduct(id, qnaDto.getEmail());
+                qnaDto.setPurchased(isPurchased);
+            }
+        }
 
         model.addAttribute("qnaList", qnaList != null ? qnaList : new ArrayList<>());
         model.addAttribute("qnaTotal", qnaTotal);

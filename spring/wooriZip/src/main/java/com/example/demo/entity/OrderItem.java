@@ -23,7 +23,7 @@ public class OrderItem {
     private Product product; // 제품 아이디 조인
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-    @JoinColumn
+    @JoinColumn(name = "product_model_id") // 0729 dk 수정
     private ProductModel productModel; // 제품 모델 조인
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,7 +45,7 @@ public class OrderItem {
         orderItem.setProductModel(productModel);
         orderItem.setCount(count);
         orderItem.setOrderPrice(productModel.getPrice()); // 옵션별 가격으로 저장
-        //productModel.removeStock(count);
+        productModel.removeStock(count);
         return orderItem;
     }
 

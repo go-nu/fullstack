@@ -41,7 +41,7 @@
             background: #F9F7F0;
         }
         .table th, .table td {
-            padding: 14px 10px;
+            padding: 10px 8px;
             border-bottom: 1px solid #e0e0e0;
             text-align: center;
             font-size: 15px;
@@ -59,12 +59,12 @@
         }
         .btn {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: bold;
             text-decoration: none;
-            margin: 0 2px 4px 2px;
+            margin: 0 1px 2px 1px;
             transition: background 0.2s, color 0.2s;
             border: none;
             cursor: pointer;
@@ -72,9 +72,11 @@
         .btn-primary {
             background: #B17457;
             color: #fff;
+            text-decoration: none;
         }
         .btn-primary:hover {
             background: #8d5a41;
+            text-decoration: none;
         }
         .btn-warning {
             background: #D8D2C2;
@@ -92,8 +94,10 @@
         }
         .action-buttons {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             justify-content: center;
+            flex-wrap: nowrap;
+            white-space: nowrap;
         }
         .inline-form {
             display: inline;
@@ -224,6 +228,7 @@
         <div class="user-actions">
             <a th:href="@{/user/edit}" class="btn btn-primary">정보 수정</a>
             <a th:href="@{/cart}" class="btn btn-primary">장바구니</a>
+            <a th:href="@{/order/history}" class="btn btn-primary">주문 내역</a>
             <a href="/user/logout" class="btn btn-primary">로그아웃</a>
             <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말 탈퇴하시겠습니까?');">
                 <button type="submit" class="btn btn-primary">회원 탈퇴</button>

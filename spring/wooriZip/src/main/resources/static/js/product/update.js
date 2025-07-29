@@ -14,7 +14,7 @@ document.getElementById("imageInput").addEventListener("change", function (event
     const newFiles = Array.from(event.target.files);
 
     if (selectedFiles.length + newFiles.length > 4) {
-        alert("이미지는 최대 4장까지 업로드할 수 있습니다.");
+        alert("이미지는 최대 1장까지 업로드할 수 있습니다.");
         return;
     }
 
@@ -114,6 +114,7 @@ manualBtn.addEventListener('click', function () {
     // 옵션명 입력란
     const tdName = document.createElement('td');
     tdName.innerHTML = `
+        <input type="hidden" class="model-id" value="">
         <input type="hidden" class="attr-ids" value="">
     `;
     const input = document.createElement('input');
@@ -205,11 +206,14 @@ if (editForm) {
             // 테이블 기반
             const rows = document.querySelectorAll('#optionTable tbody tr');
             rows.forEach(row => {
-                const attrIds = row.querySelector('.attr-ids').value.split(',');
-                const optionName = row.querySelector('span').innerText;
-                const price = row.querySelector('.option-price').value;
-                const prStock = row.querySelector('.option-stock').value;
+                const attrIds = row.querySelector('.attr-ids')?.value?.split(',') || [];
+                const modelId = row.querySelector('.model-id')?.value || null;
+                const optionName = row.querySelector('span')?.innerText?.trim() || '';
+                const price = row.querySelector('.option-price')?.value || 0;
+                const prStock = row.querySelector('.option-stock')?.value || 0;
+
                 models.push({
+                    id: modelId, // ✅ 이게 핵심
                     productModelSelect: optionName,
                     price: price,
                     prStock: prStock,
@@ -387,6 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>
+                    <input type="hidden" class="model-id" value="${model.id}">
                     <input type="hidden" class="attr-ids" value="${attrIds.join(',')}">
                     <span>${optionName}</span>
                 </td>

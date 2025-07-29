@@ -32,7 +32,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CartItemRepository cartItemRepository;
-    private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final ProductModelRepository productModelRepository;
     private final UserCouponRepository userCouponRepository;
@@ -54,25 +53,31 @@ public class OrderService {
     public OrderDto getOrderByOrderId(String orderId) {
         // 최종 주문 완료한 것만 보여주기
         Order order = orderRepository.findByOrderId(orderId).orElseThrow(()-> new IllegalArgumentException("찾는 주문이 없습니다."));
-        List<CartItem> cartItems = cartItemRepository.findByCartUserEmail(order.getUsers().getEmail());
-
-        List<Long> orderedModelIds = order.getOrderItems().stream()
-                .map(oi -> oi.getProductModel().getId())
-                .toList();
-
-        List<OrderItemDto> orderItemDtos = cartItems.stream()
-                .filter(cartItem -> orderedModelIds.contains(cartItem.getProductModel().getId()))
-                .map(cartItem -> {
+        
+        // OrderItems에서 직접 OrderItemDto 생성
+        List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
+                .map(orderItem -> {
                     OrderItemDto dto = new OrderItemDto();
-                    dto.setProductId(cartItem.getProduct().getId());
-                    dto.setOrderItemId(null);
-                    dto.setProductName(cartItem.getProduct().getName());
-                    dto.setModelId(cartItem.getProductModel().getId());
-                    dto.setCount(cartItem.getCount());
-                    dto.setPrice(cartItem.getProductModel().getPrice());
-                    dto.setImgUrl(cartItem.getProduct().getImages().isEmpty() ? null
-                            : cartItem.getProduct().getImages().get(0).getImageUrl());
-                    dto.setCartItemId(cartItem.getId());
+                    dto.setProductId(orderItem.getProduct().getId());
+                    dto.setOrderItemId(orderItem.getId());
+                    dto.setProductName(orderItem.getProduct().getName());
+                    dto.setModelId(orderItem.getProductModel().getId());
+                    dto.setCount(orderItem.getCount());
+                    dto.setPrice(orderItem.getProductModel().getPrice());
+                    dto.setImgUrl(orderItem.getProduct().getImages().isEmpty() ? null
+                            : orderItem.getProduct().getImages().get(0).getImageUrl());
+                    dto.setCartItemId(null); // 주문 완료 후에는 cartItemId가 필요 없음
+                    
+                    // 배송비 계산 (주문 총액이 5만원 이상이면 무료배송)
+                    int totalOrderPrice = order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum();
+                    if (totalOrderPrice >= 50000) {
+                        dto.setDeliveryFee(0);
+                        dto.setDeliveryType("무료배송");
+                    } else {
+                        dto.setDeliveryFee(3000);
+                        dto.setDeliveryType("유료배송");
+                    }
+                    
                     return dto;
                 }).collect(Collectors.toList());
 
@@ -90,48 +95,20 @@ public class OrderService {
                 .detailAddress(order.getUsers().getDetailAddr())
                 .orderTime(order.getOrderDate().toLocalDate())
                 .payInfo(order.getPaymentMethod())
+                .totalPrice(order.getTotalPrice())
+                .discountAmount(order.getDiscountAmount())
+                .deliveryFee(order.getDeliveryFee())
+                .finalAmount(order.getFinalAmount())
                 .build();
-
         return dto;
     }
 
-    // 결재 성공 내역
-    @Transactional(readOnly = true)
-    public List<OrderDto> history(String email){
-        Users users = userRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("회원을 찾을 수 없습니다"));
-        List<Order> findStatuesOrders = orderRepository.findByUsersAndOrderStatus(users, OrderStatus.ORDER);
-        List<OrderDto> orderDtos = new ArrayList<>();
-
-        for (Order order : findStatuesOrders) {
-            List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
-                    .map(OrderItemDto::new)
-                    .collect(Collectors.toList());
-
-            OrderDto dto = OrderDto.builder()
-                    .orderNo(order.getId())
-                    .totalPrice(order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum())
-                    .items(orderItemDtos)
-                    .userName(order.getUsers().getName())
-                    .orderId(order.getOrderId())
-                    .email(order.getUsers().getEmail())
-                    .phone(order.getUsers().getPhone())
-                    .pCode(order.getUsers().getP_code())
-                    .loadAddress(order.getUsers().getLoadAddr())
-                    .lotAddress(order.getUsers().getLotAddr())
-                    .detailAddress(order.getUsers().getDetailAddr())
-                    .orderTime(order.getOrderDate().toLocalDate())
-                    .build();
-
-            orderDtos.add(dto);
-        }
-        log.info("사이즈 확인 : {} " , orderDtos.size());
-        return orderDtos;
-    }
 
     // 기존에 오더 있는지 확인
     @Transactional(readOnly = true)
     public OrderDto getExistingOrderDto(Users user) {
-        List<Order> existingOrders = orderRepository.findByUsersAndOrderStatus(user, OrderStatus.STAY);;
+        List<Order> existingOrders = orderRepository.findByUsersAndOrderStatus(user, OrderStatus.STAY);
+        ;
 
         if (!existingOrders.isEmpty()) {
             Order existingOrder = existingOrders.get(0);
@@ -157,87 +134,7 @@ public class OrderService {
         return null; // 기존 주문이 없으면 null 반환
     }
 
-//    // 주문 생성
-//    public OrderDto createOrder(String email, List<Long> itemIds) {
-//        Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
-//
-//        List<OrderItem> orderItems = new ArrayList<>();
-//        int totalAmount = 0;
-//
-//        // 기존 주문이 있는지 확인하고, 있는 경우 기존 주문에 항목 추가
-//        List<Order> existingOrders = findExistingOrders(user);
-//        Order order;
-//        if (!existingOrders.isEmpty()) {
-//            order = existingOrders.get(0);
-//        } else {
-//            order = Order.createOrder(user, new ArrayList<>());
-//            orderRepository.save(order);
-//        }
-//
-//        for (Long cartItemId : itemIds) {
-//            CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new IllegalArgumentException("찾는 아이템이 없습니다"));
-//            Product product = cartItem.getProduct();
-//            ProductModel productModel = cartItem.getProductModel();
-//
-//            // 기존 주문 항목 중 동일한 제품 및 모델이 있는지 확인
-//            boolean exists = order.getOrderItems().stream()
-//                    .anyMatch(item -> item.getProduct().getId().equals(product.getId()) &&
-//                            item.getProductModel().getId().equals(productModel.getId()));
-//
-//            if (!exists) {
-//                // 기존 주문 항목이 없는 경우 새로 추가
-//                OrderItem orderItem = OrderItem.createOrderItems(product, productModel, cartItem.getCount());
-//                order.addOrderItem(orderItem); // OrderItem 객체를 Order 객체에 추가
-//                totalAmount += orderItem.getTotalPrice();
-//            } else {
-//                // 기존 주문 항목에 있고 수량의 차이가 있다면
-//                OrderItem existingOrderItem = order.getOrderItems().stream()
-//                        .filter(item -> item.getProduct().getId().equals(product.getId()) &&
-//                                item.getProductModel().getId().equals(productModel.getId()))
-//                        .findFirst()
-//                        .orElseThrow(() -> new IllegalArgumentException("주문 항목을 찾을 수 없습니다."));
-//
-//                int newCount = cartItem.getCount();
-//                int oldCount = existingOrderItem.getCount();
-//                int difference = newCount - oldCount;
-//
-//                //재고 수 파악
-////                if (difference > 0) {
-////                    existingOrderItem.getProductModel().removeStock(difference);
-////                } else {
-////                    existingOrderItem.getProductModel().addStock(Math.abs(difference));
-////                }
-//
-//                existingOrderItem.setCount(newCount);
-//                totalAmount += existingOrderItem.getTotalPrice();
-//            }
-//        }
-//
-//
-//
-//        orderRepository.save(order);
-//
-//        List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
-//                .map(OrderItemDto::new)
-//                .collect(Collectors.toList());
-//        OrderDto dto = OrderDto.builder()
-//                .orderNo(order.getId())
-//                .orderId(order.getOrderId())
-//                .totalPrice(totalAmount)
-//                .items(orderItemDtos)
-//                .userName(user.getName())
-//                .email(user.getEmail())
-//                .phone(user.getPhone())
-//                .pCode(user.getP_code())
-//                .loadAddress(user.getLoadAddr())
-//                .lotAddress(user.getLotAddr())
-//                .detailAddress(user.getDetailAddr())
-//                .build();
-//
-//        return dto;
-//    }
-
-    // 주문 생성
+    // 장바구니에서 주문 생성
     public OrderDto createOrder(String email, List<Long> itemIds, Long couponId) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
@@ -292,37 +189,35 @@ public class OrderService {
                     .anyMatch(item -> item.getProduct().getId().equals(product.getId()) &&
                             item.getProductModel().getId().equals(productModel.getId()));
 
-//            if (!exists) {
-//                // 기존 주문 항목이 없는 경우 새로 추가
-//                OrderItem orderItem = OrderItem.createOrderItems(product, productModel, cartItem.getCount());
-//                order.addOrderItem(orderItem); // OrderItem 객체를 Order 객체에 추가
-//                totalAmount += orderItem.getTotalPrice();
-//            } else {
-//                // 기존 주문 항목에 있고 수량의 차이가 있다면
-//                OrderItem existingOrderItem = order.getOrderItems().stream()
-//                        .filter(item -> item.getProduct().getId().equals(product.getId()) &&
-//                                item.getProductModel().getId().equals(productModel.getId()))
-//                        .findFirst()
-//                        .orElseThrow(() -> new IllegalArgumentException("주문 항목을 찾을 수 없습니다."));
-//
-//                int newCount = cartItem.getCount();
-//                int oldCount = existingOrderItem.getCount();
-//                int difference = newCount - oldCount;
+            if (!exists) {
+                // 기존 주문 항목이 없는 경우 새로 추가
+                order.addOrderItem(orderItem); // OrderItem 객체를 Order 객체에 추가
+                totalAmount += orderItem.getTotalPrice();
+            } else {
+                // 기존 주문 항목에 있고 수량의 차이가 있다면
+                OrderItem existingOrderItem = order.getOrderItems().stream()
+                        .filter(item -> item.getProduct().getId().equals(product.getId()) &&
+                                item.getProductModel().getId().equals(productModel.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("주문 항목을 찾을 수 없습니다."));
+
+                int newCount = cartItem.getCount();
+                int oldCount = existingOrderItem.getCount();
+                int difference = newCount - oldCount;
 
                 //재고 수 파악
-//                if (difference > 0) {
-//                    existingOrderItem.getProductModel().removeStock(difference);
-//                } else {
-//                    existingOrderItem.getProductModel().addStock(Math.abs(difference));
-//                }
-//
-//                existingOrderItem.setCount(newCount);
-//                totalAmount += existingOrderItem.getTotalPrice();
-//            }
+                if (difference > 0) {
+                    existingOrderItem.getProductModel().removeStock(difference);
+                } else {
+                    existingOrderItem.getProductModel().addStock(Math.abs(difference));
+                }
+
+                existingOrderItem.setCount(newCount);
+                totalAmount += existingOrderItem.getTotalPrice();
+            }
         }
 
         order.getOrderItems().addAll(newItems);
-//        order.setOrderItems(newItems);
         orderRepository.save(order);
 
         List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
@@ -344,60 +239,6 @@ public class OrderService {
                 .build();
 
         return dto;
-    }
-
-    // 주문 아이템 삭제
-    public void removeOrderItem(Long orderId, Long orderItemId, String email) {
-        Users user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
-
-        // 해당 주문을 찾기
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-
-        if (!order.getUsers().getEmail().equals(email)) {
-            throw new IllegalArgumentException("해당 주문에 대한 권한이 없습니다.");
-        }
-
-        // 해당 주문 항목을 찾기
-        OrderItem orderItem = order.getOrderItems().stream()
-                .filter(item -> item.getId().equals(orderItemId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("주문 항목을 찾을 수 없습니다."));
-
-        // 재고 롤백
-        //orderItem.getProductModel().addStock(orderItem.getCount());
-
-        // 주문 항목 삭제
-        order.getOrderItems().remove(orderItem);
-
-        // 주문 항목이 없으면 주문 삭제
-        if (order.getOrderItems().isEmpty()) {
-            orderRepository.delete(order);
-        } else {
-            orderRepository.save(order);
-        }
-    }
-
-    // 수량 업데이트
-    public void updateOrderItemQuantity(Long orderItemId, int newCount) {
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("주문 항목을 찾을 수 없습니다."));
-
-        int oldCount = orderItem.getCount();
-        int difference = newCount - oldCount;
-
-//        if (difference > 0) {
-//            orderItem.getProductModel().removeStock(difference);
-//        } else {
-//            orderItem.getProductModel().addStock(Math.abs(difference));
-//        }
-        // 장바구니 항목도 업데이트
-        CartItem cartItem = cartItemRepository.findByProductAndProductModel(orderItem.getProduct(), orderItem.getProductModel())
-                .orElseThrow(() -> new IllegalArgumentException("장바구니 항목을 찾을 수 없습니다."));
-        cartItem.updateCount(newCount);
-        cartItemRepository.save(cartItem);
-
-        orderItem.setCount(newCount);
-        orderItemRepository.save(orderItem);
     }
 
 
@@ -469,10 +310,9 @@ public class OrderService {
             Order order = orderRepository.findByOrderId(orderId).orElseThrow(() -> new EntityNotFoundException("주문정보를 찾을수 없습니다."));
             order.setOrderStatus(OrderStatus.CANCEL);
 
-//            for (OrderItem orderItem : order.getOrderItems()) {
-//
-//                orderItem.getProductModel().addStock(orderItem.getOrderPrice());
-//            }
+            for (OrderItem orderItem : order.getOrderItems()) {
+                orderItem.getProductModel().addStock(orderItem.getOrderPrice());
+            }
 
             orderRepository.save(order);
         } catch (EntityNotFoundException e) {
@@ -484,10 +324,11 @@ public class OrderService {
         }
     }
 
+    // 바로구매하기 주문 생성
     public OrderDto createOrderByNow(CartDto cartDto, long prId, String email) {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다"));
 
-        int totalAmount = (int)cartDto.getTotalPrice();
+        int totalAmount = (int) cartDto.getTotalPrice();
 
         // 기존 주문에 해당 상품이 있는지 확인하고, 있는 경우 기존 주문 삭제
         List<Order> existingOrders = orderRepository.findByUsersAndOrderStatus(user, OrderStatus.STAY);
@@ -532,11 +373,11 @@ public class OrderService {
                 int oldCount = existingOrderItem.getCount();
                 int difference = newCount - oldCount;
 
-//                if (difference > 0) {
-//                    existingOrderItem.getProductModel().removeStock(difference);
-//                } else {
-//                    existingOrderItem.getProductModel().addStock(Math.abs(difference));
-//                }
+                if (difference > 0) {
+                    existingOrderItem.getProductModel().removeStock(difference);
+                } else {
+                    existingOrderItem.getProductModel().addStock(Math.abs(difference));
+                }
 
                 existingOrderItem.setCount(newCount);
             }
@@ -564,34 +405,6 @@ public class OrderService {
         return dto;
     }
 
-    public List<OrderDto> findOrdersByDateRange(LocalDate startDate, LocalDate endDate) {
-        log.info("{}", orderRepository.findAllByOrderDateBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()).size());
-        List<Order> orders = orderRepository.findAllByOrderDateBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
-        List<OrderDto> orderDtos = new ArrayList<>();
-        for (Order order : orders) {
-            List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
-                    .map(OrderItemDto::new)
-                    .collect(Collectors.toList());
-
-            OrderDto dto = OrderDto.builder()
-                    .orderNo(order.getId())
-                    .totalPrice(order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum())
-                    .items(orderItemDtos)
-                    .userName(order.getUsers().getName())
-                    .orderId(order.getOrderId())
-                    .email(order.getUsers().getEmail())
-                    .phone(order.getUsers().getPhone())
-                    .pCode(order.getUsers().getP_code())
-                    .loadAddress(order.getUsers().getLoadAddr())
-                    .lotAddress(order.getUsers().getLotAddr())
-                    .detailAddress(order.getUsers().getDetailAddr())
-                    .orderTime(order.getOrderDate().toLocalDate())
-                    .build();
-
-            orderDtos.add(dto);
-        }
-        return orderDtos;
-    }
 
     @Transactional(readOnly = true)
     public Page<OrderDto> orderPage(List<OrderDto> orderDtos, int page) {
@@ -629,9 +442,8 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다"));
 
         // 쿠폰이 해당 사용자의 것인지 확인
-        if (!userCoupon.getUser().getId().equals(user.getId())) {
+        if (!userCoupon.getUser().getId().equals(user.getId()))
             throw new IllegalArgumentException("해당 쿠폰을 사용할 수 없습니다");
-        }
 
         // 주문에 이미 같은 쿠폰이 연결되어 있으면 그냥 리턴
         if (order.getUserCoupon() != null && order.getUserCoupon().getId().equals(couponId)) {
@@ -642,7 +454,7 @@ public class OrderService {
     }
 
     // 쿠폰 할인이 적용된 실제 결제 금액 계산
-    @Transactional(readOnly = true)
+    @Transactional
     public int getFinalPaymentAmount(String email) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
@@ -670,7 +482,16 @@ public class OrderService {
             }
         }
 
-        return totalPrice + deliveryFee - discountAmount;
+        int finalAmount = totalPrice + deliveryFee - discountAmount;
+
+        // 💾 저장
+        order.setTotalPrice(totalPrice);
+        order.setDiscountAmount(discountAmount);
+        order.setDeliveryFee(deliveryFee);
+        order.setFinalAmount(finalAmount);
+        orderRepository.save(order); // 변경 감지로 자동 저장도 가능
+
+        return finalAmount;
     }
 
     @Transactional
@@ -686,6 +507,7 @@ public class OrderService {
         userCouponRepository.save(order.getUserCoupon());
     }
 
+
     @Transactional
     public void markCouponUsedForOrder(String orderId) {
         Order order = orderRepository.findByOrderId(orderId).orElse(null);
@@ -695,4 +517,49 @@ public class OrderService {
         order.getUserCoupon().setUsed(true);
         userCouponRepository.save(order.getUserCoupon());
     }
+
+
+    public List<OrderDto> findOrdersByDateRange(LocalDate startDate, LocalDate endDate) {
+        log.info("{}", orderRepository.findAllByOrderDateBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()).size());
+        List<Order> orders = orderRepository.findAllByOrderDateBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : orders) {
+            List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
+                    .map(OrderItemDto::new)
+                    .collect(Collectors.toList());
+
+            OrderDto dto = OrderDto.builder()
+                    .orderNo(order.getId())
+                    .totalPrice(order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum())
+                    .items(orderItemDtos)
+                    .userName(order.getUsers().getName())
+                    .orderId(order.getOrderId())
+                    .email(order.getUsers().getEmail())
+                    .phone(order.getUsers().getPhone())
+                    .pCode(order.getUsers().getP_code())
+                    .loadAddress(order.getUsers().getLoadAddr())
+                    .lotAddress(order.getUsers().getLotAddr())
+                    .detailAddress(order.getUsers().getDetailAddr())
+                    .orderTime(order.getOrderDate().toLocalDate())
+                    .build();
+
+            orderDtos.add(dto);
+        }
+        return orderDtos;
+    }
+
+
+    // 결재 성공 내역
+    @Transactional(readOnly = true)
+    public List<OrderItem> history(String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
+
+        List<Order> orders = orderRepository.findByUsersAndOrderStatus(user, OrderStatus.ORDER);
+
+        return orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .collect(Collectors.toList());
+    }
+
 }

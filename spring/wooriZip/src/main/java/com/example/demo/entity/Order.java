@@ -49,6 +49,11 @@ public class Order {
     @JoinColumn(name = "user_coupon_id")
     private UserCoupon userCoupon;
 
+    private int totalPrice;   // 상품 총 금액
+    private int discountAmount;
+    private int deliveryFee;  // 배송비
+    private int finalAmount;  // 최종 결제 금액 (쿠폰 적용 후)
+
     // 주문 목록
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();

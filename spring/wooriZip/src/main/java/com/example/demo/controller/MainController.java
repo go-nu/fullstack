@@ -41,16 +41,18 @@ public class MainController {
             model.addAttribute("loginUser", user);
         }
 
-        // ✅ 추천 상품 추가
-        if (user != null) {
-            try {
-                model.addAttribute("products", recommendService.getRecommendedProducts(user));
-            } catch (Exception e) {
-                model.addAttribute("products", List.of()); // 추천 실패 시 빈 리스트로 대체
-            }
-        } else {
-            model.addAttribute("products", List.of()); // 비로그인 시에도 빈 리스트
-        }
+//        // ✅ 추천 상품 추가
+//        if (user != null) {
+//            try {
+//                model.addAttribute("products", recommendService.getRecommendedProducts(user));
+//            } catch (Exception e) {
+//                model.addAttribute("products", List.of()); // 추천 실패 시 빈 리스트로 대체
+//            }
+//        } else {
+//            model.addAttribute("products", List.of()); // 비로그인 시에도 빈 리스트
+//        }
+
+        model.addAttribute("products", recommendService.getBestProducts());
 
         // 전체 게시글 가져오기
         List<InteriorPostDto> allPosts = interiorPostService.findAll();

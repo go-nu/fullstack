@@ -88,9 +88,9 @@
         #resultModal {
             display: none;
             position: fixed;
-            left: 0; top: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
             justify-content: center;
             align-items: center;
         }
@@ -99,12 +99,13 @@
         }
         #resultModal > div {
             background: #fff;
+            padding: 32px;
             border-radius: 12px;
-            padding: 32px 24px;
-            min-width: 320px;
+            min-width: 300px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             text-align: center;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
         }
+
         #resultModal p {
             font-size: 18px;
             margin-bottom: 24px;
@@ -202,6 +203,23 @@
 
 <div th:replace="~{index/footer :: footer}"></div>
 <script src="/js/user/findPW.js"></script>
+<!-- resetMailSent 있을 때만 스크립트 실행 -->
+<div th:if="${resetMailSent != null}">
+    <script>
+        window.onload = function () {
+            showModal('[[${resetMailSent}]]');
+        }
+    </script>
+</div>
+
+<!-- error 있을 때만 스크립트 실행 -->
+<div th:if="${error != null}">
+    <script>
+        window.onload = function () {
+            showModal('[[${error}]]');
+        }
+    </script>
+</div>
 </body>
 </html>
 

@@ -8,6 +8,8 @@ import com.example.demo.entity.Users;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.QnaAnswerRepository;
 import com.example.demo.repository.QnaPostRepository;
+import com.example.demo.repository.OrderRepository;
+import com.example.demo.constant.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,7 @@ public class QnaPostService {
     private final QnaPostRepository qnaPostRepository;
     private final QnaAnswerRepository qnaAnswerRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     private final String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
@@ -56,6 +59,7 @@ public class QnaPostService {
                 .filePaths(joinedPaths)
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
+                .isSecret(dto.isSecret())
                 .product(product)
                 .build();
 
@@ -91,6 +95,7 @@ public class QnaPostService {
         post.setContent(dto.getContent());
         post.setFilePaths(joinedPaths);
         post.setFileNames(joinedNames);
+        post.setSecret(dto.isSecret());
         post.setUpdatedAt(LocalDateTime.now());
 
         qnaPostRepository.save(post);
@@ -209,7 +214,7 @@ public class QnaPostService {
         return stats;
     }
 
-    public Map<String, Map<String, Object>> getQnaByCategoryWithStatus() {
+        public Map<String, Map<String, Object>> getQnaByCategoryWithStatus() {
         List<QnaPost> allQna = qnaPostRepository.findAll();
         Map<String, Map<String, Object>> categoryStats = new HashMap<>();
 
@@ -223,8 +228,8 @@ public class QnaPostService {
                                     list.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
                                     return list;
                                 }
-                        )
-                ));
+                            )
+                        ));
 
         allQna.forEach(qna -> {
             String category = qna.getProduct().getCategory().getName();
@@ -296,7 +301,7 @@ public class QnaPostService {
                 .collect(Collectors.toList());
     }
 
-    /** 사용자가 작성한 QnA 목록 조회 */
+    //사용자가 작성한 QnA 목록 조회
     public List<QnaPostDto> findByUser(Users user) {
         return qnaPostRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
                 .stream()
@@ -309,6 +314,12 @@ public class QnaPostService {
                 .collect(Collectors.toList());
     }
 
+    // 사용자가 해당 상품을 구매했는지 확인
+    public boolean hasPurchasedProduct(Long productId, String email) {
+        return orderRepository.existsByUsersEmailAndOrderStatusAndOrderItemsProductId(email, OrderStatus.ORDER, productId);
+    }
+
+    // 관리자 대시보드에서 QnA 목록 조회
     public List<com.example.demo.dto.QnaPostDto> getAllQnaForAdminDashboard() {
         List<QnaPost> allQna = qnaPostRepository.findAll();
         List<com.example.demo.dto.QnaPostDto> result = new java.util.ArrayList<>();
