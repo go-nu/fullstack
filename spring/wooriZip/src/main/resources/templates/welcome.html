@@ -213,6 +213,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
+            width: 100%;
         }
         .interior-card {
             background: #fff;
@@ -238,7 +239,10 @@
             font-weight: 600;
             color: #4A4947;
             margin-bottom: 4px;
-            line-height: 1.3;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .interior-meta {
             font-size: 0.8rem;
@@ -309,16 +313,22 @@
             main {
                 padding: 0 2vw;
             }
-            .product-grid, .interior-grid {
+            .product-grid {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            .interior-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
             .event-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
         @media (max-width: 900px) {
-            .product-grid, .interior-grid {
+            .product-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .interior-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
             .event-grid {
                 grid-template-columns: 1fr;
@@ -341,8 +351,11 @@
             .slide-content p {
                 font-size: 1rem;
             }
-            .product-grid, .interior-grid {
+            .product-grid {
                 grid-template-columns: 1fr;
+            }
+            .interior-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             .category-nav {
                 flex-direction: column;
@@ -509,31 +522,27 @@
                 </div>
             </div>
             <!-- 일반 게시글 카드 -->
-            <div class="interior-grid">
-                <a class="interior-card-link" th:each="post : ${latestInteriorPosts}"
-                   th:href="@{'/interior/' + ${post.postId}}"
+            <div class="interior-card" th:each="post : ${latestInteriorPosts}">
+                <a th:href="@{'/interior/' + ${post.postId}}"
                    style="text-decoration: none; color: inherit; display: block;">
-                    <div class="interior-card">
-                        <img th:if="${post.filePaths != null and post.filePaths != ''}"
-                             th:src="@{${#strings.arraySplit(post.filePaths, ',')[0]}}"
-                             class="interior-image" alt="게시글 이미지">
-                        <img th:unless="${post.filePaths != null and post.filePaths != ''}"
-                             src="https://via.placeholder.com/300x200"
-                             class="interior-image" alt="기본 이미지">
-                        <div class="interior-info">
-                            <span class="interior-title" th:text="${post.title}">게시글 제목</span>
-                            <div class="interior-meta" th:text="${post.nickname + ' · ' + #temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성자 · 날짜</div>
-                            <div class="product-price" th:text="${#numbers.formatInteger(post.price, 3, 'COMMA')} + '원'" th:if="${post.price != null}"></div>
-                        </div>
-                        <div class="interior-stats">
-                            <div>
-                                <span>🔍 <span th:text="${post.views}">0</span></span>
-                                <span>❤️ <span th:text="${post.liked}">0</span></span>
-                            </div>
-                            <a th:href="@{'/interior/' + ${post.postId}}" class="interior-btn">보기</a>
-                        </div>
+                    <img th:if="${post.filePaths != null and post.filePaths != ''}"
+                         th:src="@{${#strings.arraySplit(post.filePaths, ',')[0]}}"
+                         class="interior-image" alt="게시글 이미지">
+                    <img th:unless="${post.filePaths != null and post.filePaths != ''}"
+                         src="https://via.placeholder.com/300x200"
+                         class="interior-image" alt="기본 이미지">
+                    <div class="interior-info">
+                        <span class="interior-title" th:text="${post.title}">게시글 제목</span>
+                        <div class="interior-meta" th:text="${post.nickname + ' · ' + #temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성자 · 날짜</div>
                     </div>
                 </a>
+                <div class="interior-stats">
+                    <div>
+                        <span>🔍 <span th:text="${post.views}">0</span></span>
+                        <span>❤️ <span th:text="${post.liked}">0</span></span>
+                    </div>
+                    <a th:href="@{'/interior/' + ${post.postId}}" class="interior-btn">보기</a>
+                </div>
             </div>
         </div>
         <div class="section-footer">
@@ -609,4 +618,4 @@
     </script>
 </div>
 </body>
-</html>
+</html>     

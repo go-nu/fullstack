@@ -235,7 +235,7 @@
             <div th:each="url, iterStat : ${productForm.imageUrls}" class="image-container"
                  th:data-index="${iterStat.index}">
                 <img th:src="${url}" class="image-preview"/>
-                <button type="button" class="remove-btn" onclick="removeExistingImage(this)">X</button>
+                <button type="button" class="remove-btn" onclick="removeExistingImage(this)">✕</button>
             </div>
         </div>
 

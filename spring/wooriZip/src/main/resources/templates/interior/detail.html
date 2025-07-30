@@ -287,11 +287,11 @@
                 </button>
             </div>
 
-            <div class="btn-box" th:if="${loginUser != null and dto.email == loginUser.email}">
-                <button type="button" th:onclick="|location.href='@{/interior/edit/{id}(id=${dto.postId})}'|">수정</button>
+            <div class="btn-box" th:if="${loginUser != null and (dto.email == loginUser.email or loginUser.role.name() == 'ADMIN')}">
+                <button type="button" th:if="${dto.email == loginUser.email}" th:onclick="|location.href='@{/interior/edit/{id}(id=${dto.postId})}'|">수정</button>
                 <form th:action="@{'/interior/delete/' + ${dto.postId}}" method="post"
                       onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
-                    <button type="submit">삭제</button>
+                    <button type="submit" th:text="${loginUser.role.name() == 'ADMIN' ? '관리자 삭제' : '삭제'}">삭제</button>
                 </form>
             </div>
         </div>
@@ -303,15 +303,15 @@
                     <p><strong th:text="${comment.nickname}">작성자</strong>: <span th:text="${comment.content}">내용</span></p>
                     <p><small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</small></p>
 
-                    <div th:if="${loginUser != null and comment.email == loginUser.email}">
-                        <form th:action="@{'/interior/' + ${dto.postId} + '/comment/edit/' + ${comment.commentId}}"
+                    <div th:if="${loginUser != null and (comment.email == loginUser.email or loginUser.role.name() == 'ADMIN')}">
+                        <form th:if="${comment.email == loginUser.email}" th:action="@{'/interior/' + ${dto.postId} + '/comment/edit/' + ${comment.commentId}}"
                               method="post">
                             <textarea name="content" rows="2" th:text="${comment.content}"></textarea>
                             <button type="submit">댓글 수정</button>
                         </form>
                         <form th:action="@{'/interior/' + ${dto.postId} + '/comment/delete/' + ${comment.commentId}}"
                               method="post">
-                            <button type="submit">댓글 삭제</button>
+                            <button type="submit" th:text="${loginUser.role.name() == 'ADMIN' ? '관리자 댓글 삭제' : '댓글 삭제'}">댓글 삭제</button>
                         </form>
                     </div>
                 </div>

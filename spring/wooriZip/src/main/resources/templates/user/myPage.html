@@ -230,7 +230,8 @@
             <a th:href="@{/cart}" class="btn btn-primary">장바구니</a>
             <a th:href="@{/order/history}" class="btn btn-primary">주문 내역</a>
             <a href="/user/logout" class="btn btn-primary">로그아웃</a>
-            <form th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말 탈퇴하시겠습니까?');">
+            <form th:if="${loginUser.role.name() != 'ADMIN'}"
+                  th:action="@{/user/delete}" method="post" onsubmit="return confirm('정말 탈퇴하시겠습니까?');">
                 <button type="submit" class="btn btn-primary">회원 탈퇴</button>
             </form>
         </div>

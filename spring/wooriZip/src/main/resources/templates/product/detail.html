@@ -164,6 +164,539 @@
             cursor: not-allowed !important;
             opacity: 0.7;
         }
+        
+        /* Review & QnA 섹션 스타일링 */
+        .tab-content-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 24px;
+        }
+        
+        /* Review 섹션 스타일 */
+        #review-section .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+        }
+        
+        #review-section .card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #review-section .card-body {
+            padding: 24px;
+        }
+        
+        #review-section .card-title {
+            color: var(--brand-text);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        #review-section .card-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+                 #review-section .btn {
+             background: transparent;
+             color: var(--brand-point);
+             border: 2px solid var(--brand-point);
+             border-radius: 6px;
+             padding: 12px 32px;
+             font-size: 1.1rem;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.2s;
+             margin-bottom: 0;
+             text-decoration: none;
+         }
+         
+         #review-section .btn:hover, #review-section .btn.active {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         #review-section .btn-primary {
+             background: transparent;
+             color: var(--brand-point);
+             border-color: var(--brand-point);
+         }
+         
+         #review-section .btn-primary:hover {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         #review-section .btn-success {
+             background: transparent;
+             color: #28a745;
+             border-color: #28a745;
+         }
+         
+         #review-section .btn-success:hover {
+             background: #28a745;
+             color: #fff;
+         }
+         
+         #review-section .btn-outline-secondary {
+             color: #6c757d;
+             border-color: #6c757d;
+             background: transparent;
+         }
+         
+         #review-section .btn-outline-secondary:hover {
+             background: #6c757d;
+             color: #fff;
+         }
+         
+         #review-section .btn-outline-danger {
+             color: #dc3545;
+             border-color: #dc3545;
+             background: transparent;
+         }
+         
+         #review-section .btn-outline-danger:hover {
+             background: #dc3545;
+             color: #fff;
+         }
+        
+        #review-section .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        #review-section .form-control:focus {
+            border-color: var(--brand-point);
+            box-shadow: 0 0 0 0.2rem rgba(177, 116, 87, 0.25);
+        }
+        
+        #review-section .progress {
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        #review-section .progress-bar {
+            background: var(--brand-point);
+            border-radius: 10px;
+        }
+        
+                 #review-section .pagination {
+             display: flex;
+             justify-content: center;
+             gap: 8px;
+             margin-top: 40px;
+         }
+         
+         #review-section .pagination a, #review-section .pagination span {
+             padding: 8px 12px;
+             border: 1px solid #E0E0E0;
+             background: #fff;
+             color: #4A4947;
+             text-decoration: none;
+             font-size: 0.95rem;
+             transition: all 0.2s;
+         }
+         
+         #review-section .pagination a:hover {
+             background: var(--brand-point);
+             color: #fff;
+             border-color: var(--brand-point);
+         }
+         
+         #review-section .pagination .active {
+             background: var(--brand-point);
+             color: #fff;
+             border-color: var(--brand-point);
+         }
+         
+         #review-section .pagination span:not(.active) {
+             color: #ccc;
+             cursor: not-allowed;
+         }
+        
+        /* QnA 섹션 스타일 */
+        #qna-section .border.rounded {
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 8px !important;
+            padding: 24px !important;
+            margin-bottom: 20px !important;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+        }
+        
+        #qna-section .border.rounded:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+                 #qna-section .btn {
+             background: transparent;
+             color: var(--brand-point);
+             border: 2px solid var(--brand-point);
+             border-radius: 6px;
+             padding: 12px 32px;
+             font-size: 1.1rem;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.2s;
+             margin-bottom: 0;
+             text-decoration: none;
+         }
+         
+         #qna-section .btn:hover, #qna-section .btn.active {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         #qna-section .btn-primary {
+             background: transparent;
+             color: var(--brand-point);
+             border-color: var(--brand-point);
+         }
+         
+         #qna-section .btn-primary:hover {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         #qna-section .btn-success {
+             background: transparent;
+             color: #28a745;
+             border-color: #28a745;
+         }
+         
+         #qna-section .btn-success:hover {
+             background: #28a745;
+             color: #fff;
+         }
+         
+         #qna-section .btn-outline-primary {
+             color: var(--brand-point);
+             border-color: var(--brand-point);
+             background: transparent;
+         }
+         
+         #qna-section .btn-outline-primary:hover {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         #qna-section .btn-outline-danger {
+             color: #dc3545;
+             border-color: #dc3545;
+             background: transparent;
+         }
+         
+         #qna-section .btn-outline-danger:hover {
+             background: #dc3545;
+             color: #fff;
+         }
+         
+         #qna-section .btn-outline-success {
+             color: #28a745;
+             border-color: #28a745;
+             background: transparent;
+         }
+         
+         #qna-section .btn-outline-success:hover {
+             background: #28a745;
+             color: #fff;
+         }
+        
+        #qna-section .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        #qna-section .form-control:focus {
+            border-color: var(--brand-point);
+            box-shadow: 0 0 0 0.2rem rgba(177, 116, 87, 0.25);
+        }
+        
+        #qna-section .badge {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        
+        #qna-section .badge.bg-warning {
+            background: #ffc107 !important;
+            color: #212529;
+        }
+        
+        #qna-section .badge.bg-success {
+            background: #28a745 !important;
+            color: #fff;
+        }
+        
+        #qna-section .alert {
+            border-radius: 6px;
+            border: none;
+            padding: 16px;
+        }
+        
+        #qna-section .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        
+                 #qna-section .border-top {
+             border-top: 1px solid #e0e0e0 !important;
+             padding-top: 16px;
+             margin-top: 16px;
+         }
+         
+         /* QnA Q&A 라벨 스타일링 */
+         #qna-section .badge.bg-primary {
+             background: #007bff !important;
+             color: #fff;
+         }
+         
+         #qna-section .badge.bg-info {
+             background: #17a2b8 !important;
+             color: #fff;
+         }
+         
+         #qna-section .text-primary {
+             color: #007bff !important;
+         }
+         
+         #qna-section .text-success {
+             color: #28a745 !important;
+         }
+        
+                 #qna-section .pagination {
+             display: flex;
+             justify-content: center;
+             gap: 8px;
+             margin-top: 40px;
+         }
+         
+         #qna-section .pagination a, #qna-section .pagination span {
+             padding: 8px 12px;
+             border: 1px solid #E0E0E0;
+             background: #fff;
+             color: #4A4947;
+             text-decoration: none;
+             font-size: 0.95rem;
+             transition: all 0.2s;
+         }
+         
+         #qna-section .pagination a:hover {
+             background: var(--brand-point);
+             color: #fff;
+             border-color: var(--brand-point);
+         }
+         
+         #qna-section .pagination .active {
+             background: var(--brand-point);
+             color: #fff;
+             border-color: var(--brand-point);
+         }
+         
+         #qna-section .pagination span:not(.active) {
+             color: #ccc;
+             cursor: not-allowed;
+         }
+        
+        /* 공통 스타일 */
+        .text-primary {
+            color: var(--brand-point) !important;
+        }
+        
+        .text-success {
+            color: #28a745 !important;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        .fw-bold {
+            font-weight: 600 !important;
+        }
+        
+        .mb-1, .mb-2, .mb-3, .mb-4 {
+            margin-bottom: 0.5rem, 1rem, 1.5rem, 2rem !important;
+        }
+        
+        .mt-2, .mt-3, .mt-4, .mt-5 {
+            margin-top: 1rem, 1.5rem, 2rem, 3rem !important;
+        }
+        
+        .me-1, .me-2 {
+            margin-right: 0.25rem, 0.5rem !important;
+        }
+        
+        .d-flex {
+            display: flex !important;
+        }
+        
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+        
+        .justify-content-end {
+            justify-content: flex-end !important;
+        }
+        
+        .justify-content-center {
+            justify-content: center !important;
+        }
+        
+        .align-items-center {
+            align-items: center !important;
+        }
+        
+        .d-none {
+            display: none !important;
+        }
+        
+        .d-block {
+            display: block !important;
+        }
+        
+        .d-inline-block {
+            display: inline-block !important;
+        }
+        
+        .position-relative {
+            position: relative !important;
+        }
+        
+        .position-absolute {
+            position: absolute !important;
+        }
+        
+        .top-0 {
+            top: 0 !important;
+        }
+        
+        .end-0 {
+            right: 0 !important;
+        }
+        
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+        
+        .img-thumbnail {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+        
+        .flex-wrap {
+            flex-wrap: wrap !important;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem !important;
+        }
+        
+                 .btn-group {
+             display: flex;
+             gap: 8px;
+         }
+         
+         .btn-group .btn {
+             background: transparent;
+             color: var(--brand-point);
+             border: 2px solid var(--brand-point);
+             border-radius: 6px !important;
+             padding: 12px 32px;
+             font-size: 1.1rem;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.2s;
+             margin-bottom: 0;
+             text-decoration: none;
+         }
+         
+         .btn-group .btn:hover, .btn-group .btn.active {
+             background: var(--brand-point);
+             color: #fff;
+         }
+         
+         .btn-group .btn:first-child {
+             border-top-right-radius: 0 !important;
+             border-bottom-right-radius: 0 !important;
+         }
+         
+         .btn-group .btn:last-child {
+             border-top-left-radius: 0 !important;
+             border-bottom-left-radius: 0 !important;
+         }
+         
+         .btn-group .btn:not(:first-child):not(:last-child) {
+             border-radius: 0 !important;
+         }
+        
+                 /* 이미지 삭제 버튼 통일 스타일 */
+         .remove-btn, .delete-existing-image {
+             background: #dc3545 !important;
+             color: #fff !important;
+             border: none !important;
+             border-radius: 50% !important;
+             width: 25px !important;
+             height: 25px !important;
+             padding: 0 !important;
+             line-height: 1 !important;
+             font-size: 14px !important;
+             font-weight: bold !important;
+             cursor: pointer !important;
+             position: absolute !important;
+             top: 5px !important;
+             right: 5px !important;
+             display: flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             z-index: 10 !important;
+             transition: all 0.2s !important;
+         }
+         
+         .remove-btn:hover, .delete-existing-image:hover {
+             background: #c82333 !important;
+             transform: scale(1.1) !important;
+         }
+         
+         .image-container {
+             position: relative !important;
+             display: inline-block !important;
+         }
+         
+         /* 반응형 스타일 */
+         @media (max-width: 768px) {
+            .tab-content-section {
+                padding: 20px;
+            }
+            
+            #review-section .card-body,
+            #qna-section .border.rounded {
+                padding: 16px !important;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .btn-group .btn {
+                border-radius: 6px !important;
+            }
+        }
     </style>
 </head>
 <body class="product-detail-page">
@@ -235,7 +768,7 @@
             <input type="hidden" id="productId" name="productId" th:value="${product.id}" />
             <input type="hidden" id="actionType" name="actionType" value="cart" />
             <div class="product-actions" style="display: flex; gap: 0; margin-top: 10px; width: 100%;">
-                <button type="button" id="cartButton" style="flex: 1; background: var(--brand-point); color: #fff; border: none; border-radius: 6px 0 0 6px; padding: 14px 0; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border-right: 1.5px solid #fff;">🛒 장바구니</button>
+                <button type="button" id="cartButton" onclick="submitForm('cart')" style="flex: 1; background: var(--brand-point); color: #fff; border: none; border-radius: 6px 0 0 6px; padding: 14px 0; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border-right: 1.5px solid #fff;">🛒 장바구니</button>
                 <button type="button" id="buyButton" style="flex: 1; background: #28a745; color: #fff; border: none; border-radius: 0; padding: 14px 0; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border-right: 1.5px solid #fff;" onclick="submitForm('buy')">💳 구매하기</button>
                 <button type="submit" style="flex: 1; background: #fff; color: var(--brand-point); border: 1.5px solid var(--brand-point); border-radius: 0 6px 6px 0; padding: 14px 0; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" th:text="${product.liked} ? '💔 찜 취소' : '❤️ 찜하기'"></button>
             </div>
@@ -322,6 +855,7 @@
 <!-- 플로팅 네비게이션 리모콘 -->
 <!-- (플로팅 네비게이션은 2차 적용에서 개선) -->
 <div th:replace="~{index/footer :: footer}"></div>
+<div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:inline="javascript">
     window.allAttributeValues = /*[[${attributeValues}]]*/ [];

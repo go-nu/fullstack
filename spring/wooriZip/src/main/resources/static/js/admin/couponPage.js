@@ -8,14 +8,27 @@ function generateRandomCode() {
 }
 
 function toggleDiscountInputs() {
-    const amountInput = document.getElementById("amountInput");
-    const percentInput = document.getElementById("percentInput");
+    const amountInputDiv = document.getElementById("amountInput");
+    const percentInputDiv = document.getElementById("percentInput");
 
-    const typeAmount = document.getElementById("typeAmount").checked;
-    const typePercent = document.getElementById("typePercent").checked;
+    const amountInput = document.querySelector('input[name="discountAmount"]');
+    const percentInput = document.querySelector('input[name="discountPercent"]');
 
-    amountInput.style.display = typeAmount ? "block" : "none";
-    percentInput.style.display = typePercent ? "block" : "none";
+    const isAmount = document.querySelector('input[name="type"][value="AMOUNT"]').checked;
+
+    if (isAmount) {
+        amountInputDiv.style.display = "block";
+        percentInputDiv.style.display = "none";
+        amountInput.disabled = false;
+        percentInput.disabled = true; // 전송되지 않도록 막음
+        percentInput.value = '';      // 값도 초기화
+    } else {
+        amountInputDiv.style.display = "none";
+        percentInputDiv.style.display = "block";
+        amountInput.disabled = true;
+        percentInput.disabled = false;
+        amountInput.value = '';
+    }
 }
 
 window.onload = toggleDiscountInputs;

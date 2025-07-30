@@ -33,7 +33,7 @@ function handleFileInput(event) {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'remove-btn';
-            btn.innerText = '×';
+            btn.innerText = '✕';
             btn.onclick = () => {
                 const idx = Array.from(preview.children).indexOf(container);
                 selectedFiles.splice(idx, 1);

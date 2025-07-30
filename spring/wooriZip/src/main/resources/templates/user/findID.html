@@ -199,6 +199,12 @@
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const EMAIL = /*[[${email}]]*/ null;
+    const ERROR = /*[[${error}]]*/ null;
+    /*]]>*/
+</script>
 <script src="/js/user/findID.js"></script>
 </body>
 </html>

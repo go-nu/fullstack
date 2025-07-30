@@ -2,21 +2,21 @@ const email = /*[[${email}]]*/ null;
 const error = /*[[${error}]]*/ null;
 
 window.onload = function () {
-   if (email) {
-       showModal("회원님의 이메일은 " + email + " 입니다.");
-   } else if (error) {
-       showModal(error);
-   }
-}
+    if (EMAIL !== null && EMAIL !== undefined) {
+        showModal("회원님의 이메일은 " + EMAIL + " 입니다.");
+    } else if (ERROR !== null && ERROR !== undefined) {
+        showModal(ERROR);
+    }
+};
 
 function showModal(message) {
-   document.getElementById("resultMessage").innerText = message;
-   document.getElementById("resultModal").style.display = "block";
+    document.getElementById("resultMessage").innerText = message;
+    document.getElementById("resultModal").classList.add("active");
+}
+function closeModal() {
+    document.getElementById("resultModal").classList.remove("active");
 }
 
-function closeModal() {
-   document.getElementById("resultModal").style.display = "none";
-}
 // 전화번호 합치기
 function updatePhoneValue() {
    const phone1 = document.getElementById("phone1").value;

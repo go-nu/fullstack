@@ -274,6 +274,7 @@
                     <div class="qna-status">
                         <span th:if="${qna.answered}" class="badge badge-success">답변완료</span>
                         <span th:unless="${qna.answered}" class="badge badge-danger">미답변</span>
+                        <span th:if="${qna.isSecret}" class="badge badge-warning" style="background: #ffc107; color: #000; margin-left: 5px;">비밀글</span>
                     </div>
                     <div class="qna-title" th:text="${qna.title}">QnA 제목</div>
                     <div class="qna-meta mt-2">

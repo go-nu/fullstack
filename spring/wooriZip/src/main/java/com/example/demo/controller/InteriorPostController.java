@@ -11,6 +11,8 @@ import com.example.demo.service.PostLikeService;
 import com.example.demo.service.ReviewPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -197,8 +199,9 @@ public class InteriorPostController {
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
+        Users loginUser = (Users) UserUtils.getUser(authentication);
 
-        service.delete(id);
+        service.delete(id, loginUser);
 
         if (Boolean.TRUE.equals(fromMyPage)) {
             return "redirect:/user/mypage";
@@ -236,7 +239,8 @@ public class InteriorPostController {
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
         PostCommentDto dto = commentService.findById(commentId);
-        if (!dto.getEmail().equals(loginUser.getEmail())) {
+        // 관리자가 아니고 댓글 작성자도 아니면 삭제 불가
+        if (loginUser.getRole() != Role.ADMIN && !dto.getEmail().equals(loginUser.getEmail())) {
             return "redirect:/interior/" + postId;
         }
 
@@ -304,13 +308,17 @@ public class InteriorPostController {
     /** 좋아요 */
     @PostMapping("/{postId}/like")
     @ResponseBody
-    public String toggleLike(@PathVariable Long postId,
-                             Authentication authentication) {
+    public ResponseEntity<String> toggleLike(@PathVariable Long postId,
+                                             Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인이 필요합니다.");
+        }
         Users loginUser = (Users) UserUtils.getUser(authentication);
 
-        return postLikeService.toggleLike(postId, loginUser.getEmail());
+        String result = postLikeService.toggleLike(postId, loginUser.getEmail());
+        return ResponseEntity.ok(result);
     }
 
 }

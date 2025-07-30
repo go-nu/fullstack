@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Product;
-import com.example.demo.entity.ProductModel;
 import com.example.demo.entity.ProductModelAttribute;
-import com.example.demo.entity.Users;
 import com.example.demo.repository.ProductModelAttributeRepository;
 import com.example.demo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,63 +18,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecommendService {
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
     private final ProductRepository productRepository;
     private final ProductModelAttributeRepository productModelAttributeRepository;
 
-    @Value("${recommend.api.url:http://localhost:8000/recommend}")
-    private String recommendApiUrl;
-
-    public List<Product> getRecommendedProducts(Users user) {
-        int gender = user.getGender().equalsIgnoreCase("male") ? 1 : 0;
-        int ageGroup = calculateAgeGroup(user.getBirth());
-        int residenceType = user.getResidenceType();
-
-        int color = getMostUsedOption("색상");
-        int size = getMostUsedOption("사이즈");
-        int material = getMostUsedOption("소재");
-
-        Map<String, Object> requestBody = Map.of(
-                "user_id", user.getId(),
-                "gender", gender,
-                "age_group", ageGroup,
-                "residence_type", residenceType,
-                "색상", color,
-                "사이즈", size,
-                "소재", material
-        );
-
-        // ✅ 전달한 입력 로그 출력
-        System.out.println("📤 [FastAPI 요청값]");
-        requestBody.forEach((key, value) ->
-                System.out.println(" - " + key + ": " + value)
-        );
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-
-        ResponseEntity<RecommendResult[]> response = restTemplate.postForEntity(
-                recommendApiUrl, request, RecommendResult[].class);
-
-        RecommendResult[] results = response.getBody();
-
-        // ✅ 응답 결과 로그 출력
-        System.out.println("📥 [FastAPI 응답값]");
-        if (results != null && results.length > 0) {
-            for (RecommendResult r : results) {
-                System.out.println(" → product_id: " + r.getProduct_id() + ", score: " + r.getScore());
-            }
-        } else {
-            System.out.println(" → 추천 결과 없음 (빈 배열)");
-        }
-
-        List<Long> productIds = Arrays.stream(results)
-                .map(RecommendResult::getProduct_id)
-                .toList();
-
-        return productRepository.findAllById(productIds);
-    }
+    private final String RECOMMEND_API = "https://c97ac8024fed.ngrok-free.app/recommend"; // ngrok 주소
 
     private int getMostUsedOption(String attributeName) {
         List<ProductModelAttribute> all = productModelAttributeRepository.findAll();
@@ -108,12 +54,24 @@ public class RecommendService {
         return productRepository.findTopRecommendedProducts();
     }
 
-    public static class RecommendResult {
-        private Long product_id;
-        private double score;
-        public Long getProduct_id() { return product_id; }
-        public void setProduct_id(Long id) { this.product_id = id; }
-        public double getScore() { return score; }
-        public void setScore(double score) { this.score = score; }
+    public List<Product> getRecommendedProducts(Long userId) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("user_id", userId);
+        body.put("k", 6);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(RECOMMEND_API, body, Map.class);
+            List<Integer> ids = (List<Integer>) response.getBody().get("recommended");
+
+            if (ids == null || ids.isEmpty()) {
+                return getBestProducts();
+            }
+
+            return productRepository.findAllById(ids.stream().map(Long::valueOf).toList());
+
+        } catch (Exception e) {
+            System.err.println("⚠️ 추천 서버 연결 실패, 인기 상품으로 fallback");
+            return getBestProducts();
+        }
     }
 }

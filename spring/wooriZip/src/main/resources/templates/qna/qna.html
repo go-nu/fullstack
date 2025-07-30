@@ -1,701 +1,277 @@
 <div th:fragment="qnaboard">
-    <style>
-        :root {
-            --brand-bg: #FFFFFF;
-            --brand-text: #4A4947;
-            --brand-point-bg: #F9F7F0;
-            --brand-point: #B17457;
-        }
-
-        .qna-container {
-            max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* QnA 헤더 */
-        .qna-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .qna-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--brand-text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .qna-count {
-            color: var(--brand-point);
-            font-weight: 600;
-        }
-
-        /* 필터 버튼 */
-        .filter-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid var(--brand-point);
-            border-radius: 6px;
-            background: transparent;
-            color: var(--brand-point);
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .filter-btn:hover {
-            background: var(--brand-point);
-            color: #fff;
-        }
-
-        .filter-btn.active {
-            background: var(--brand-point);
-            color: #fff;
-        }
-
-        /* 작성 버튼 */
-        .write-section {
-            margin-bottom: 24px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--brand-point);
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: #8d5a41;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: #fff;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: #fff;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .btn-outline-primary {
-            background: transparent;
-            color: var(--brand-point);
-            border: 1px solid var(--brand-point);
-        }
-
-        .btn-outline-primary:hover {
-            background: var(--brand-point);
-            color: #fff;
-        }
-
-        .btn-outline-danger {
-            background: transparent;
-            color: #dc3545;
-            border: 1px solid #dc3545;
-        }
-
-        .btn-outline-danger:hover {
-            background: #dc3545;
-            color: #fff;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
-
-        /* 폼 스타일 */
-        .form-container {
-            background: var(--brand-point-bg);
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: var(--brand-text);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--brand-point);
-        }
-
-        .form-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .form-check-input {
-            width: 16px;
-            height: 16px;
-        }
-
-        .form-check-label {
-            color: var(--brand-text);
-            font-size: 0.9rem;
-        }
-
-        /* 이미지 업로드 */
-        .image-upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            background: #fff;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-        }
-
-        .image-upload-area:hover {
-            border-color: var(--brand-point);
-            background: var(--brand-point-bg);
-        }
-
-        .preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .preview-item {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(220, 53, 69, 0.9);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* QnA 아이템 */
-        .qna-item {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .qna-question {
-            margin-bottom: 16px;
-        }
-
-        .qna-header-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .qna-icon {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--brand-point);
-        }
-
-        .qna-title-text {
-            font-weight: 600;
-            color: var(--brand-text);
-            font-size: 1.1rem;
-        }
-
-        .qna-badges {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-success {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .qna-content {
-            color: var(--brand-text);
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        .qna-meta {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
-
-        .qna-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .qna-image {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        .qna-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        /* 답변 영역 */
-        .qna-answer {
-            border-top: 1px solid #e0e0e0;
-            padding-top: 16px;
-            margin-top: 16px;
-        }
-
-        .answer-icon {
-            color: #28a745;
-        }
-
-        .answer-content {
-            color: var(--brand-text);
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        /* 수정 폼 */
-        .edit-form {
-            background: var(--brand-point-bg);
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 12px;
-        }
-
-        /* 페이지네이션 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 32px;
-        }
-
-        .page-item {
-            list-style: none;
-        }
-
-        .page-link {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            color: var(--brand-text);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .page-link:hover {
-            background: var(--brand-point-bg);
-            border-color: var(--brand-point);
-        }
-
-        .page-item.active .page-link {
-            background: var(--brand-point);
-            color: #fff;
-            border-color: var(--brand-point);
-        }
-
-        .page-item.disabled .page-link {
-            color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .qna-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-
-            .filter-buttons {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .qna-item {
-                padding: 16px;
-            }
-
-            .qna-images {
-                justify-content: center;
-            }
-
-            .qna-image {
-                width: 100px;
-                height: 100px;
-            }
-        }
-    </style>
-
-    <div class="qna-container">
-        <!-- Q&A 제목 및 작성 버튼 -->
-        <div class="qna-header">
-            <h4 class="qna-title">
-                💬 Q&A (<span class="qna-count" th:text="${qnaTotal}">0</span>)
-            </h4>
+    <!-- Q&A 제목 및 작성 버튼 -->
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Q&A (<span th:text="${qnaTotal}"></span>)</h4>
 
             <!-- QnA 필터 버튼 -->
-            <div class="filter-buttons">
+            <div class="btn-group" role="group">
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='all')} + '#qna-tab'"
-                   class="filter-btn"
-                   th:classappend="${qnaFilter == 'all' || qnaFilter == null} ? 'active'">
+                   class="btn"
+                   th:classappend="${qnaFilter == 'all' || qnaFilter == null} ? 'btn-primary' : 'btn-outline-primary'">
                     전체보기
                 </a>
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='answered')} + '#qna-tab'"
-                   class="filter-btn" 
-                   th:classappend="${qnaFilter == 'answered'} ? 'active'">
+                   class="btn" th:classappend="${qnaFilter == 'answered'} ? 'btn-primary' : 'btn-outline-primary'">
                     답변완료
                 </a>
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='unanswered')} + '#qna-tab'"
-                   class="filter-btn" 
-                   th:classappend="${qnaFilter == 'unanswered'} ? 'active'">
+                   class="btn" th:classappend="${qnaFilter == 'unanswered'} ? 'btn-primary' : 'btn-outline-primary'">
                     미답변
                 </a>
             </div>
         </div>
 
-        <!-- 작성 버튼 -->
-        <div class="write-section">
-            <!-- 로그인 사용자만 작성 가능 -->
-            <div th:if="${loginUser != null}">
-                <button class="btn btn-primary" onclick="toggleQnaForm()">✏️ 문의 작성</button>
-            </div>
+        <!-- 로그인 사용자만 작성 가능 -->
+        <div th:if="${loginUser != null}">
+            <button class="btn btn-primary mb-3" onclick="toggleQnaForm()">문의 작성</button>
+        </div>
 
-            <!-- 로그인하지 않은 사용자 -->
-            <div th:if="${loginUser == null}">
-                <a th:href="@{/user/login}" class="btn btn-primary">✏️ 문의 작성</a>
-                <small style="color: #666; display: block; margin-top: 8px;">문의를 작성하려면 로그인이 필요합니다.</small>
-            </div>
+        <!-- 로그인하지 않은 사용자 -->
+        <div th:if="${loginUser == null}">
+            <a th:href="@{/user/login}" class="btn btn-primary mb-3">문의 작성</a>
+            <small class="text-muted d-block">문의를 작성하려면 로그인이 필요합니다.</small>
+        </div>
 
-            <!-- 문의 작성 폼 -->
-            <div id="qnaFormWrapper" class="form-container" style="display: none;">
-                <form th:action="@{/qna/create}" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="productId" th:value="${product.id}"/>
+        <!-- 문의 작성 폼 -->
+        <div id="qnaFormWrapper" class="card p-3 mb-4" style="display: none;">
+            <form th:action="@{/qna/create}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="productId" th:value="${product.id}"/>
 
-                    <div style="margin-bottom: 16px;">
-                        <label class="form-label">제목</label>
-                        <input type="text" name="title" class="form-control" required/>
-                    </div>
+                <div class="mb-2">
+                    <label>제목</label>
+                    <input type="text" name="title" class="form-control" required/>
+                </div>
 
-                    <div style="margin-bottom: 16px;">
-                        <label class="form-label">내용</label>
-                        <textarea name="content" class="form-control" rows="4" required></textarea>
-                    </div>
+                <div class="mb-2">
+                    <label>내용</label>
+                    <textarea name="content" class="form-control" rows="3" required></textarea>
+                </div>
 
-                    <div style="margin-bottom: 16px;">
-                        <label class="form-label">이미지 첨부 (최대 4장)</label>
-                        <div class="image-upload-area" onclick="document.getElementById('qnaImageInput').click()">
-                            <div style="font-size: 2rem; color: var(--brand-point); margin-bottom: 8px;">📁</div>
-                            <div>클릭하여 이미지 업로드</div>
-                            <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">최대 4장까지 첨부 가능</div>
-                        </div>
-                        <input type="file" id="qnaImageInput" name="files" multiple accept="image/*" style="display: none;">
-                        <div id="qnaPreviewContainer" class="preview-container"></div>
-                    </div>
+                <div class="mb-2">
+                    <label>이미지 첨부 (최대 4장)</label>
+                    <input type="file" id="qnaImageInput" name="files" multiple accept="image/*" class="form-control">
+                    <div id="qnaPreviewContainer" class="mt-2 d-flex flex-wrap gap-2"></div>
+                </div>
 
+                <div class="mb-3">
                     <div class="form-check">
                         <input type="checkbox" name="isSecret" id="isSecret" class="form-check-input" value="true">
                         <label class="form-check-label" for="isSecret">
-                            🔒 관리자만 볼 수 있는 비밀글
+                            <i class="fas fa-lock"></i> 관리자만 볼 수 있는 비밀글
                         </label>
                     </div>
+                </div>
 
-                    <button type="submit" class="btn btn-success" style="margin-top: 16px;">등록</button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-success">등록</button>
+            </form>
         </div>
+    </div>
 
-        <!-- Q&A 리스트 -->
-        <div>
-            <div th:if="${qnaList != null}" th:each="dto : ${qnaList}" class="qna-item"
-                 th:id="'qna-' + ${dto.id}">
-                <!-- 질문 영역 -->
-                <div class="qna-question">
-                    <div class="qna-header-row">
-                        <span class="qna-icon">Q.</span>
-                        <strong class="qna-title-text" th:text="${dto.title}">제목</strong>
+    <!-- Q&A 리스트 -->
+    <div>
+        <div th:if="${qnaList != null}" th:each="dto : ${qnaList}" class="border rounded p-3 mb-3"
+             th:id="'qna-' + ${dto.id}">
+            <!-- 질문 영역 -->
+            <div>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="fw-bold text-primary me-2" style="font-size: 1.2em;">Q.</span>
+                    <strong th:text="${dto.title}">제목</strong>
+                </div>
+
+                <!-- 비밀글 표시와 구매 여부 표시 -->
+                <div class="mb-2">
+                    <span th:if="${dto.isSecret}" class="badge bg-warning me-2">
+                        <i class="fas fa-lock"></i> 비밀글
+                    </span>
+                    <span th:if="${dto.purchased}" class="badge bg-success">
+                        구매한 고객
+                    </span>
+                </div>
+
+                <!-- 비밀글 내용 표시 (관리자 또는 작성자만) -->
+                <div th:if="${dto.isSecret and (loginUser == null or (loginUser.role == null or loginUser.role.name() != 'ADMIN') and (loginUser == null or loginUser.email != dto.email))}">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-lock"></i> 이 글은 관리자만 볼 수 있는 비밀글입니다.
                     </div>
+                </div>
+                <div th:if="${!dto.isSecret or (loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN') or (loginUser != null and loginUser.email == dto.email)}">
+                    <p th:text="${dto.content}">내용</p>
+                </div>
+                <small class="text-muted"
+                       th:text="${dto.nickname + ' | ' + #temporals.format(dto.createdAt, 'yyyy-MM-dd HH:mm')}">작성자</small>
 
-                    <!-- 비밀글 표시와 구매 여부 표시 -->
-                    <div class="qna-badges">
-                        <span th:if="${dto.isSecret}" class="badge badge-warning">
-                            🔒 비밀글
-                        </span>
-                        <span th:if="${dto.purchased}" class="badge badge-success">
-                            💰 구매한 고객
-                        </span>
+                <!-- 이미지 출력 -->
+                <div th:if="${dto.filePathList != null and !dto.filePathList.isEmpty()}"
+                     class="mt-2 d-flex flex-wrap gap-2">
+                    <div th:each="path : ${dto.filePathList}" class="position-relative d-inline-block me-2 mb-2">
+                        <img th:src="@{${path}}"
+                             class="img-thumbnail"
+                             style="width: 150px; height: 150px; object-fit: cover;"/>
                     </div>
+                </div>
 
-                    <!-- 비밀글 내용 표시 (관리자 또는 작성자만) -->
-                    <div th:if="${dto.isSecret and (loginUser == null or (loginUser.role == null or loginUser.role.name() != 'ADMIN') and (loginUser == null or loginUser.email != dto.email))}">
-                        <div style="background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                            🔒 이 글은 관리자만 볼 수 있는 비밀글입니다.
+                <!-- 본인만 수정/삭제 -->
+                <div th:if="${loginUser != null and loginUser.email == dto.email}" class="mt-2">
+                    <button class="btn btn-sm btn-outline-primary" th:onclick="'toggleQnaEditForm(' + ${dto.id} + ')'">
+                        수정
+                    </button>
+                    <form th:action="@{'/qna/delete/' + ${dto.id}}" method="post" style="display:inline;">
+                        <input type="hidden" name="productId" th:value="${product.id}"/>
+                        <button class="btn btn-sm btn-outline-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </div>
+
+                <!-- QnA 수정 폼 -->
+                <div th:id="'qnaEditForm_' + ${dto.id}" class="mt-3" style="display: none;">
+                    <form th:action="@{'/qna/update/' + ${dto.id}}" method="post" enctype="multipart/form-data"
+                          class="qna-form">
+                        <input type="hidden" name="productId" th:value="${product.id}"/>
+                        <div class="mb-2">
+                            <label>제목</label>
+                            <input type="text" name="title" class="form-control" th:value="${dto.title}" required/>
                         </div>
-                    </div>
-                    <div th:if="${!dto.isSecret or (loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN') or (loginUser != null and loginUser.email == dto.email)}">
-                        <p class="qna-content" th:text="${dto.content}">내용</p>
-                    </div>
-                    <small class="qna-meta"
-                           th:text="${dto.nickname + ' | ' + #temporals.format(dto.createdAt, 'yyyy-MM-dd HH:mm')}">작성자</small>
+                        <div class="mb-2">
+                            <label>내용</label>
+                            <textarea name="content" class="form-control" rows="3" required
+                                      th:text="${dto.content}"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label>이미지 첨부 (최대 4장):</label>
+                            <input type="file" name="files" class="qna-image-input form-control" multiple
+                                   accept="image/*">
 
-                    <!-- 이미지 출력 -->
-                    <div th:if="${dto.filePathList != null and !dto.filePathList.isEmpty()}"
-                         class="qna-images">
-                        <img th:each="path : ${dto.filePathList}" 
-                             th:src="${path}"
-                             class="qna-image"
-                             alt="QnA 이미지"/>
-                    </div>
-
-                    <!-- 본인만 수정/삭제 -->
-                    <div th:if="${loginUser != null and loginUser.email == dto.email}" class="qna-actions">
-                        <button class="btn btn-sm btn-outline-primary" th:onclick="'toggleQnaEditForm(' + ${dto.id} + ')'">
-                            ✏️ 수정
-                        </button>
-                        <form th:action="@{'/qna/delete/' + ${dto.id}}" method="post" style="display:inline;">
-                            <input type="hidden" name="productId" th:value="${product.id}"/>
-                            <button class="btn btn-sm btn-outline-danger" onclick="return confirm('삭제하시겠습니까?')">🗑️ 삭제</button>
-                        </form>
-                    </div>
-
-                    <!-- QnA 수정 폼 -->
-                    <div th:id="'qnaEditForm_' + ${dto.id}" class="edit-form" style="display: none;">
-                        <form th:action="@{'/qna/update/' + ${dto.id}}" method="post" enctype="multipart/form-data"
-                              class="qna-form">
-                            <input type="hidden" name="productId" th:value="${product.id}"/>
-                            <div style="margin-bottom: 16px;">
-                                <label class="form-label">제목</label>
-                                <input type="text" name="title" class="form-control" th:value="${dto.title}" required/>
+                            <!-- 기존 이미지 미리보기 -->
+                            <div class="existing-images-container mt-2 d-flex flex-wrap gap-2">
+                                <th:block th:if="${dto.filePathList != null and !dto.filePathList.isEmpty()}">
+                                    <div th:each="path : ${dto.filePathList}"
+                                         class="position-relative d-inline-block me-2 mb-2">
+                                        <img th:src="@{${path}}" class="img-thumbnail"
+                                             style="width: 150px; height: 150px; object-fit: cover;">
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle delete-existing-image"
+                                                th:data-path="${path}"
+                                                style="width: 25px; height: 25px; padding: 0; line-height: 1; margin: 5px;">
+                                            ✕
+                                        </button>
+                                        <input type="hidden" name="deleteImages" th:value="${path}" disabled>
+                                    </div>
+                                </th:block>
                             </div>
-                            <div style="margin-bottom: 16px;">
-                                <label class="form-label">내용</label>
-                                <textarea name="content" class="form-control" rows="4" required
-                                          th:text="${dto.content}"></textarea>
-                            </div>
-                            <div style="margin-bottom: 16px;">
-                                <label class="form-label">이미지 첨부 (최대 4장):</label>
-                                <div class="image-upload-area" onclick="document.getElementById('editImageInput_' + ${dto.id}).click()">
-                                    <div style="font-size: 2rem; color: var(--brand-point); margin-bottom: 8px;">📁</div>
-                                    <div>클릭하여 이미지 업로드</div>
-                                </div>
-                                <input type="file" th:id="'editImageInput_' + ${dto.id}" name="files" class="qna-image-input form-control" multiple
-                                       accept="image/*" style="display: none;">
+                            <!-- 새 이미지 미리보기 -->
+                            <div class="qna-preview-container mt-2 d-flex flex-wrap gap-2"></div>
+                        </div>
 
-                                <!-- 기존 이미지 미리보기 -->
-                                <div class="existing-images-container preview-container">
-                                    <th:block th:if="${dto.filePathList != null and !dto.filePathList.isEmpty()}">
-                                        <div th:each="path : ${dto.filePathList}"
-                                             class="preview-item">
-                                            <img th:src="${path}" class="qna-image">
-                                            <button type="button"
-                                                    class="delete-btn delete-existing-image"
-                                                    th:data-path="${path}">×</button>
-                                            <input type="hidden" name="deleteImages" th:value="${path}" disabled>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <!-- 새 이미지 미리보기 -->
-                                <div class="qna-preview-container preview-container"></div>
-                            </div>
-
+                        <div class="mb-3">
                             <div class="form-check">
                                 <input type="checkbox" name="isSecret" class="form-check-input" value="true"
                                        th:checked="${dto.isSecret}">
                                 <label class="form-check-label">
-                                    🔒 관리자만 볼 수 있는 비밀글
+                                    <i class="fas fa-lock"></i> 관리자만 볼 수 있는 비밀글
                                 </label>
                             </div>
-                            <div style="margin-top: 16px;">
-                                <button type="submit" class="btn btn-success">수정</button>
-                                <button type="button" class="btn btn-secondary"
-                                        th:onclick="'toggleQnaEditForm(' + ${dto.id} + ')'">취소
-                                </button>
-                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">수정</button>
+                        <button type="button" class="btn btn-secondary"
+                                th:onclick="'toggleQnaEditForm(' + ${dto.id} + ')'">취소
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 답변 영역 (관리자) -->
+                <div th:if="${dto.answer != null}" class="border-top pt-2 mt-2">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="fw-bold text-success me-2" style="font-size: 1.2em;">A.</span>
+                        <strong>답변</strong>
+                    </div>
+
+                    <!-- 비밀글 답변 표시 (관리자 또는 작성자만) -->
+                    <div th:if="${dto.isSecret and (loginUser == null or (loginUser.role == null or loginUser.role.name() != 'ADMIN') and (loginUser == null or loginUser.email != dto.email))}">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-lock"></i> 답변은 질문자만 볼 수 있습니다.
+                        </div>
+                    </div>
+                    <div th:if="${!dto.isSecret or (loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN') or (loginUser != null and loginUser.email == dto.email)}">
+                        <p th:if="${dto.answer.content != null}" th:text="${dto.answer.content}">답변내용</p>
+                        <small class="text-muted"
+                               th:text="${#temporals.format(dto.answer.createdAt, 'yyyy-MM-dd HH:mm')}">답변일시</small>
+                    </div>
+
+                    <!-- 관리자만 수정/삭제 -->
+                    <div th:if="${loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN'}" class="mt-2">
+                        <button class="btn btn-sm btn-outline-primary"
+                                th:onclick="'toggleAnswerEditForm(' + ${dto.id} + ')'">수정
+                        </button>
+                        <form th:action="@{'/qna/answer/delete/' + ${dto.answer.id}}" method="post"
+                              style="display:inline;">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
+                            <button class="btn btn-sm btn-outline-danger" onclick="return confirm('답변을 삭제하시겠습니까?')">삭제
+                            </button>
                         </form>
                     </div>
 
-                    <!-- 답변 영역 (관리자) -->
-                    <div th:if="${dto.answer != null}" class="qna-answer">
-                        <div class="qna-header-row">
-                            <span class="qna-icon answer-icon">A.</span>
-                            <strong>답변</strong>
-                        </div>
-
-                        <!-- 비밀글 답변 표시 (관리자 또는 작성자만) -->
-                        <div th:if="${dto.isSecret and (loginUser == null or (loginUser.role == null or loginUser.role.name() != 'ADMIN') and (loginUser == null or loginUser.email != dto.email))}">
-                            <div style="background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                                🔒 답변은 질문자만 볼 수 있습니다.
+                    <!-- 답변 수정 폼 -->
+                    <div th:id="'answerEditForm_' + ${dto.id}" class="mt-2" style="display: none;">
+                        <form th:action="@{'/qna/answer/update/' + ${dto.answer.id}}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
+                            <input type="hidden" name="qnaPage" th:value="${qnaPage}"/>
+                            <div class="mb-2">
+                                <textarea name="content" class="form-control" rows="3" th:text="${dto.answer.content}"
+                                          required></textarea>
                             </div>
-                        </div>
-                        <div th:if="${!dto.isSecret or (loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN') or (loginUser != null and loginUser.email == dto.email)}">
-                            <p th:if="${dto.answer.content != null}" class="answer-content" th:text="${dto.answer.content}">답변내용</p>
-                            <small class="qna-meta"
-                                   th:text="${#temporals.format(dto.answer.createdAt, 'yyyy-MM-dd HH:mm')}">답변일시</small>
-                        </div>
-
-                        <!-- 관리자만 수정/삭제 -->
-                        <div th:if="${loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN'}" class="qna-actions">
-                            <button class="btn btn-sm btn-outline-primary"
-                                    th:onclick="'toggleAnswerEditForm(' + ${dto.id} + ')'">✏️ 수정
+                            <button type="submit" class="btn btn-sm btn-success">수정 완료</button>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                    th:onclick="'toggleAnswerEditForm(' + ${dto.id} + ')'">취소
                             </button>
-                            <form th:action="@{'/qna/answer/delete/' + ${dto.answer.id}}" method="post"
-                                  style="display:inline;">
-                                <input type="hidden" name="productId" th:value="${product.id}"/>
-                                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('답변을 삭제하시겠습니까?')">🗑️ 삭제
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- 답변 수정 폼 -->
-                        <div th:id="'answerEditForm_' + ${dto.id}" class="edit-form" style="display: none;">
-                            <form th:action="@{'/qna/answer/update/' + ${dto.answer.id}}" method="post">
-                                <input type="hidden" name="productId" th:value="${product.id}"/>
-                                <input type="hidden" name="qnaPage" th:value="${qnaPage}"/>
-                                <div style="margin-bottom: 16px;">
-                                    <label class="form-label">답변 내용</label>
-                                    <textarea name="content" class="form-control" rows="4" th:text="${dto.answer.content}"
-                                              required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-success">수정 완료</button>
-                                <button type="button" class="btn btn-secondary"
-                                        th:onclick="'toggleAnswerEditForm(' + ${dto.id} + ')'">취소
-                                </button>
-                            </form>
-                        </div>
+                        </form>
                     </div>
+                </div>
 
-                    <!-- 답변이 없을 때 관리자용 답변 작성 폼 -->
-                    <div th:if="${dto.answer == null and loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN'}"
-                         class="qna-answer">
-                        <button class="btn btn-sm btn-outline-success" th:onclick="'toggleAnswerForm(' + ${dto.id} + ')'">💬 답변 작성
-                        </button>
+                <!-- 답변이 없을 때 관리자용 답변 작성 폼 -->
+                <div th:if="${dto.answer == null and loginUser != null and loginUser.role != null and loginUser.role.name() == 'ADMIN'}"
+                     class="border-top pt-2 mt-2">
+                    <button class="btn btn-sm btn-outline-success" th:onclick="'toggleAnswerForm(' + ${dto.id} + ')'">답변
+                        작성
+                    </button>
 
-                        <div th:id="'answerForm_' + ${dto.id}" class="edit-form" style="display: none;">
-                            <form th:action="@{'/qna/answer/create/' + ${dto.id}}" method="post">
-                                <input type="hidden" name="productId" th:value="${product.id}"/>
-                                <input type="hidden" name="qnaPage" th:value="${qnaPage}"/>
-                                <div style="margin-bottom: 16px;">
-                                    <label class="form-label">답변 내용</label>
-                                    <textarea name="content" class="form-control" rows="4" placeholder="답변을 입력하세요..."
-                                              required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-success">답변 등록</button>
-                                <button type="button" class="btn btn-secondary"
-                                        th:onclick="'toggleAnswerForm(' + ${dto.id} + ')'">취소
-                                </button>
-                            </form>
-                        </div>
+                    <div th:id="'answerForm_' + ${dto.id}" class="mt-2" style="display: none;">
+                        <form th:action="@{'/qna/answer/create/' + ${dto.id}}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
+                            <input type="hidden" name="qnaPage" th:value="${qnaPage}"/>
+                            <div class="mb-2">
+                                <textarea name="content" class="form-control" rows="3" placeholder="답변을 입력하세요..."
+                                          required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-success">답변 등록</button>
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                    th:onclick="'toggleAnswerForm(' + ${dto.id} + ')'">취소
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- 페이지네이션 -->
-        <nav th:if="${qnaList != null and qnaList.size() > 0}" class="pagination">
-            <ul style="list-style: none; display: flex; gap: 8px; margin: 0; padding: 0;">
-                <li th:classappend="${qnaPage == 1} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage - 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">이전</a>
-                </li>
-                <li th:each="i : ${#numbers.sequence(1, T(java.lang.Math).ceil(qnaTotal / 5.0))}"
-                    th:classappend="${i == qnaPage} ? 'active'">
-                    <a class="page-link"
-                       th:href="@{'/products/' + ${product.id}(qnaPage=${i}, qnaFilter=${qnaFilter})} + '#qna-tab'"
-                       th:text="${i}">1</a>
-                </li>
-                <li th:classappend="${qnaPage == T(java.lang.Math).ceil(qnaTotal / 5.0)} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage + 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">다음</a>
-                </li>
-            </ul>
-        </nav>
     </div>
+
+    <!-- 페이지네이션 -->
+    <nav th:if="${qnaList != null and qnaList.size() > 0}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${qnaPage == 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage - 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">이전</a>
+            </li>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(1, T(java.lang.Math).ceil(qnaTotal / 5.0))}"
+                th:classappend="${i == qnaPage} ? 'active'">
+                <a class="page-link"
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${i}, qnaFilter=${qnaFilter})} + '#qna-tab'"
+                   th:text="${i}">1</a>
+            </li>
+            <li class="page-item"
+                th:classappend="${qnaPage == T(java.lang.Math).ceil(qnaTotal / 5.0)} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{'/products/' + ${product.id}(qnaPage=${qnaPage + 1}, qnaFilter=${qnaFilter})} + '#qna-tab'">다음</a>
+            </li>
+        </ul>
+    </nav>
 </div>

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.InteriorPostDto;
 import com.example.demo.entity.InteriorPost;
 import com.example.demo.entity.Users;
+import com.example.demo.constant.Role;
 import com.example.demo.repository.InteriorPostRepository;
 import com.example.demo.repository.LoginRepository;
 import com.example.demo.repository.PostCommentRepository;
@@ -84,9 +85,14 @@ public class InteriorPostService {
 
     /** 게시글 삭제 */
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, Users loginUser) {
         InteriorPost post = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
+
+        // 관리자가 아니고 작성자도 아니면 삭제 불가
+        if (loginUser.getRole() != Role.ADMIN && !post.getUser().getEmail().equals(loginUser.getEmail())) {
+            throw new SecurityException("삭제 권한이 없습니다.");
+        }
 
         postCommentRepository.deleteByPost(post); // 댓글 먼저 삭제
         postLikeRepository.deleteByPost(post);    // 좋아요 먼저 삭제

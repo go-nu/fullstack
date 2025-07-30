@@ -33,7 +33,7 @@ document.getElementById("imageInput").addEventListener("change", function (event
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'remove-btn';
-            btn.innerText = 'X';
+            btn.innerText = '✕';
             btn.onclick = () => {
                 const idx = selectedFiles.indexOf(file);
                 if (idx > -1) selectedFiles.splice(idx, 1);

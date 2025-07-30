@@ -262,7 +262,8 @@
         <table class="table">
             <thead class="table-light">
             <tr>
-                <th colspan="2">상품 정보</th>
+                <th>상품 이미지</th>
+                <th>상품 정보</th>
                 <th>판매가</th>
                 <th>수량</th>
                 <th>합계</th>
@@ -270,7 +271,6 @@
             </thead>
             <tbody>
             <tr th:each="item : ${orderDto.items}">
-                <th scope="row"><input type="hidden" name="orderId" th:value="${orderDto.orderId}"></th>
                 <td><img alt="상품 이미지" th:src="@{${item.getImgUrl()}}" width="300px"></td>
                 <td><p th:text="${item.productName}">상품 이름</p></td>
                 <td><p><span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원</p></td>

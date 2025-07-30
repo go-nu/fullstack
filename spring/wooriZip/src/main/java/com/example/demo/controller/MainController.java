@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.InteriorPostDto;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.InteriorPostService;
 import com.example.demo.service.RecommendService;
 import com.example.demo.service.ReviewPostService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -41,18 +43,17 @@ public class MainController {
             model.addAttribute("loginUser", user);
         }
 
-//        // ✅ 추천 상품 추가
-//        if (user != null) {
-//            try {
-//                model.addAttribute("products", recommendService.getRecommendedProducts(user));
-//            } catch (Exception e) {
-//                model.addAttribute("products", List.of()); // 추천 실패 시 빈 리스트로 대체
-//            }
-//        } else {
-//            model.addAttribute("products", List.of()); // 비로그인 시에도 빈 리스트
-//        }
-
-        model.addAttribute("products", recommendService.getBestProducts());
+        // ✅ 추천 상품 추가
+        if (user != null) {
+            List<Product> recommended = recommendService.getRecommendedProducts(user.getId());
+            try {
+                model.addAttribute("products", recommended);
+            } catch (Exception e) {
+                model.addAttribute("products", recommendService.getBestProducts());
+            }
+        } else {
+            model.addAttribute("products", recommendService.getBestProducts());
+        }
 
         // 전체 게시글 가져오기
         List<InteriorPostDto> allPosts = interiorPostService.findAll();
