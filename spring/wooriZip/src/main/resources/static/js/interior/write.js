@@ -22,7 +22,19 @@ input.addEventListener('change', function () {
                 const img = document.createElement('img');
                 img.src = e.target.result;
 
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '✕';
+                removeBtn.onclick = function() {
+                    const index = selectedFiles.indexOf(file);
+                    if (index > -1) {
+                        selectedFiles.splice(index, 1);
+                    }
+                    box.remove();
+                };
+
                 box.appendChild(img);
+                box.appendChild(removeBtn);
                 preview.appendChild(box);
             };
         reader.readAsDataURL(file);

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -31,8 +31,8 @@ public class Coupon {
     private int discountAmount;
     private int discountPercent;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private boolean isActive;
 
@@ -42,7 +42,7 @@ public class Coupon {
     @Builder
     public Coupon(String name, String code, CouponType type,
                   int discountAmount, int discountPercent,
-                  LocalDateTime startDate, LocalDateTime endDate,
+                  LocalDate startDate, LocalDate endDate,
                   boolean isActive, int minOrderPrice, int usageLimit) {
         this.name = name;
         this.code = code;

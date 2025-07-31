@@ -224,7 +224,7 @@
                     th:onclick="'location.href=\'/interior/write\''">
                 자랑글 작성하기
             </button>
-            
+
             <!-- 관리자용 공지사항 작성 버튼 -->
             <button type="button"
                     class="notice-btn"
@@ -265,9 +265,9 @@
                         <span><span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></span>
                     </div>
                     <!-- 썸네일 이미지 (첨부 이미지가 있는 경우) -->
-                    <img th:if="${post.filePathList != null and !post.filePathList.isEmpty()}" 
-                         th:src="@{${post.filePathList[0]}}" 
-                         class="post-thumbnail" 
+                    <img th:if="${post.filePathList != null and !post.filePathList.isEmpty()}"
+                         th:src="@{${post.filePathList[0]}}"
+                         class="post-thumbnail"
                          alt="썸네일">
                 </div>
             </a>
@@ -315,10 +315,10 @@
 <div th:replace="~{index/footer :: footer}"></div>
 
 <script>
-function writeNotice() {
-    // 공지사항 작성 페이지로 이동하면서 공지사항 플래그 전달
-    location.href = '/interior/write?isNotice=true';
-}
+    function writeNotice() {
+        // 공지사항 작성 페이지로 이동하면서 공지사항 플래그 전달
+        location.href = '/interior/write?isNotice=true';
+    }
 </script>
 
 </body>

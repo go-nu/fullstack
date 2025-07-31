@@ -450,8 +450,6 @@
                             <th>상품명</th>
                             <th>판매가</th>
                             <th>수량</th>
-                            <th>배송비</th>
-                            <th>배송구분</th>
                             <th>합계</th>
                         </tr>
                     </thead>
@@ -469,8 +467,6 @@
                             <td>
                                 <span th:text="${item.count}"></span>
                             </td>
-                            <td th:text="${#numbers.formatDecimal(item.deliveryFee, 0, 'COMMA', 0, 'COMMA')} + '원'">0원</td>
-                            <td th:text="${item.deliveryType}">무료배송</td>
                             <td>
                                 <span th:text="${#numbers.formatDecimal(item.price * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원
                             </td>
@@ -499,14 +495,14 @@
                             <span class="mobile-detail-label">수량</span>
                             <span class="mobile-detail-value" th:text="${item.count}"></span>
                         </div>
-                        <div class="mobile-detail-item">
-                            <span class="mobile-detail-label">배송구분</span>
-                            <span class="mobile-detail-value" th:text="${item.deliveryType}"></span>
-                        </div>
-                        <div class="mobile-detail-item">
-                            <span class="mobile-detail-label">배송비</span>
-                            <span class="mobile-detail-value" th:text="${#numbers.formatDecimal(item.deliveryFee, 0, 'COMMA', 0, 'COMMA')} + '원'"></span>
-                        </div>
+<!--                        <div class="mobile-detail-item">-->
+<!--                            <span class="mobile-detail-label">배송구분</span>-->
+<!--                            <span class="mobile-detail-value" th:text="${item.deliveryType}"></span>-->
+<!--                        </div>-->
+<!--                        <div class="mobile-detail-item">-->
+<!--                            <span class="mobile-detail-label">배송비</span>-->
+<!--                            <span class="mobile-detail-value" th:text="${#numbers.formatDecimal(item.deliveryFee, 0, 'COMMA', 0, 'COMMA')} + '원'"></span>-->
+<!--                        </div>-->
                     </div>
                     <div class="mobile-total-price">
                         총 가격: <span th:text="${#numbers.formatDecimal(item.price * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원

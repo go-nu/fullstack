@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>상품 수정</title>
-    <link rel="stylesheet" href="/css/pages/product.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
@@ -69,20 +68,27 @@
             border-radius: 0;
         }
         .remove-btn {
-            position: absolute;
-            top: 0; right: 0;
-            background: #B17457;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 22px; height: 22px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s;
+            position: absolute !important;
+            top: 8px !important;
+            right: 8px !important;
+            background: #dc3545 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 25px !important;
+            height: 25px !important;
+            cursor: pointer !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: background-color 0.2s !important;
+            padding: 0 !important;
+            margin: 5px !important;
         }
         .remove-btn:hover {
-            background: #4A4947;
+            background: #c82333 !important;
         }
         .product-form {
             width: 100%;

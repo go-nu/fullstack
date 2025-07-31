@@ -3,15 +3,19 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
 @Setter
+@Where(clause = "is_deleted = false") // 0731 추가
 public class Product { // 상품
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +26,9 @@ public class Product { // 상품
 
     private int stockQuantity; // 전체 재고 수량
     private double averageRating; // 후기 평점 평균
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false; // 0731 dk 추가 논리적 삭제(soft delete)를 위해서
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductModel> productModels = new ArrayList<>();
@@ -35,6 +42,7 @@ public class Product { // 상품
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,5 +71,13 @@ public class Product { // 상품
             return images.get(0).getImageUrl();
         }
         return null;
+    }
+
+    // 0731 dk 추가
+    public void setDeleted(boolean deleted) {
+        this.isDeleted = deleted;
+    }
+    public boolean isDeleted() {
+        return isDeleted;
     }
 }

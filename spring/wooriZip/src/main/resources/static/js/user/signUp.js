@@ -8,73 +8,66 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "확인"
         });
     }
+
+    const emailInput = document.getElementById('email');
+    const emailIdInput = document.getElementById('email-id');
+    const emailDomainInput = document.getElementById('email-domain');
+    const signupBtn = document.getElementById('signupBtn');
+    const msgEl = document.getElementById('emailCheckMsg');
+
+    function resetEmailCheck() {
+        isEmailChecked = false;
+        msgEl.textContent = '';
+        signupBtn.disabled = true;
+    }
+
+    emailInput.addEventListener('input', resetEmailCheck);
+    emailIdInput.addEventListener('input', resetEmailCheck);
+    emailDomainInput.addEventListener('input', resetEmailCheck);
 });
 
 let isEmailChecked = false;
-
-document.addEventListener('DOMContentLoaded', function () {
-    const emailInput = document.getElementById('email');
-    const signupBtn = document.getElementById('signupBtn');
-
-    // 이메일 입력값 변경 시 중복 확인 상태 초기화
-    emailInput.addEventListener('input', function () {
-        isEmailChecked = false;
-        document.getElementById('emailCheckMsg').textContent = '';
-        if (signupBtn) {
-            signupBtn.disabled = true;
-        }
-    });
-});
 
 function checkEmailDuplicate() {
     const emailId = document.getElementById('email-id').value.trim();
     const emailDomain = document.getElementById('email-domain').value.trim();
     const signupBtn = document.getElementById('signupBtn');
+    const msgEl = document.getElementById('emailCheckMsg');
 
     if (emailId === '' || emailDomain === '') {
         alert('이메일을 입력해 주세요.');
         return;
     }
 
-    // 이메일 아이디와 도메인이 모두 입력되었을 때만 중복 체크
-    if (emailId && emailDomain) {
-        const fullEmail = emailId + '@' + emailDomain; // 전체 이메일 생성
+    const fullEmail = emailId + '@' + emailDomain;
 
-        // 이메일 중복 확인을 서버에 요청
-        const msgEl = document.getElementById('emailCheckMsg');
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', '/user/checkEmail?email=' + encodeURIComponent(fullEmail), true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                if (response.exists) {
-                    msgEl.textContent = '이미 사용 중인 이메일입니다.';
-                    msgEl.style.color = 'red';
-                    signupBtn.disabled = true;
-                } else {
-                    msgEl.textContent = '사용 가능한 이메일입니다.';
-                    msgEl.style.color = 'green';
-                    signupBtn.disabled = false;
-
-                    // 이메일을 hidden input에 설정
-                    document.getElementById('email').value = fullEmail;
-                }
-            } else {
-                msgEl.textContent = '오류가 발생했습니다. 다시 시도해 주세요.';
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/user/checkEmail?email=' + encodeURIComponent(fullEmail), true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.exists) {
+                msgEl.textContent = '이미 사용 중인 이메일입니다.';
                 msgEl.style.color = 'red';
                 signupBtn.disabled = true;
+            } else {
+                msgEl.textContent = '사용 가능한 이메일입니다.';
+                msgEl.style.color = 'green';
+                signupBtn.disabled = false;
+                document.getElementById('email').value = fullEmail;
             }
-        };
-        xhr.onerror = function () {
-            msgEl.textContent = '서버 통신 중 오류가 발생했습니다.';
+        } else {
+            msgEl.textContent = '오류가 발생했습니다. 다시 시도해 주세요.';
             msgEl.style.color = 'red';
             signupBtn.disabled = true;
-        };
-        xhr.send();
-    } else {
-        // 이메일이 완성되지 않으면 버튼을 비활성화
+        }
+    };
+    xhr.onerror = function () {
+        msgEl.textContent = '서버 통신 중 오류가 발생했습니다.';
+        msgEl.style.color = 'red';
         signupBtn.disabled = true;
-    }
+    };
+    xhr.send();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -89,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
-        // 처음 체크된 radio의 label에 active 주기
         const checkedInput = group.querySelector("input:checked");
         if (checkedInput) {
             const checkedLabel = group.querySelector(`label[for="${checkedInput.id}"]`);
@@ -190,14 +182,13 @@ function sample4_execDaumPostcode() {
     }).open();
 }
 
-//이메일 입력
+// 이메일 입력 시 도메인 select, input 제어
 document.addEventListener("DOMContentLoaded", function () {
     const domainInput = document.getElementById("email-domain");
     const domainSelect = document.getElementById("domain-select");
     const emailIdInput = document.getElementById("email-id");
     const signupBtn = document.getElementById("signupBtn");
 
-    // select 선택 시 → input 값을 해당 도메인으로 변경
     domainSelect.addEventListener("change", function () {
         if (this.value !== "") {
             domainInput.value = this.value;
@@ -207,7 +198,6 @@ document.addEventListener("DOMContentLoaded", function () {
         validateEmail();
     });
 
-    // input 수동 입력 시 select 값을 "직접입력"으로 되돌림
     domainInput.addEventListener("input", function () {
         domainSelect.value = "";
         validateEmail();

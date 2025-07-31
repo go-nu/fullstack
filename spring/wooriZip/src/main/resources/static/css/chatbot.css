@@ -205,21 +205,26 @@
 
 /* 링크 스타일 */
 .chat-link {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 16px;
-    background: var(--color-success);
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-size: 13px;
-    transition: var(--transition-normal);
+    display: inline-block !important;
+    margin-top: 10px !important;
+    padding: 10px 20px !important;
+    background: var(--color-brand) !important;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: var(--transition-normal) !important;
+    border: 2px solid var(--color-brand) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    cursor: pointer !important;
 }
 
 .chat-link:hover {
-    background: var(--color-success);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+    background: var(--color-brand-dark) !important;
+    border-color: var(--color-brand-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* 로딩 애니메이션 */

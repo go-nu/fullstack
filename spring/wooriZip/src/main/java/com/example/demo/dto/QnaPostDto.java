@@ -25,6 +25,7 @@ public class QnaPostDto {
     private String fileNames;
     private String filePaths;
     private List<String> filePathList;
+    private String deleteImages; // 삭제할 이미지 경로들 (쉼표로 구분)
 
     private String email;
     private String nickname;
@@ -77,7 +78,7 @@ public class QnaPostDto {
                 .filePathList(filePathList)
                 .email(post.getEmail())
                 .nickname(post.getNickname())
-                .productId(post.getProduct().getId())
+                .productId(post.getProduct() != null ? post.getProduct().getId() : null)
                 .isSecret(post.isSecret())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())

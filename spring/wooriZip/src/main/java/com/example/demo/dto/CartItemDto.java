@@ -22,6 +22,7 @@ public class CartItemDto {
     private int price; // 가격
     private String imgUrl;
     private String productModelSelect;
+    private boolean isDeleted;
 
     public CartItemDto(CartItem cartItem) {
         this.cartItemId = cartItem.getId();
@@ -33,5 +34,6 @@ public class CartItemDto {
         // 대표사진만 필요
         this.imgUrl = cartItem.getProduct().getImages().get(0).getImageUrl();
         this.productModelSelect = cartItem.getProductModel().getProductModelSelect();
+        this.isDeleted = cartItem.getProduct().isDeleted();
     }
 }

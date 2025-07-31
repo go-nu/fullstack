@@ -15,17 +15,17 @@
             font-family: 'Arial', sans-serif;
         }
         main {
-            max-width: 1100px;
+            max-width: 900px;
             width: 100%;
             margin: 0 auto;
-            padding: 32px 0 64px 0;
+            padding: 24px 0 48px 0;
             box-sizing: border-box;
         }
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #B17457;
-            margin: 32px 0 24px 0;
+            margin: 24px 0 20px 0;
             text-align: center;
         }
         .order-container {
@@ -35,8 +35,8 @@
             width: 100%;
             border-collapse: collapse;
             background: #fff;
-            font-size: 1rem;
-            margin-bottom: 32px;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
         }
         .table th, .table td {
             border: 1px solid #E0E0E0;
@@ -49,8 +49,8 @@
             font-weight: 600;
         }
         .table img {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
             border: 1px solid #E0E0E0;
             background: #F9F7F0;
@@ -59,8 +59,8 @@
             background: #F9F7F0;
             border: 1px solid #E0E0E0;
             border-radius: 0;
-            padding: 16px 20px;
-            margin-bottom: 32px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
         }
         .delivery-summary th {
             color: #B17457;
@@ -70,8 +70,8 @@
             background: #fff;
             border: 1px solid #E0E0E0;
             border-radius: 0;
-            padding: 24px;
-            margin-bottom: 32px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         .coupon-section h5 {
             color: #B17457;
@@ -97,8 +97,8 @@
             background: #fff;
             border: 1px solid #E0E0E0;
             border-radius: 0;
-            padding: 24px;
-            margin-bottom: 32px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -176,8 +176,8 @@
             background: #F9F7F0;
             border: 1px solid #E0E0E0;
             border-radius: 0;
-            padding: 24px;
-            margin-bottom: 32px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
         .payment-summary table {
             width: 100%;
@@ -256,65 +256,34 @@
 </head>
 <body>
 <div th:replace="~{index/header :: header}"></div>
-<div>
-    <h1>ORDER</h1>
-    <div class="pc-only">
-        <table class="table">
-            <thead class="table-light">
-            <tr>
-                <th>상품 이미지</th>
-                <th>상품 정보</th>
-                <th>판매가</th>
-                <th>수량</th>
-                <th>합계</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${orderDto.items}">
-                <td><img alt="상품 이미지" th:src="@{${item.getImgUrl()}}" width="300px"></td>
-                <td><p th:text="${item.productName}">상품 이름</p></td>
-                <td><p><span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원</p></td>
-                <td><p th:text="${item.count}">상품 개수</p></td>
-                <td>
+<main>
+    <div>
+        <h1>ORDER</h1>
+        <div class="pc-only">
+            <table class="table">
+                <thead class="table-light">
+                <tr>
+                    <th>상품 이미지</th>
+                    <th>상품 정보</th>
+                    <th>판매가</th>
+                    <th>수량</th>
+                    <th>합계</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${orderDto.items}">
+                    <td><img alt="상품 이미지" th:src="@{${item.getImgUrl()}}" width="300px"></td>
+                    <td><p th:text="${item.productName}">상품 이름</p></td>
+                    <td><p><span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원</p></td>
+                    <td><p th:text="${item.count}">상품 개수</p></td>
+                    <td>
             <span th:text="${#numbers.formatDecimal(item.getPrice() * item.count, 0, 'COMMA', 0, 'COMMA')}">
               0</span>원
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <!--
-
-        &lt;!&ndash; 모바일 버전 &ndash;&gt;
-        <div class="mobile-only">
-            <div th:each="item : ${orderDto.items}">
-                <input type="hidden" name="orderId" th:value="${orderDto.orderNo}">
-                <div>
-                    <img alt="상품 이미지" th:src="@{${item.getImgUrl()}}">
-                    <div>
-                        <p th:text="${item.productName}">상품 이름</p>
-                    </div>
-                </div>
-                <div>
-                    <span>가격:</span>
-                    <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'COMMA')}">0</span>원
-                </div>
-                <div>
-                    <span>수량:</span>
-                    <p th:text="${item.count}"></p>
-                    <span>개</span>
-                </div>
-                <div>
-                    <span>배송비:</span>
-                    <span>0</span>원
-                </div>
-                <div>
-                    <span>합계:</span>
-                    <span th:text="${#numbers.formatDecimal(item.getPrice() * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원
-                </div>
-            </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    -->
 
         <div class="delivery-summary">
             <table>
@@ -363,8 +332,12 @@
                             <input id="address" placeholder="우편번호" type="text" th:value="${orderDto.getPCode()}">
                             <button type="button">우편번호</button>
                         </div>
-                        <input placeholder="기본주소" type="text" th:value="${orderDto.getLoadAddress()}">
-                        <input placeholder="나머지주소 (선택입력가능)" type="text" th:value="${orderDto.getDetailAddress()}">
+                        <div class="address-inputs">
+                            <input placeholder="기본주소" type="text" th:value="${orderDto.getLoadAddress()}">
+                        </div>
+                        <div class="address-inputs">
+                            <input placeholder="나머지주소 (선택입력가능)" type="text" th:value="${orderDto.getDetailAddress()}">
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -385,7 +358,7 @@
                         <input id="email-id" name="emailId" placeholder="이메일 아이디" type="text"
                                th:value="${orderDto.email != null and #strings.contains(orderDto.email, '@') ? #strings.arraySplit(orderDto.email, '@')[0] : orderDto.email}">
                         <span>@</span>
-                        <input id="email-domain" name="domain" placeholder="직접입력"
+                        <input id="email-domain" name="domain" placeholder="직접입력" type="text"
                                th:value="${orderDto.email != null and #strings.contains(orderDto.email, '@') ? #strings.arraySplit(orderDto.email, '@')[1] : ''}">
                         <select id="domain-select">
                             <option value="">직접입력</option>
@@ -413,12 +386,12 @@
                 <tbody>
                 <tr>
                     <td><span id="finalTotalPrice"
-                            th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
+                              th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
                     </td>
                     <td><span id="deliveryFee">0</span>원</td>
-                    <td><span id="appliedCoupon">0</span>원</td>
+                    <td><span id="appliedCoupon">0</span></td>
                     <td><span id="finalPaymentAmount"
-                            th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
+                              th:text="${#numbers.formatDecimal(orderDto.getTotalPrice(), 0, 'COMMA', 0, 'COMMA')}">0</span>원
                     </td>
                 </tr>
                 </tbody>
@@ -426,6 +399,7 @@
         </div>
 
         <div class="submit-section">
+            <input type="hidden" name="orderId" th:value="${orderDto.orderId}">
             <button id="submit-orderDto">결제하기</button>
         </div>
     </div>

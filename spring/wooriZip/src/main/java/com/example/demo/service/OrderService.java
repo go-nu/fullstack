@@ -52,36 +52,45 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDto getOrderByOrderId(String orderId) {
         // 최종 주문 완료한 것만 보여주기
-        Order order = orderRepository.findByOrderId(orderId).orElseThrow(()-> new IllegalArgumentException("찾는 주문이 없습니다."));
-        
-        // OrderItems에서 직접 OrderItemDto 생성
+        Order order = orderRepository.findWithDetailsByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 없음"));
         List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
-                .map(orderItem -> {
-                    OrderItemDto dto = new OrderItemDto();
-                    dto.setProductId(orderItem.getProduct().getId());
-                    dto.setOrderItemId(orderItem.getId());
-                    dto.setProductName(orderItem.getProduct().getName());
-                    dto.setModelId(orderItem.getProductModel().getId());
-                    dto.setCount(orderItem.getCount());
-                    dto.setPrice(orderItem.getProductModel().getPrice());
-                    dto.setImgUrl(orderItem.getProduct().getImages().isEmpty() ? null
-                            : orderItem.getProduct().getImages().get(0).getImageUrl());
-                    dto.setCartItemId(null); // 주문 완료 후에는 cartItemId가 필요 없음
-                    
-                    // 배송비 계산 (주문 총액이 5만원 이상이면 무료배송)
-                    int totalOrderPrice = order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum();
-                    if (totalOrderPrice >= 50000) {
-                        dto.setDeliveryFee(0);
-                        dto.setDeliveryType("무료배송");
-                    } else {
-                        dto.setDeliveryFee(3000);
-                        dto.setDeliveryType("유료배송");
-                    }
-                    
-                    return dto;
-                }).collect(Collectors.toList());
+                .map(OrderItemDto::new)
+                .collect(Collectors.toList());
 
-        OrderDto dto =  OrderDto.builder()
+        List<CartItem> cartItems = cartItemRepository.findByCartUserEmail(order.getUsers().getEmail());
+        if (!cartItems.isEmpty()) {
+            List<Long> orderedModelIds = order.getOrderItems().stream()
+                    .map(oi -> oi.getProductModel().getId())
+                    .toList();
+
+            orderItemDtos = cartItems.stream()
+                    .filter(cartItem -> orderedModelIds.contains(cartItem.getProductModel().getId()))
+                    .map(cartItem -> {
+                        OrderItemDto dto = new OrderItemDto();
+                        dto.setProductId(cartItem.getProduct().getId());
+                        dto.setOrderItemId(null);
+                        dto.setProductName(cartItem.getProduct().getName());
+                        dto.setModelId(cartItem.getProductModel().getId());
+                        dto.setCount(cartItem.getCount());
+                        dto.setPrice(cartItem.getProductModel().getPrice());
+                        dto.setImgUrl(cartItem.getProduct().getImages().isEmpty() ? null
+                                : cartItem.getProduct().getImages().get(0).getImageUrl());
+                        dto.setCartItemId(cartItem.getId());
+                        // 배송비 계산 (주문 총액이 5만원 이상이면 무료배송)
+                        int totalOrderPrice = order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum();
+                        if (totalOrderPrice >= 50000) {
+                            dto.setDeliveryFee(0);
+                            dto.setDeliveryType("무료배송");
+                        } else {
+                            dto.setDeliveryFee(3000);
+                            dto.setDeliveryType("유료배송");
+                        }
+                        return dto;
+                    }).collect(Collectors.toList());
+        }
+
+        return OrderDto.builder()
                 .orderNo(order.getId())
                 .totalPrice(order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum())
                 .items(orderItemDtos)
@@ -100,7 +109,6 @@ public class OrderService {
                 .deliveryFee(order.getDeliveryFee())
                 .finalAmount(order.getFinalAmount())
                 .build();
-        return dto;
     }
 
 
@@ -168,6 +176,9 @@ public class OrderService {
 
             // 사용 여부 체크 및 예외 발생/사용 처리 모두 제거
             order.setUserCoupon(userCoupon);
+        } else {
+            // 쿠폰이 선택되지 않은 경우 기존 쿠폰 제거
+            order.setUserCoupon(null);
         }
 
         List<OrderItem> newItems = new ArrayList<>();
@@ -555,7 +566,7 @@ public class OrderService {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
 
-        List<Order> orders = orderRepository.findByUsersAndOrderStatus(user, OrderStatus.ORDER);
+        List<Order> orders = orderRepository.findByUsersAndOrderStatusOrderByOrderDateDesc(user, OrderStatus.ORDER);
 
         return orders.stream()
                 .flatMap(order -> order.getOrderItems().stream())

@@ -3,7 +3,7 @@ package com.example.demo.dto;
 import com.example.demo.constant.CouponType;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,8 +20,8 @@ public class CouponDto {
     private Integer discountAmount;
     private Integer discountPercent;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private boolean isActive = true;
     private int minOrderPrice;

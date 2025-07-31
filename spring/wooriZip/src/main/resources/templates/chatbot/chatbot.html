@@ -13,11 +13,16 @@
             color: #4A4947;
             font-family: 'Arial', sans-serif;
         }
-        .chatbot-container {
-            max-width: 800px;
+        main {
+            max-width: 1100px;
             width: 100%;
-            margin: 0 auto;
-            padding: 32px 0 64px 0;
+            margin: 60px auto 60px auto;
+            background-color: #FFF;
+            padding: 40px 40px 30px 40px;
+            box-sizing: border-box;
+        }
+        .chatbot-container {
+            width: 100%;
             box-sizing: border-box;
         }
         .chatbot-header {
@@ -146,14 +151,34 @@
         .send-btn:hover {
             background: #4A4947;
         }
+        .chat-link {
+            display: inline-block !important;
+            margin-top: 10px !important;
+            padding: 10px 20px !important;
+            background: #B17457 !important;
+            color: white !important;
+            text-decoration: none !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            transition: all 0.2s !important;
+            border: 2px solid #B17457 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            cursor: pointer !important;
+        }
+        .chat-link:hover {
+            background: #4A4947 !important;
+            border-color: #4A4947 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+        }
         @media (max-width: 1200px) {
-            .chatbot-container {
-                max-width: 90vw;
+            main {
                 padding: 24px 2vw 40px 2vw;
             }
         }
         @media (max-width: 700px) {
-            .chatbot-container {
+            main {
                 padding: 16px 2vw 32px 2vw;
             }
             .chatbot-header h2 {
@@ -186,34 +211,37 @@
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
-<div class="chatbot-container">
-    <div class="chatbot-header">
-        <h2>💬 우리집 챗봇 상담</h2>
-        <p>무엇을 도와드릴까요?</p>
-    </div>
+<main>
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <h2>💬 우리집 챗봇 상담</h2>
+            <p>무엇을 도와드릴까요?</p>
+        </div>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message bot-message">
-            <div class="message-content">
-                안녕하세요! 우리집 쇼핑몰 챗봇입니다. 무엇을 도와드릴까요?
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    안녕하세요! 우리집 쇼핑몰 챗봇입니다. 무엇을 도와드릴까요?
+                </div>
+                <div class="message-time" id="currentTime"></div>
             </div>
-            <div class="message-time" id="currentTime"></div>
+        </div>
+
+        <div class="suggestions" id="suggestions">
+            <button class="suggestion-btn" onclick="sendMessage('자주하는질문')">자주하는질문</button>
+            <button class="suggestion-btn" onclick="sendMessage('카테고리 보여줘')">카테고리 보여줘</button>
+            <button class="suggestion-btn" onclick="sendMessage('배송 안내 알려줘')">배송 안내 알려줘</button>
+            <button class="suggestion-btn" onclick="sendMessage('반품 정책 알려줘')">반품 정책 알려줘</button>
+            <button class="suggestion-btn" onclick="sendMessage('결제 방법 알려줘')">결제 방법 알려줘</button>
+            <button class="suggestion-btn" onclick="sendMessage('이벤트 정보 알려줘')">이벤트 정보 알려줘</button>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="send-btn">전송</button>
         </div>
     </div>
-
-    <div class="suggestions" id="suggestions">
-        <button class="suggestion-btn" onclick="sendMessage('가구 카테고리 보여줘')">가구 카테고리 보여줘</button>
-        <button class="suggestion-btn" onclick="sendMessage('배송 안내 알려줘')">배송 안내 알려줘</button>
-        <button class="suggestion-btn" onclick="sendMessage('반품 정책 알려줘')">반품 정책 알려줘</button>
-        <button class="suggestion-btn" onclick="sendMessage('결제 방법 알려줘')">결제 방법 알려줘</button>
-        <button class="suggestion-btn" onclick="sendMessage('이벤트 정보 알려줘')">이벤트 정보 알려줘</button>
-    </div>
-
-    <div class="chat-input-container">
-        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()" class="send-btn">전송</button>
-    </div>
-</div>
+</main>
 
 <div th:replace="~{index/footer :: footer}"></div>
 <script th:src="@{/js/chatbot.js}"></script>

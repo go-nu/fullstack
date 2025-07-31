@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.AttributeValue;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
 import com.example.demo.repository.AttributeRepository;
 import com.example.demo.repository.AttributeValueRepository;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.ReviewPostRepository;
 import com.example.demo.service.*;
@@ -39,6 +41,7 @@ public class ProductController {
 
     private final ProductRepository productRepository;
     private final ReviewPostRepository reviewPostRepository;
+    private final CategoryRepository categoryRepository;
 
     //    @GetMapping("/admin/products")
 //    public String adminProductList(Model model, Authentication authentication) {
@@ -133,12 +136,27 @@ public class ProductController {
 //    }
 
     @GetMapping("/products")
-    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,
+    public String showProductList(@RequestParam(name = "category", required = false) String categoryParam,
                                   @RequestParam(defaultValue = "1") int page,
                                   Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
         model.addAttribute("loginUser", loginUser);
+
+        // 카테고리 파라미터 처리 (ID 또는 이름)
+        Long categoryId = null;
+        if (categoryParam != null && !categoryParam.isEmpty()) {
+            try {
+                // 숫자인 경우 ID로 처리
+                categoryId = Long.parseLong(categoryParam);
+            } catch (NumberFormatException e) {
+                // 숫자가 아닌 경우 카테고리 이름으로 ID 찾기
+                Category category = categoryRepository.findByName(categoryParam).orElse(null);
+                if (category != null) {
+                    categoryId = category.getId();
+                }
+            }
+        }
 
         // 페이징 처리 (한 페이지당 9개)
         int pageSize = 9;
@@ -154,56 +172,7 @@ public class ProductController {
         return "product/list";
     }
 
-    @GetMapping("/admin/products/register")
-    public String showProductRegisterForm(Model model, Authentication authentication) {
-        String email = UserUtils.getEmail(authentication);
-        if (email == null) return "redirect:/user/login";
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        ProductForm productForm = new ProductForm();
-        ProductModelDto defaultModel = new ProductModelDto();
-        productForm.getProductModelDtoList().add(defaultModel);
-
-        model.addAttribute("productForm", productForm);
-        model.addAttribute("attributes", attributeRepository.findAll());
-        List<AttributeValue> attributeValues = attributeValueRepository.findAllWithAttribute();
-        List<AttributeValueDto> attributeValueDtos = attributeValues.stream()
-                .map(av -> new AttributeValueDto(av.getId(), av.getValue(), av.getAttribute().getName()))
-                .toList();
-        model.addAttribute("attributeValues", attributeValueDtos);
-        return "product/products";
-    }
-
-    @PostMapping("/admin/products/register")
-    public String registerProduct(@ModelAttribute ProductForm form,
-                                  @RequestParam("images") MultipartFile[] images,
-                                  @RequestParam(value = "productModelDtoListJson", required = false) String modelsJson,
-                                  Authentication authentication,
-                                  Model model) {
-        String email = UserUtils.getEmail(authentication);
-        try {
-            if (email == null) return "redirect:/user/login";
-            Users loginUser = (Users) UserUtils.getUser(authentication);
-
-            // 옵션 리스트 JSON 파싱 (프론트에서 넘어온 경우)
-            if (modelsJson != null && !modelsJson.isEmpty()) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                List<ProductModelDto> modelDtoList = objectMapper.readValue(
-                        modelsJson, new TypeReference<List<ProductModelDto>>() {}
-                );
-                form.setProductModelDtoList(modelDtoList);
-            }
-
-            // 상품 등록 처리
-            Long productId = productService.createProduct(form, Arrays.asList(images), loginUser);
-            model.addAttribute("productForm", form);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/error";
-        }
-        return "redirect:/products";
-    }
 
     @GetMapping("/products/{id}")
     public String viewProduct(@PathVariable Long id,

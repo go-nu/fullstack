@@ -62,16 +62,19 @@ function sendMessage(message = null) {
         console.error('Error:', error);
         hideTypingIndicator();
         addMessage('죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요.', 'bot');
+
+        if (message === '가구 카테고리 보여줘') {
+            addBackToSuggestionsButton();
+        }
     });
 }
 
 // 봇 응답 처리
 function handleBotResponse(response) {
     const { message, type, products, link, suggestions } = response;
-    
+
     let responseContent = message;
-    
-    // 상품 목록이 있는 경우
+
     if (type === 'product_list' && products && products.length > 0) {
         responseContent += '<div class="product-list">';
         products.forEach(product => {
@@ -86,8 +89,7 @@ function handleBotResponse(response) {
         });
         responseContent += '</div>';
     }
-    
-    // 링크가 있는 경우
+
     if (link) {
         let linkText = "상품 목록 보기";
         if (link === "/event") {
@@ -95,15 +97,19 @@ function handleBotResponse(response) {
         }
         responseContent += `<br><a href="${link}" class="chat-link">${linkText}</a>`;
     }
-    
-    // 봇 메시지 추가
+
     addMessage(responseContent, 'bot');
-    
-    // 제안사항 업데이트
+
+    // ✅ 여기 조건 수정
+    if (type === 'product_list') {
+        addBackToSuggestionsButton();
+    }
+
     if (suggestions && suggestions.length > 0) {
         updateSuggestions(suggestions);
     }
 }
+
 
 // 메시지 추가
 function addMessage(content, sender) {
@@ -188,4 +194,35 @@ document.addEventListener('click', function(e) {
         const message = e.target.textContent;
         sendMessage(message);
     }
-}); 
+});
+
+function addBackToSuggestionsButton() {
+    // 이미 버튼이 있으면 중복 추가하지 않음
+    if (document.getElementById('backToSuggestionsBtn')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'backToSuggestionsBtn';
+    btn.className = 'suggestion-btn';
+    btn.textContent = '이전 질문 목록';
+    btn.onclick = () => {
+        fetch('/api/chatbot/suggestions')
+            .then(response => response.json())
+            .then(data => {
+                const suggestionsDiv = document.getElementById('suggestions');
+                suggestionsDiv.innerHTML = ''; // 기존 버튼 초기화
+
+                data.forEach(suggestion => {
+                    const btn = document.createElement('button');
+                    btn.className = 'suggestion-btn';
+                    btn.textContent = suggestion;
+                    btn.onclick = () => sendMessage(suggestion);
+                    suggestionsDiv.appendChild(btn);
+                });
+
+                document.getElementById('backToSuggestionsBtn').remove();
+            });
+    };
+
+    const suggestionsDiv = document.getElementById('suggestions');
+    suggestionsDiv.appendChild(btn);
+}

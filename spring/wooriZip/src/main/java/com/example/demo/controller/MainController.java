@@ -1,12 +1,16 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.CouponDto;
 import com.example.demo.dto.InteriorPostDto;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
 import com.example.demo.security.CustomUserDetails;
+import com.example.demo.service.CouponService;
 import com.example.demo.service.InteriorPostService;
 import com.example.demo.service.RecommendService;
 import com.example.demo.service.ReviewPostService;
+import com.example.demo.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -34,6 +38,8 @@ public class MainController {
     private final InteriorPostService interiorPostService;
     private final ReviewPostService reviewPostService;
     private final RecommendService recommendService;
+    private final CouponService couponService;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping("/")
     public String welcome(Authentication authentication, Model model) {
@@ -76,6 +82,23 @@ public class MainController {
                 reviewPostService.findAllReviews().stream()
                         .limit(4)
                         .collect(Collectors.toList()));
+
+        // 이벤트 쿠폰 데이터 추가 (event.html과 동일한 방식)
+        List<CouponDto> allCoupons = couponService.getAllCoupons();
+        model.addAttribute("coupons", allCoupons);
+
+        // 쿠폰별로 이미 받았는지 여부를 map으로 전달 (event.html과 동일)
+        java.util.Map<Long, Boolean> receivedMap = new java.util.HashMap<>();
+        if (user != null) {
+            for (CouponDto coupon : allCoupons) {
+                receivedMap.put(coupon.getId(), couponService.hasUserReceivedCoupon(coupon.getId(), user));
+            }
+        }
+        model.addAttribute("receivedMap", receivedMap);
+
+        // 카테고리 데이터 추가 (탭 링크용)
+        List<Category> categories = categoryRepository.findByParentIsNull(); // 대분류만
+        model.addAttribute("categories", categories);
 
         return "welcome";
     }

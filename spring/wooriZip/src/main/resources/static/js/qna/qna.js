@@ -111,12 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         const deleteBtn = document.createElement('button');
                         deleteBtn.type = 'button';
-                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle';
+                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle delete-existing-image';
                         deleteBtn.innerHTML = '×';
                         deleteBtn.style.width = '25px';
                         deleteBtn.style.height = '25px';
                         deleteBtn.style.padding = '0';
                         deleteBtn.style.margin = '5px';
+                        deleteBtn.style.fontSize = '12px';
+                        deleteBtn.style.fontWeight = 'bold';
 
                         const fileIndex = selectedFiles.length - 1;
                         deleteBtn.onclick = function() {
@@ -236,12 +238,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         const deleteBtn = document.createElement('button');
                         deleteBtn.type = 'button';
-                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle';
+                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle delete-existing-image';
                         deleteBtn.innerHTML = '×';
                         deleteBtn.style.width = '25px';
                         deleteBtn.style.height = '25px';
                         deleteBtn.style.padding = '0';
                         deleteBtn.style.margin = '5px';
+                        deleteBtn.style.fontSize = '12px';
+                        deleteBtn.style.fontWeight = 'bold';
 
                         const fileIndex = selectedFiles.length - 1;
                         deleteBtn.onclick = function() {

@@ -28,7 +28,13 @@ public class CartService {
     public CartDto getCartByEmail(String email) {
         Users user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을수 없습니다"));
         Cart cart = cartRepository.findByUser(user);
-        return cart != null ? new CartDto(cart) : null;
+        List<CartItem> validItems = cartItemRepository.findValidCartItemsByUserEmail(email);
+        if (validItems.isEmpty()) return null;
+
+        Cart filteredCart = Cart.createCart(user);
+        validItems.forEach(filteredCart::addCartItems);
+
+        return new CartDto(filteredCart);
     }
 
     public void addItemToCart(CartDto cartDto, String email, Long productId) {

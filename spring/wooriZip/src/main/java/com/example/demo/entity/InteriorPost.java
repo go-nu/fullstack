@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +35,7 @@ public class InteriorPost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")  // users 테이블의 PK 컬럼명에 맞게!
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users user;
 
     private int liked;

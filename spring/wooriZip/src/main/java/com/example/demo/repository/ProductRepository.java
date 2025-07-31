@@ -3,6 +3,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,7 +29,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findWithCategoryTreeById(@Param("id") Long id);
 
     List<Product> findByIdIn(List<Long> myWishList);
-    
+
+    // 유저가 보는 상품 목록
+    List<Product> findByIsDeletedFalse(); // 0731 추가
+
+    Page<Product> findByIsDeletedFalse(Pageable pageable);  // ✅ 추가
+
+    // 유저가 보는 상품 상세
+    List<Product> findByCategoryIdInAndIsDeletedFalse(List<Long> categoryIds);
+
+    Optional<Product> findByIdAndIsDeletedFalse(Long id); // 0731 추가 상품 상세용
+
+
     // 챗봇용 메서드들
     List<Product> findByNameContainingIgnoreCase(String name);
     
@@ -57,6 +69,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             ORDER BY cnt DESC
             LIMIT 6
         ) AS top ON p.id = top.product_id
+        WHERE p.is_deleted = 0
         """, nativeQuery = true)
     List<Product> findTopRecommendedProducts();
 }

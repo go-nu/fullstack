@@ -219,13 +219,14 @@ public class ProductService {
         Page<Product> productPage;
         
         if (categoryId == null) {
-            productPage = productRepository.findAll(pageable);
+            // ✅ 삭제되지 않은 상품만
+            productPage = productRepository.findByIsDeletedFalse(pageable);
         } else {
             List<Long> idsToSearch = new ArrayList<>();
             idsToSearch.add(categoryId);
             idsToSearch.addAll(getChildCategoryIds(categoryId));
-            // 페이징을 위한 커스텀 쿼리가 필요할 수 있지만, 일단 전체 조회 후 페이징 처리
-            List<Product> allProducts = productRepository.findByCategoryIdIn(idsToSearch);
+            // ✅ 삭제되지 않은 상품만
+            List<Product> allProducts = productRepository.findByCategoryIdInAndIsDeletedFalse(idsToSearch);
             int start = (page - 1) * size;
             int end = Math.min(start + size, allProducts.size());
             List<Product> pagedProducts = allProducts.subList(start, end);
@@ -329,7 +330,30 @@ public class ProductService {
             throw new AccessDeniedException("권한 없음");
         }
 
-        // ✅ 이미지 삭제 + 업로드는 동일하게 처리
+        // ✅ 기존 이미지 삭제
+        if (deleteIndexes != null && !deleteIndexes.isEmpty()) {
+            List<ProductImage> currentImages = product.getImages();
+            deleteIndexes.stream()
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(idx -> {
+                        if (idx >= 0 && idx < currentImages.size()) {
+                            ProductImage removed = currentImages.remove((int) idx);
+                            deleteFile(removed.getImageUrl());
+                            imageRepository.delete(removed);
+                        }
+                    });
+        }
+
+        // ✅ 새 이미지 업로드
+        if (images != null) {
+            List<String> imagePaths = handleAndReturnFiles(images);
+            for (String path : imagePaths) {
+                ProductImage image = new ProductImage();
+                image.setImageUrl(path);
+                image.setProduct(product);
+                product.getImages().add(image);
+            }
+        }
 
         product.setName(form.getName());
         product.setPrice(form.getPrice());
@@ -411,6 +435,46 @@ public class ProductService {
         return productRepository.findWithCategoryTreeById(id);
     }
 
+//    @Transactional
+//    public void deleteProduct(Long id, Users user) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+//
+//        if (product.getUser() == null || !product.getUser().getId().equals(user.getId())) {
+//            throw new AccessDeniedException("상품 삭제 권한이 없습니다.");
+//        }
+//
+//        // 1. 옵션(모델) 목록
+//        List<ProductModel> productModels = product.getProductModels();
+//
+//        // 2. order_item에서 해당 옵션을 참조하는 row 삭제
+//        orderItemRepository.deleteByProductModelIn(productModels);
+//
+//        // 3. wishlist에서 해당 상품을 참조하는 row 삭제
+//        wishlistRepository.deleteByProduct(product);
+//
+//        // 4. cart_item에서 해당 상품을 참조하는 row 삭제
+//        cartItemRepository.deleteByProduct(product);
+//
+//        // 5. qna_post에서 해당 상품을 참조하는 row 삭제
+//        qnaPostRepository.deleteByProduct(product);
+//
+//        // 6. product_detail에서 해당 상품을 참조하는 row 삭제
+//        productDetailRepository.deleteByProduct(product);
+//
+//        // 7. review_post에서 해당 상품을 참조하는 row 삭제
+//        reviewPostRepository.deleteByProduct(product);
+//
+//        // 8. 이미지, 옵션 등 연관 엔티티 삭제 (기존 코드)
+//        imageRepository.deleteAll(product.getImages());
+//        product.getProductModels().clear();
+//
+//        // 9. 상품 삭제
+//        productRepository.delete(product);
+//
+//    }
+
+    //soft delete로 바꾼 로직
     @Transactional
     public void deleteProduct(Long id, Users user) {
         Product product = productRepository.findById(id)
@@ -420,34 +484,13 @@ public class ProductService {
             throw new AccessDeniedException("상품 삭제 권한이 없습니다.");
         }
 
-        // 1. 옵션(모델) 목록
-        List<ProductModel> productModels = product.getProductModels();
+        // 👉 옵션들도 soft delete
+        for (ProductModel model : product.getProductModels()) {
+            model.setDeleted(true);
+        }
 
-        // 2. order_item에서 해당 옵션을 참조하는 row 삭제
-        orderItemRepository.deleteByProductModelIn(productModels);
-
-        // 3. wishlist에서 해당 상품을 참조하는 row 삭제
-        wishlistRepository.deleteByProduct(product);
-
-        // 4. cart_item에서 해당 상품을 참조하는 row 삭제
-        cartItemRepository.deleteByProduct(product);
-
-        // 5. qna_post에서 해당 상품을 참조하는 row 삭제
-        qnaPostRepository.deleteByProduct(product);
-
-        // 6. product_detail에서 해당 상품을 참조하는 row 삭제
-        productDetailRepository.deleteByProduct(product);
-
-        // 7. review_post에서 해당 상품을 참조하는 row 삭제
-        reviewPostRepository.deleteByProduct(product);
-
-        // 8. 이미지, 옵션 등 연관 엔티티 삭제 (기존 코드)
-        imageRepository.deleteAll(product.getImages());
-        product.getProductModels().clear();
-
-        // 9. 상품 삭제
-        productRepository.delete(product);
-
+        // 👉 상품도 soft delete
+        product.setDeleted(true);
     }
 
     public List<Product> findByUser(Long userId) {

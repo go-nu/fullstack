@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         const deleteBtn = document.createElement('button');
                         deleteBtn.type = 'button';
-                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle';
+                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle delete-existing-image';
                         deleteBtn.innerHTML = '×';
                         deleteBtn.style.width = '25px';
                         deleteBtn.style.height = '25px';

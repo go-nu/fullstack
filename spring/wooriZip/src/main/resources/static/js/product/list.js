@@ -7,6 +7,28 @@ window.onload = function () {
     .then(data => {
         categoryTree = data;
         populateParentCategory(data);
+        
+        // URL 파라미터에서 카테고리 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        
+        if (categoryParam) {
+            // 카테고리 이름으로 ID 찾기
+            const category = findCategoryByName(data, categoryParam);
+            if (category) {
+                // 대분류 선택
+                document.getElementById("parentCategory").value = category.id;
+                
+                // 소분류가 있다면 소분류도 선택
+                if (category.children && category.children.length > 0) {
+                    populateChildCategory(category.children);
+                    document.getElementById("childCategory").value = category.children[0].id;
+                }
+                
+                // 자동 검색 실행
+                filterByCategory();
+            }
+        }
     });
 };
 
@@ -32,6 +54,20 @@ function populateChildCategory(children) {
     children.forEach(child => {
         childSelect.innerHTML += `<option value="${child.id}">${child.name}</option>`;
     });
+}
+
+// 카테고리 이름으로 ID 찾기
+function findCategoryByName(categories, name) {
+    for (let category of categories) {
+        if (category.name === name) {
+            return category;
+        }
+        if (category.children) {
+            const found = findCategoryByName(category.children, name);
+            if (found) return found;
+        }
+    }
+    return null;
 }
 
 // 카테고리 기반 검색

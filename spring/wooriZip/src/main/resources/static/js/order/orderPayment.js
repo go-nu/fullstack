@@ -4,6 +4,12 @@ console.log($);
 
     // ✅ 쿠폰 선택 시 할인 금액 계산 및 반영
     $("#couponSelect").on("change", function () {
+        const selectedValue = $(this).val();
+        if (selectedValue === "") {
+            // 쿠폰이 선택되지 않은 경우 할인 금액 초기화
+            appliedCouponAmount = 0;
+            $("#appliedCoupon").text("0");
+        }
         updateSummary(); // 쿠폰 선택도 요약 재계산에 포함
     });
 
@@ -24,23 +30,31 @@ console.log($);
 
         // ✅ 쿠폰 할인 계산
         const selectedCoupon = $("#couponSelect").find("option:selected");
-        const type = selectedCoupon.data("type");
-        const amount = parseInt(selectedCoupon.data("amount")) || 0;
-        const percent = parseInt(selectedCoupon.data("percent")) || 0;
-        const minOrderPrice = parseInt(selectedCoupon.data("min-order-price")) || 0;
+        const selectedValue = $("#couponSelect").val();
 
-        if (type && minOrderPrice > 0 && totalPrice < minOrderPrice) {
+        // 쿠폰이 선택되지 않은 경우 할인 금액 0으로 설정
+        if (selectedValue === "" || !selectedValue) {
             appliedCouponAmount = 0;
-            $("#appliedCoupon").text("0 (최소주문금액 미달)");
-        } else if (type === "AMOUNT") {
-            appliedCouponAmount = amount;
-            $("#appliedCoupon").text(amount.toLocaleString() + "원");
-        } else if (type === "PERCENT") {
-            appliedCouponAmount = Math.floor(totalPrice * percent / 100);
-            $("#appliedCoupon").text(appliedCouponAmount.toLocaleString() + "원 (" + percent + "% 할인)");
+            $("#appliedCoupon").text("0원");
         } else {
-            appliedCouponAmount = 0;
-            $("#appliedCoupon").text("0");
+            const type = selectedCoupon.data("type");
+            const amount = parseInt(selectedCoupon.data("amount")) || 0;
+            const percent = parseInt(selectedCoupon.data("percent")) || 0;
+            const minOrderPrice = parseInt(selectedCoupon.data("min-order-price")) || 0;
+
+            if (type && minOrderPrice > 0 && totalPrice < minOrderPrice) {
+                appliedCouponAmount = 0;
+                $("#appliedCoupon").text("0원 (최소주문금액 미달)");
+            } else if (type === "AMOUNT") {
+                appliedCouponAmount = amount;
+                $("#appliedCoupon").text(amount.toLocaleString() + "원");
+            } else if (type === "PERCENT") {
+                appliedCouponAmount = Math.floor(totalPrice * percent / 100);
+                $("#appliedCoupon").text(appliedCouponAmount.toLocaleString() + "원 (" + percent + "% 할인)");
+            } else {
+                appliedCouponAmount = 0;
+                $("#appliedCoupon").text("0원");
+            }
         }
 
         const finalAmount = totalPrice + deliveryFee - appliedCouponAmount;
@@ -60,14 +74,17 @@ console.log($);
         const orderId = $('input[name="orderId"]').val();
         const couponId = $('#couponSelect').val(); // 선택된 쿠폰 ID
 
+        // 쿠폰이 선택되지 않은 경우 null로 전송
+        const requestData = {
+            orderId: orderId,
+            couponId: couponId === "" ? null : couponId
+        };
+
         $.ajax({
             url: '/pay/checkout',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({
-                orderId: orderId,
-                couponId: couponId // 추가!
-            }),
+            data: JSON.stringify(requestData),
             success: function (response) {
                 if (response.success) {
                     window.location.href = response.redirectUrl;

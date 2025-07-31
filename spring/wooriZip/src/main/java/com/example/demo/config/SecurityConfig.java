@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.oauth2.CustomOAuth2UserService;
 import com.example.demo.security.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +79,8 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/user/login")
                         .loginProcessingUrl("/user/login")
-                        .defaultSuccessUrl("/")
+//                        .defaultSuccessUrl("/")
+                        .successHandler(successHandler())
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -94,7 +98,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("/", false)
+                        .successHandler(successHandler())
+//                        .defaultSuccessUrl("/", false)
                 );
 
         return http.build();
@@ -120,4 +125,23 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return (request, response, authentication) -> {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                String redirectUrl = (String) session.getAttribute("prevPage");
+                if (redirectUrl != null) {
+                    session.removeAttribute("prevPage");
+                    response.sendRedirect(redirectUrl);
+                    return;
+                }
+            }
+
+            // SavedRequest 있는 경우 or 기본으로 설정된 페이지로 이동
+            new SavedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request, response, authentication);
+        };
+    }
+
 }

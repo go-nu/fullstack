@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +15,7 @@ public class Review { // 후기(리뷰)
     private int rating; // 점수
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)

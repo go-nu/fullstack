@@ -203,7 +203,32 @@ public class ReviewPostService {
     public List<ReviewPostDto> findByUser(Users user) {
         return reviewPostRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
                 .stream()
-                .map(ReviewPostDto::fromEntity)
+                .filter(review -> {
+                    try {
+                        return review.getProduct() != null && !review.getProduct().getIsDeleted();
+                    } catch (Exception e) {
+                        // Product가 완전히 삭제된 경우 false 반환
+                        return false;
+                    }
+                })
+                .map(review -> {
+                    try {
+                        return ReviewPostDto.fromEntity(review);
+                    } catch (Exception e) {
+                        // Product가 완전히 삭제된 경우 기본 정보만으로 DTO 생성
+                        ReviewPostDto dto = new ReviewPostDto();
+                        dto.setId(review.getId());
+                        dto.setTitle(review.getTitle() != null ? review.getTitle() : "제목 없음");
+                        dto.setContent(review.getContent() != null ? review.getContent() : "내용 없음");
+                        dto.setEmail(review.getEmail());
+                        dto.setNickname(review.getNickname());
+                        dto.setProductId(null);
+                        dto.setRating(review.getRating());
+                        dto.setCreatedAt(review.getCreatedAt());
+                        dto.setUpdatedAt(review.getUpdatedAt());
+                        return dto;
+                    }
+                })
                 .collect(Collectors.toList());
     }
 

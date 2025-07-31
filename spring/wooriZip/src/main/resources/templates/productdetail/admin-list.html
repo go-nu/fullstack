@@ -157,6 +157,17 @@
       color: #fff;
     }
 
+    .btn-outline-warning {
+      background: transparent;
+      color: #ffc107;
+      border: 1px solid #ffc107;
+    }
+
+    .btn-outline-warning:hover {
+      background: #ffc107;
+      color: #fff;
+    }
+
     .btn-sm {
       padding: 8px 16px;
       font-size: 0.9rem;
@@ -403,6 +414,17 @@
     }
   </style>
 </head>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
 
 <body>
 <div th:replace="~{index/header :: header}"></div>

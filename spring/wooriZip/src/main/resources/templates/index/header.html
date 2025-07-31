@@ -5,11 +5,13 @@
             position: fixed;
             top: 0;
             width: 100%;
-            height: 63px;
-            background-color: #fff; /* 항상 불투명 흰색 배경 */
+            height: 70px;
+            background-color: #fff;
             transition: all 0.3s ease;
             z-index: 1000;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
         }
         .header.scrolled {
             background-color: #F9F7F0;
@@ -17,10 +19,17 @@
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
         .logo a {
             font-size: 35px;
@@ -29,11 +38,16 @@
             font-style: normal;
             color: #B17457;
             text-decoration: none;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
         .gnb-wrap {
             display: flex;
             align-items: center;
             gap: 30px;
+            height: 100%;
         }
         .divider {
             width: 1px;
@@ -46,12 +60,24 @@
             font-size: 18px;
             margin: 0 10px;
             text-decoration: none;
+            display: inline-block;
+            padding: 8px 12px;
+            transition: color 0.2s;
+        }
+        .gnb-group-1 a:hover {
+            color: #B17457;
         }
         .gnb-group-2 a {
             color: #4A4947;
             font-size: 15px;
             margin: 0 5px;
             text-decoration: none;
+            display: inline-block;
+            padding: 8px 12px;
+            transition: color 0.2s;
+        }
+        .gnb-group-2 a:hover {
+            color: #B17457;
         }
         .admin-menu {
             position: relative;
@@ -78,11 +104,75 @@
         .admin-menu-content a:hover {
             background-color: #e9e5dc;
         }
-        body { padding-top: 63px !important; }
+        body { padding-top: 70px !important; }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 1200px) {
+            .header-inner {
+                padding: 0 16px;
+            }
+            .gnb-wrap {
+                gap: 20px;
+            }
+            .gnb-group-1 a {
+                font-size: 16px;
+                margin: 0 8px;
+                padding: 6px 10px;
+            }
+            .gnb-group-2 a {
+                font-size: 14px;
+                margin: 0 4px;
+                padding: 6px 8px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                height: 60px;
+            }
+            body { 
+                padding-top: 60px !important; 
+            }
+            .logo a {
+                font-size: 28px;
+                line-height: 1;
+            }
+            .gnb-wrap {
+                gap: 15px;
+            }
+            .gnb-group-1 a {
+                font-size: 14px;
+                margin: 0 6px;
+                padding: 4px 8px;
+            }
+            .gnb-group-2 a {
+                font-size: 12px;
+                margin: 0 3px;
+                padding: 4px 6px;
+            }
+            .divider {
+                height: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                height: 55px;
+            }
+            body { 
+                padding-top: 55px !important; 
+            }
+            .logo a {
+                font-size: 24px;
+                line-height: 1;
+            }
+        }
     </style>
     <div class="header-inner">
         <h1 class="logo">
-            <a href="/">WooriZIP</a>
+            <a href="/"
+               style="font-family: 'Stardos Stencil', system-ui; font-weight: 700; font-style: normal;
+               color: #B17457; font-size: 35px; text-decoration: none;">WooriZIP</a>
         </h1>
         <div class="gnb-wrap">
             <div class="gnb-group-1">

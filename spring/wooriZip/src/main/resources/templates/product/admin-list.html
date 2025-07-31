@@ -418,6 +418,17 @@
     </style>
 </head>
 
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
@@ -541,7 +552,7 @@
         <div th:if="${#lists.isEmpty(products)}" class="text-center py-5">
             <div style="font-size: 4rem; color: #ccc; margin-bottom: 16px;">📦</div>
             <h5 class="text-muted mt-3">등록된 상품이 없습니다</h5>
-            <a href="/admin/products/register" class="btn btn-primary mt-2">
+            <a href="/products/form" class="btn btn-primary mt-2">
                 ➕ 상품 등록하기
             </a>
         </div>

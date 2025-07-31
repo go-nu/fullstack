@@ -99,6 +99,19 @@ public class QnaAnswerController {
         return "qna/dashboard";
     }
 
+    // 대시보드에서 답변 삭제
+    @PostMapping("/admin/delete/{answerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteFromDashboard(@PathVariable Long answerId,
+                                     Authentication authentication) {
+        String email = UserUtils.getEmail(authentication);
+        if (email == null) return "redirect:/user/login";
+        Users user = (Users) UserUtils.getUser(authentication);
+        qnaAnswerService.deleteAnswer(answerId, user);
+
+        return "redirect:/qna/answer/admin/dashboard";
+    }
+
     @GetMapping("/admin/unanswered")
     @PreAuthorize("hasRole('ADMIN')")
     public String getUnansweredQna(Model model, Authentication authentication) {

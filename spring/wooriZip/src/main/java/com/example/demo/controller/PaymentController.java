@@ -165,11 +165,12 @@ public class PaymentController {
         String email = UserUtils.getEmail(authentication);
 
         try {
-            // 결제 직전 쿠폰 연결(선택된 경우)
+            // 결제 직전 쿠폰 연결(선택된 경우에만)
             if (couponId != null) {
                 orderService.applyCouponToOrder(orderId, couponId, email);
+                // 쿠폰이 선택된 경우에만 쿠폰 사용 처리
+                orderService.markCouponUsedForOrder(orderId);
             }
-            orderService.markCouponUsedForOrder(orderId);
             // 쿠폰 할인이 적용된 실제 결제 금액 사용
             int finalAmount = orderService.getFinalPaymentAmount(email);
             String amount = String.valueOf(finalAmount);
@@ -190,7 +191,7 @@ public class PaymentController {
         } catch (Exception e) {
 
             log.error("결제 요청 중 오류: {}", e.getMessage(), e); // 서버 콘솔에 전체 스택트레이스와 메시지 출력
-            
+
             Map<String, String> response = new HashMap<>();
             response.put("success", "false");
             response.put("message", "결제 요청 중 오류가 발생했습니다.");

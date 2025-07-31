@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>쿠폰 등록</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             background: #fff;
@@ -154,6 +157,18 @@
         }
     </style>
 </head>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
 <body>
 <div th:replace="~{index/header :: header}"></div>
 
@@ -195,9 +210,9 @@
         <div class="form-group">
             <label>사용 기간</label>
             <div class="date-range">
-                <input type="datetime-local" name="startDate" required/>
+                <input type="date" name="startDate" required/>
                 <span>~</span>
-                <input type="datetime-local" name="endDate" required/>
+                <input type="date" name="endDate" required/>
             </div>
         </div>
 

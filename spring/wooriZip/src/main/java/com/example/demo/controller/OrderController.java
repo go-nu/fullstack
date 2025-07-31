@@ -66,7 +66,8 @@ public class OrderController {
             orderDto = orderService.createOrder(email, cartItemIds, couponId);
             model.addAttribute("orderDto", orderDto);
         }
-        // 주문 생성 후 쿠폰 사용 처리 코드 완전 삭제
+        
+        // 쿠폰이 선택된 경우에만 selectedCouponId를 전달
         if (couponId != null) {
             return "redirect:/order?selectedCouponId=" + couponId;
         } else {
@@ -106,6 +107,7 @@ public class OrderController {
     @GetMapping("/history")
     public String history(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
         if (email == null) return "redirect:/user/login";
 
         List<OrderItem> orderItems = orderService.history(email);

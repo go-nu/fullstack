@@ -33,7 +33,27 @@ document.getElementById("imageInput").addEventListener("change", function (event
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'remove-btn';
-            btn.innerText = '✕';
+            btn.innerHTML = '✕';
+            btn.style.cssText = `
+                position: absolute !important;
+                top: 8px !important;
+                right: 8px !important;
+                background: #dc3545 !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 50% !important;
+                width: 25px !important;
+                height: 25px !important;
+                cursor: pointer !important;
+                font-size: 14px !important;
+                line-height: 1 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                transition: background-color 0.2s !important;
+                padding: 0 !important;
+                margin: 5px !important;
+            `;
             btn.onclick = () => {
                 const idx = selectedFiles.indexOf(file);
                 if (idx > -1) selectedFiles.splice(idx, 1);

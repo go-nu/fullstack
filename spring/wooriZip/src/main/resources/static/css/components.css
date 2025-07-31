@@ -1,7 +1,8 @@
 /* components.css - 버튼 + 폼 + 카드 */
 
 /* === Button System === */
-.btn {
+/* Bootstrap 버튼 클래스가 제대로 작동하도록 예외 처리 */
+.btn:not(.btn-danger):not(.btn-sm):not(.btn-lg):not(.btn-xl):not(.position-absolute):not(.top-0):not(.end-0):not(.rounded-circle) {
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -81,8 +81,13 @@ A/S 책임자와 전화번호: `;
                 
                 const removeBtn = document.createElement('button');
                 removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '×';
+                removeBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle';
+                removeBtn.style.width = '25px';
+                removeBtn.style.height = '25px';
+                removeBtn.style.padding = '0';
+                removeBtn.style.lineHeight = '1';
+                removeBtn.style.margin = '5px';
+                removeBtn.innerHTML = '✕';
                 removeBtn.addEventListener('click', function() {
                     const index = selectedFiles.indexOf(file);
                     if (index > -1) {

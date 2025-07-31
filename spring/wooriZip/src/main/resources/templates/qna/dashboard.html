@@ -212,6 +212,14 @@
           background: #aaa;
           color: #fff;
         }
+        .btn-outline-danger {
+          border: 1px solid #e57373;
+          color: #e57373;
+        }
+        .btn-outline-danger:hover {
+          background: #e57373;
+          color: #fff;
+        }
         .empty-state {
           text-align: center;
           padding: 60px 20px;
@@ -250,6 +258,18 @@
         }
     </style>
 </head>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
 <body>
 <div th:replace="~{index/header :: header}"></div>
 <div class="admin-container">
@@ -283,8 +303,13 @@
                         <span class="ms-2"><i class="bi bi-box"></i> <span th:text="${qna.productName}">상품명</span></span>
                     </div>
                     <div class="qna-actions d-flex gap-2">
-                        <a th:if="${!qna.answered}" th:href="@{'/products/' + ${qna.productId} + '#qna-tab'}" class="btn btn-outline-success btn-sm">답변하기</a>
-                        <a th:if="${qna.answered}" th:href="@{'/products/' + ${qna.productId} + '#qna-tab'}" class="btn btn-outline-secondary btn-sm">답변보기</a>
+                        <a th:if="${!qna.answered and qna.productName != '삭제된 상품'}" th:href="@{'/products/' + ${qna.productId} + '#qna-tab'}" class="btn btn-outline-success btn-sm">답변하기</a>
+                        <a th:if="${!qna.answered and qna.productName == '삭제된 상품'}" class="btn btn-outline-secondary btn-sm disabled" style="cursor: not-allowed;">답변불가</a>
+                        <a th:if="${qna.answered and qna.productName != '삭제된 상품'}" th:href="@{'/products/' + ${qna.productId} + '#qna-tab'}" class="btn btn-outline-secondary btn-sm">답변보기</a>
+                        <a th:if="${qna.answered and qna.productName == '삭제된 상품'}" class="btn btn-outline-secondary btn-sm disabled" style="cursor: not-allowed;">답변보기</a>
+                        <form th:if="${qna.answered and qna.answer != null}" th:action="@{'/qna/answer/admin/delete/' + ${qna.answer.id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('답변을 삭제하시겠습니까?')">답변삭제</button>
+                        </form>
                     </div>
                 </div>
             </div>

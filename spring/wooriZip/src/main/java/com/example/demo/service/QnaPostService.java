@@ -77,19 +77,66 @@ public class QnaPostService {
             throw new SecurityException("작성자만 수정할 수 있습니다.");
         }
 
-        deleteFiles(post.getFilePaths());
-
-        List<String> storedPaths = new ArrayList<>();
-        String joinedPaths = "";
-        String joinedNames = "";
-
-        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-            storedPaths = handleMultipleFiles(dto.getFiles());
-            joinedPaths = String.join(",", storedPaths);
-            joinedNames = dto.getFiles().stream()
-                    .map(MultipartFile::getOriginalFilename)
-                    .collect(Collectors.joining(","));
+        // 기존 이미지 경로들 가져오기
+        List<String> existingPaths = new ArrayList<>();
+        if (post.getFilePaths() != null && !post.getFilePaths().isEmpty()) {
+            existingPaths = Arrays.asList(post.getFilePaths().split(","));
         }
+
+        // 삭제할 이미지들 처리
+        List<String> deleteImages = dto.getDeleteImages() != null ? 
+            Arrays.asList(dto.getDeleteImages().split(",")) : new ArrayList<>();
+        
+        // 삭제할 이미지들을 기존 경로에서 제거
+        existingPaths = existingPaths.stream()
+                .filter(path -> !deleteImages.contains(path.trim()))
+                .collect(Collectors.toList());
+
+        // 새로 업로드된 이미지들 처리
+        List<String> newPaths = new ArrayList<>();
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            newPaths = handleMultipleFiles(dto.getFiles());
+        }
+
+        // 기존 이미지 + 새 이미지 합치기
+        List<String> allPaths = new ArrayList<>(existingPaths);
+        allPaths.addAll(newPaths);
+
+        // 삭제된 이미지 파일들 실제로 삭제
+        for (String deletePath : deleteImages) {
+            if (deletePath != null && !deletePath.trim().isEmpty()) {
+                File file = new File(System.getProperty("user.dir") + deletePath.trim());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+        }
+
+        String joinedPaths = String.join(",", allPaths);
+        String joinedNames = "";
+        
+        // 기존 파일명들 유지 + 새 파일명들 추가
+        List<String> existingNames = new ArrayList<>();
+        if (post.getFileNames() != null && !post.getFileNames().isEmpty()) {
+            existingNames = Arrays.asList(post.getFileNames().split(","));
+        }
+        
+        // 삭제된 이미지에 해당하는 파일명들 제거
+        existingNames = existingNames.stream()
+                .filter(name -> !deleteImages.contains(name.trim()))
+                .collect(Collectors.toList());
+
+        // 새 파일명들 추가
+        List<String> newNames = new ArrayList<>();
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
+            newNames = dto.getFiles().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .collect(Collectors.toList());
+        }
+
+        List<String> allNames = new ArrayList<>(existingNames);
+        allNames.addAll(newNames);
+        joinedNames = String.join(",", allNames);
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -220,6 +267,7 @@ public class QnaPostService {
 
         // 각 상품별로 QnA 게시글을 그룹화하고 생성일 기준 내림차순 정렬
         Map<Long, List<QnaPost>> productQnas = allQna.stream()
+                .filter(qna -> qna.getProduct() != null) // Product가 null이 아닌 것만 필터링
                 .collect(Collectors.groupingBy(
                         qna -> qna.getProduct().getId(),
                         Collectors.collectingAndThen(
@@ -232,51 +280,65 @@ public class QnaPostService {
                         ));
 
         allQna.forEach(qna -> {
-            String category = qna.getProduct().getCategory().getName();
-            categoryStats.putIfAbsent(category, new HashMap<>());
-
-            Map<String, Object> stats = categoryStats.get(category);
-
-            List<Map<String, Object>> answeredList = (List<Map<String, Object>>) stats.getOrDefault("answeredList", new ArrayList<Map<String, Object>>());
-            List<Map<String, Object>> unansweredList = (List<Map<String, Object>>) stats.getOrDefault("unansweredList", new ArrayList<Map<String, Object>>());
-
-            // 해당 상품의 QnA 목록에서 현재 게시글의 위치를 찾아 페이지 번호 계산
-            List<QnaPost> productQnaList = productQnas.get(qna.getProduct().getId());
-            int position = 0;
-            for (int i = 0; i < productQnaList.size(); i++) {
-                if (productQnaList.get(i).getId().equals(qna.getId())) {
-                    position = i;
-                    break;
+            try {
+                // Product가 null인 경우 건너뛰기
+                if (qna.getProduct() == null) {
+                    return;
                 }
+                
+                String category = qna.getProduct().getCategory().getName();
+                categoryStats.putIfAbsent(category, new HashMap<>());
+
+                Map<String, Object> stats = categoryStats.get(category);
+
+                List<Map<String, Object>> answeredList = (List<Map<String, Object>>) stats.getOrDefault("answeredList", new ArrayList<Map<String, Object>>());
+                List<Map<String, Object>> unansweredList = (List<Map<String, Object>>) stats.getOrDefault("unansweredList", new ArrayList<Map<String, Object>>());
+
+                // 해당 상품의 QnA 목록에서 현재 게시글의 위치를 찾아 페이지 번호 계산
+                List<QnaPost> productQnaList = productQnas.get(qna.getProduct().getId());
+                if (productQnaList == null) {
+                    return; // 해당 상품의 QnA 목록이 없으면 건너뛰기
+                }
+                
+                int position = 0;
+                for (int i = 0; i < productQnaList.size(); i++) {
+                    if (productQnaList.get(i).getId().equals(qna.getId())) {
+                        position = i;
+                        break;
+                    }
+                }
+
+                // 페이지 번호 계산 (5개씩 페이징, 최신글이 1페이지)
+                int pageNum = (position / 5) + 1;
+
+                Map<String, Object> postInfo = new HashMap<>();
+                postInfo.put("post", qna);
+                postInfo.put("page", pageNum);
+
+                if (qna.getAnswer() != null) {
+                    answeredList.add(postInfo);
+                } else {
+                    unansweredList.add(postInfo);
+                }
+
+                // 답변 완료/미답변 목록도 생성일 기준 내림차순 정렬
+                Comparator<Map<String, Object>> byCreatedAt = (m1, m2) -> {
+                    QnaPost p1 = (QnaPost) m1.get("post");
+                    QnaPost p2 = (QnaPost) m2.get("post");
+                    return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+                };
+
+                answeredList.sort(byCreatedAt);
+                unansweredList.sort(byCreatedAt);
+
+                stats.put("answeredList", answeredList);
+                stats.put("unansweredList", unansweredList);
+                stats.put("answered", answeredList.size());
+                stats.put("unanswered", unansweredList.size());
+            } catch (Exception e) {
+                // 개별 QnA 처리 중 오류가 발생해도 다른 QnA는 계속 처리
+                // 오류가 발생한 QnA는 건너뛰기
             }
-
-            // 페이지 번호 계산 (5개씩 페이징, 최신글이 1페이지)
-            int pageNum = (position / 5) + 1;
-
-            Map<String, Object> postInfo = new HashMap<>();
-            postInfo.put("post", qna);
-            postInfo.put("page", pageNum);
-
-            if (qna.getAnswer() != null) {
-                answeredList.add(postInfo);
-            } else {
-                unansweredList.add(postInfo);
-            }
-
-            // 답변 완료/미답변 목록도 생성일 기준 내림차순 정렬
-            Comparator<Map<String, Object>> byCreatedAt = (m1, m2) -> {
-                QnaPost p1 = (QnaPost) m1.get("post");
-                QnaPost p2 = (QnaPost) m2.get("post");
-                return p2.getCreatedAt().compareTo(p1.getCreatedAt());
-            };
-
-            answeredList.sort(byCreatedAt);
-            unansweredList.sort(byCreatedAt);
-
-            stats.put("answeredList", answeredList);
-            stats.put("unansweredList", unansweredList);
-            stats.put("answered", answeredList.size());
-            stats.put("unanswered", unansweredList.size());
         });
 
         return categoryStats;
@@ -305,11 +367,34 @@ public class QnaPostService {
     public List<QnaPostDto> findByUser(Users user) {
         return qnaPostRepository.findByEmailOrderByCreatedAtDesc(user.getEmail())
                 .stream()
+                .filter(post -> {
+                    try {
+                        return post.getProduct() != null && !post.getProduct().getIsDeleted();
+                    } catch (Exception e) {
+                        // Product가 완전히 삭제된 경우 false 반환
+                        return false;
+                    }
+                })
                 .map(post -> {
-                    QnaPostDto dto = QnaPostDto.fromEntity(post);
-                    qnaAnswerRepository.findByQnaPost(post)
-                            .ifPresent(answer -> dto.setAnswer(QnaAnswerDto.fromEntity(answer)));
-                    return dto;
+                    try {
+                        QnaPostDto dto = QnaPostDto.fromEntity(post);
+                        qnaAnswerRepository.findByQnaPost(post)
+                                .ifPresent(answer -> dto.setAnswer(QnaAnswerDto.fromEntity(answer)));
+                        return dto;
+                    } catch (Exception e) {
+                        // Product가 완전히 삭제된 경우 기본 정보만으로 DTO 생성
+                        QnaPostDto dto = new QnaPostDto();
+                        dto.setId(post.getId());
+                        dto.setTitle(post.getTitle() != null ? post.getTitle() : "제목 없음");
+                        dto.setContent(post.getContent() != null ? post.getContent() : "내용 없음");
+                        dto.setEmail(post.getEmail());
+                        dto.setNickname(post.getNickname());
+                        dto.setProductId(null);
+                        dto.setCreatedAt(post.getCreatedAt());
+                        dto.setUpdatedAt(post.getUpdatedAt());
+                        dto.setSecret(post.isSecret());
+                        return dto;
+                    }
                 })
                 .collect(Collectors.toList());
     }
@@ -324,11 +409,38 @@ public class QnaPostService {
         List<QnaPost> allQna = qnaPostRepository.findAll();
         List<com.example.demo.dto.QnaPostDto> result = new java.util.ArrayList<>();
         for (QnaPost post : allQna) {
-            com.example.demo.dto.QnaPostDto dto = com.example.demo.dto.QnaPostDto.fromEntity(post);
-            dto.setAnswered(qnaAnswerRepository.existsByQnaPost(post));
-            dto.setProductId(post.getProduct().getId());
-            dto.setProductName(post.getProduct().getName());
-            result.add(dto);
+            try {
+                com.example.demo.dto.QnaPostDto dto = com.example.demo.dto.QnaPostDto.fromEntity(post);
+                dto.setAnswered(qnaAnswerRepository.existsByQnaPost(post));
+                
+                // Product가 존재하는지 확인
+                if (post.getProduct() != null) {
+                    dto.setProductId(post.getProduct().getId());
+                    dto.setProductName(post.getProduct().getName());
+                } else {
+                    // Product가 삭제된 경우
+                    dto.setProductId(null);
+                    dto.setProductName("삭제된 상품");
+                }
+                result.add(dto);
+            } catch (Exception e) {
+                // 개별 QnA 처리 중 오류가 발생해도 다른 QnA는 계속 처리
+                // 오류가 발생한 QnA도 기본 정보만이라도 추가
+                try {
+                    com.example.demo.dto.QnaPostDto dto = new com.example.demo.dto.QnaPostDto();
+                    dto.setId(post.getId());
+                    dto.setTitle(post.getTitle() != null ? post.getTitle() : "제목 없음");
+                    dto.setContent(post.getContent() != null ? post.getContent() : "내용 없음");
+                    dto.setEmail(post.getEmail());
+                    dto.setNickname(post.getNickname());
+                    dto.setProductId(null);
+                    dto.setProductName("삭제된 상품");
+                    dto.setAnswered(qnaAnswerRepository.existsByQnaPost(post));
+                    result.add(dto);
+                } catch (Exception ex) {
+                    // 기본 정보 생성 중에도 오류가 발생하면 해당 QnA는 건너뛰기
+                }
+            }
         }
         return result;
     }

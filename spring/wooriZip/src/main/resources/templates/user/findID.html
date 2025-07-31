@@ -15,18 +15,19 @@
             margin: 0;
         }
         main {
-            max-width: 500px;
-            margin: 120px auto 120px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 60px auto 60px auto;
             background-color: #FFF;
-            border: 1px solid #FFF;
-            border-radius: 12px;
-            padding: 40px 30px 30px 30px;
+            padding: 40px 40px 30px 40px;
             box-sizing: border-box;
         }
         h2 {
             text-align: center;
-            font-size: 32px;
-            margin-bottom: 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #B17457;
+            margin: 32px 0 24px 0;
         }
         form {
             display: flex;
@@ -43,9 +44,9 @@
             width: 100%;
             padding: 18px 18px;
             font-size: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #E0E0E0;
             background-color: #F9F7F0;
-            border-radius: 6px;
+            border-radius: 0;
             box-sizing: border-box;
             margin-bottom: 6px;
         }
@@ -70,10 +71,10 @@
         button[type="submit"] {
             width: 100%;
             padding: 18px 18px;
-            background-color: #D8D2C2;
-            color: #4A4947;
+            background-color: #B17457;
+            color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 0;
             font-size: 20px;
             font-weight: bold;
             cursor: pointer;
@@ -81,80 +82,105 @@
             transition: background-color 0.3s ease;
         }
         button[type="submit"]:hover {
-            background-color: #B17457;
-            color: #F9F7F0;
+            background-color: #4A4947;
+            color: #fff;
         }
         #resultModal {
             display: none;
             position: fixed;
-            left: 0; top: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3);
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
+
         #resultModal.active {
             display: flex;
         }
-        #resultModal > div {
+
+        #resultModal .modal-content {
             background: #fff;
             border-radius: 12px;
-            padding: 32px 24px;
-            min-width: 320px;
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 16px rgba(0,0,0,0.15);
         }
+
         #resultModal p {
             font-size: 18px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 18px;
+
+        #resultModal button,
+        #resultModal .btn {
+            margin: 3px 3px 0 6px;
+            padding: 10px 16px;
+            font-size: 16px;
             border-radius: 6px;
-            font-size: 15px;
+            border: none;
+            cursor: pointer;
             font-weight: bold;
             text-decoration: none;
-            margin: 0 4px 8px 4px;
-            transition: background 0.2s, color 0.2s;
         }
-        .btn-primary {
+
+        #resultModal .btn-primary {
             background: #B17457;
             color: #fff;
-            border: none;
         }
-        .btn-primary:hover {
-            background: #8d5a41;
-        }
-        .btn-success {
+
+        #resultModal .btn-success {
             background: #D8D2C2;
             color: #4A4947;
-            border: none;
         }
-        .btn-success:hover {
-            background: #b6a98a;
-        }
-        #resultModal button {
-            margin-top: 10px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            background: #eee;
-            color: #4A4947;
+
+        #resultModal .btn-close-modal {
+            width: 80px;
+            margin-top: 14px;
+            padding: 10px 16px;
             font-size: 14px;
-            cursor: pointer;
+            background: #B17457;
+            color: white;
+            display: inline-block;
         }
-        #resultModal button:hover {
+
+        #resultModal button:hover,
+        #resultModal .btn:hover {
             background: #B17457;
             color: #fff;
         }
+
         @media (max-width: 600px) {
-            main {
-                padding: 18px 6px;
+            #resultModal .modal-content {
+                width: 90%;
+                padding: 20px 10px;
             }
-            #resultModal > div {
-                min-width: 90vw;
-                padding: 18px 6px;
+        }
+        @media (max-width: 1200px) {
+            main {
+                padding: 24px 2vw 40px 2vw;
+            }
+        }
+        @media (max-width: 700px) {
+            main {
+                padding: 16px 2vw 32px 2vw;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            input[type="text"],
+            input[type="tel"] {
+                padding: 14px 14px;
+                font-size: 16px;
+            }
+            button[type="submit"] {
+                padding: 14px 14px;
+                font-size: 16px;
             }
         }
     </style>
@@ -190,12 +216,19 @@
         <button type="submit" id="findId">아이디 찾기</button>
     </form>
 
-    <div id="resultModal" >
-        <p id="resultMessage"></p>
-        <a href="/user/login" class="btn btn-primary">로그인</a>
-        <a href="/user/findPw" class="btn btn-success">비밀번호 찾기</a>
-        <button onclick="closeModal()">닫기</button>
+    <div id="resultModal">
+        <div class="modal-content">
+            <p id="resultMessage"></p>
+
+            <div class="modal-buttons">
+                <a href="/user/login" class="btn btn-primary">로그인</a>
+                <a href="/user/findPw" class="btn btn-success">비밀번호 찾기</a>
+            </div>
+
+            <button class="btn-close-modal" onclick="closeModal()">닫기</button>
+        </div>
     </div>
+
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>

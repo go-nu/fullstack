@@ -18,7 +18,8 @@
             max-width: 1100px;
             width: 100%;
             margin: 0 auto;
-            padding: 0;
+            margin-top: 0;
+            padding: 50px 0 0 0;
             box-sizing: border-box;
         }
         .hero-slider {
@@ -30,8 +31,9 @@
         }
         .slider-container {
             display: flex;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease-in-out;
             height: 100%;
+            width: 100%;
         }
         .slide {
             min-width: 100%;
@@ -86,16 +88,25 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             color: #fff;
             border: none;
-            padding: 15px 10px;
+            padding: 15px 12px;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
         }
         .slider-btn:hover {
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
+            transform: translateY(-50%) scale(1.1);
         }
         .slider-btn.prev {
             left: 20px;
@@ -120,11 +131,13 @@
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 0;
+            text-decoration: none;
         }
         .category-btn:hover {
             background: #B17457;
             color: #fff;
         }
+
         .section {
             margin-bottom: 80px;
         }
@@ -145,7 +158,7 @@
         }
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 30px;
         }
@@ -187,6 +200,7 @@
         }
         .section-footer {
             text-align: center;
+            margin-top: 40px;
         }
         .more-btn {
             background: #B17457;
@@ -250,27 +264,15 @@
         }
         .interior-stats {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             padding: 8px 12px;
-            background: #F9F7F0;
+            background: #fff;
+            gap: 16px;
         }
         .interior-stats span {
             font-size: 0.8rem;
             color: #666;
-        }
-        .interior-btn {
-            background: #B17457;
-            color: #fff;
-            text-decoration: none;
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            border-radius: 0;
-            transition: background 0.3s;
-        }
-        .interior-btn:hover {
-            background: #4A4947;
-            color: #fff;
         }
         .event-section {
             background: #fff;
@@ -284,30 +286,84 @@
         }
         .event-card {
             background: #fff;
-            border: 2px solid #B17457;
+            border: 1px solid #E0E0E0;
             border-radius: 0;
             padding: 24px;
-            text-align: center;
-            transition: all 0.3s;
+            transition: border 0.2s;
+            position: relative;
+            overflow: hidden;
         }
         .event-card:hover {
-            background: #F9F7F0;
+            border: 1px solid #B17457;
+        }
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
         .event-title {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #B17457;
-            margin-bottom: 12px;
-        }
-        .event-desc {
-            font-size: 1rem;
             color: #4A4947;
-            margin-bottom: 16px;
-            line-height: 1.5;
+            margin: 0;
         }
-        .event-period {
+        .event-code {
+            background: #F9F7F0;
+            padding: 6px 12px;
+            border-radius: 0;
             font-size: 0.9rem;
+            color: #B17457;
+            font-weight: 600;
+        }
+        .event-discount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #B17457;
+            margin: 16px 0;
+        }
+        .event-details {
+            margin: 20px 0;
+        }
+        .event-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 0.95rem;
             color: #666;
+        }
+        .event-detail strong {
+            color: #4A4947;
+            font-weight: 600;
+        }
+        .event-button {
+            width: 100%;
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .event-button:hover {
+            background: #4A4947;
+        }
+        .event-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .no-events {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin: 60px 0;
+            padding: 40px;
+            background: #F9F7F0;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
         }
         @media (max-width: 1200px) {
             main {
@@ -322,6 +378,15 @@
             .event-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .event-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .event-detail {
+                flex-direction: column;
+                gap: 4px;
+            }
         }
         @media (max-width: 900px) {
             .product-grid {
@@ -332,6 +397,9 @@
             }
             .event-grid {
                 grid-template-columns: 1fr;
+            }
+            .event-card {
+                padding: 20px;
             }
             .category-nav {
                 gap: 12px;
@@ -360,6 +428,7 @@
             .category-nav {
                 flex-direction: column;
                 align-items: center;
+                text-decoration: none;
             }
             .section-header h2 {
                 font-size: 1.5rem;
@@ -381,12 +450,14 @@
 
         // 슬라이더 기능
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.slider-dot');
+        let slideInterval;
+        let slides, dots, slider;
 
         function showSlide(n) {
+            if (n < 0) n = slides.length - 1;
+            if (n >= slides.length) n = 0;
+            
             currentSlide = n;
-            const slider = document.querySelector('.slider-container');
             slider.style.transform = `translateX(-${currentSlide * 100}%)`;
             
             // 도트 업데이트
@@ -396,22 +467,73 @@
         }
 
         function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
+            showSlide(currentSlide + 1);
         }
 
         function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(currentSlide);
+            showSlide(currentSlide - 1);
         }
 
-        // 자동 슬라이드
-        setInterval(nextSlide, 5000);
+        function startAutoSlide() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            showSlide(0);
+            // DOM 요소들 가져오기
+            slides = document.querySelectorAll('.slide');
+            dots = document.querySelectorAll('.slider-dot');
+            slider = document.querySelector('.slider-container');
+
+            if (slides.length > 0 && dots.length > 0 && slider) {
+                // 슬라이더 컨테이너에 마우스 올렸을 때 자동 슬라이드 정지
+                slider.addEventListener('mouseenter', stopAutoSlide);
+                slider.addEventListener('mouseleave', startAutoSlide);
+
+                // 터치 이벤트 지원 (모바일)
+                let startX = 0;
+                let endX = 0;
+
+                slider.addEventListener('touchstart', function(e) {
+                    startX = e.touches[0].clientX;
+                    stopAutoSlide();
+                });
+
+                slider.addEventListener('touchend', function(e) {
+                    endX = e.changedTouches[0].clientX;
+                    const diff = startX - endX;
+                    
+                    if (Math.abs(diff) > 50) { // 최소 스와이프 거리
+                        if (diff > 0) {
+                            nextSlide(); // 왼쪽으로 스와이프
+                        } else {
+                            prevSlide(); // 오른쪽으로 스와이프
+                        }
+                    }
+                    
+                    startAutoSlide();
+                });
+
+                // 초기 슬라이드 표시 및 자동 슬라이드 시작
+                showSlide(0);
+                startAutoSlide();
+            }
         });
+
+        // 키보드 이벤트 지원
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
+
     </script>
 </head>
 <body>
@@ -452,24 +574,22 @@
         </div>
     </section>
 
-    <!-- 카테고리 네비게이션 -->
-    <section class="category-nav">
-        <button class="category-btn">가구</button>
-        <button class="category-btn">조명</button>
-        <button class="category-btn">패브릭</button>
-        <button class="category-btn">수납/정리</button>
-        <button class="category-btn">주방용품</button>
-        <button class="category-btn">생활용품</button>
-        <button class="category-btn">인테리어 소품</button>
-        <button class="category-btn">전체보기</button>
-    </section>
-
     <!-- 추천 상품 섹션 -->
     <section class="section">
         <div class="section-header">
             <h2>추천 상품</h2>
             <p>고객님이 가장 많이 찾으시는 인기 상품들을 소개합니다</p>
         </div>
+
+        <!-- 카테고리 네비게이션 -->
+        <section class="category-nav">
+            <a href="/products" class="category-btn active">전체보기</a>
+            <a th:each="category : ${categories}"
+               th:href="@{'/products?category=' + ${category.name}}"
+               class="category-btn"
+               th:text="${category.name}">카테고리</a>
+        </section>
+
         <div class="product-grid">
             <a class="product-card-link" th:each="product : ${products}"
                th:href="@{'/products/' + ${product.id}}"
@@ -489,9 +609,6 @@
                 </div>
             </a>
         </div>
-        <div class="section-footer">
-            <a href="/products" class="more-btn">전체 상품 보기</a>
-        </div>
     </section>
 
     <!-- 인테리어 자랑 게시판 섹션 -->
@@ -502,29 +619,31 @@
         </div>
         <div class="interior-grid">
             <!-- 공지사항 카드 -->
-            <div class="interior-card" th:if="${notice != null}">
-                <img th:if="${notice.filePaths != null and notice.filePaths != ''}"
-                     th:src="@{${#strings.arraySplit(notice.filePaths, ',')[0]}}"
-                     class="interior-image" alt="공지사항 이미지">
-                <img th:unless="${notice.filePaths != null and notice.filePaths != ''}"
-                     src="https://via.placeholder.com/300x200"
-                     class="interior-image" alt="기본 이미지">
-                <div class="interior-info">
-                    <div class="interior-title" th:text="${notice.title}">공지사항 제목</div>
-                    <div class="interior-meta" th:text="${notice.nickname + ' · ' + #temporals.format(notice.createdAt, 'yyyy-MM-dd')}">작성자 · 날짜</div>
-                </div>
-                <div class="interior-stats">
-                    <div>
+            <a th:href="@{'/interior/' + ${notice.postId}}" 
+               th:if="${notice != null}"
+               style="text-decoration: none; color: inherit; display: block;">
+                <div class="interior-card">
+                    <img th:if="${notice.filePaths != null and notice.filePaths != ''}"
+                         th:src="@{${#strings.arraySplit(notice.filePaths, ',')[0]}}"
+                         class="interior-image" alt="공지사항 이미지">
+                    <img th:unless="${notice.filePaths != null and notice.filePaths != ''}"
+                         src="https://via.placeholder.com/300x200"
+                         class="interior-image" alt="기본 이미지">
+                    <div class="interior-info">
+                        <div class="interior-title" th:text="${notice.title}">공지사항 제목</div>
+                        <div class="interior-meta" th:text="${notice.nickname + ' · ' + #temporals.format(notice.createdAt, 'yyyy-MM-dd')}">작성자 · 날짜</div>
+                    </div>
+                    <div class="interior-stats">
                         <span>🔍 <span th:text="${notice.views}">0</span></span>
                         <span>❤️ <span th:text="${notice.liked}">0</span></span>
                     </div>
-                    <a th:href="@{'/interior/' + ${notice.postId}}" class="interior-btn">공지 보기</a>
                 </div>
-            </div>
+            </a>
             <!-- 일반 게시글 카드 -->
-            <div class="interior-card" th:each="post : ${latestInteriorPosts}">
-                <a th:href="@{'/interior/' + ${post.postId}}"
-                   style="text-decoration: none; color: inherit; display: block;">
+            <a th:href="@{'/interior/' + ${post.postId}}" 
+               th:each="post : ${latestInteriorPosts}"
+               style="text-decoration: none; color: inherit; display: block;">
+                <div class="interior-card">
                     <img th:if="${post.filePaths != null and post.filePaths != ''}"
                          th:src="@{${#strings.arraySplit(post.filePaths, ',')[0]}}"
                          class="interior-image" alt="게시글 이미지">
@@ -535,15 +654,12 @@
                         <span class="interior-title" th:text="${post.title}">게시글 제목</span>
                         <div class="interior-meta" th:text="${post.nickname + ' · ' + #temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성자 · 날짜</div>
                     </div>
-                </a>
-                <div class="interior-stats">
-                    <div>
+                    <div class="interior-stats">
                         <span>🔍 <span th:text="${post.views}">0</span></span>
                         <span>❤️ <span th:text="${post.liked}">0</span></span>
                     </div>
-                    <a th:href="@{'/interior/' + ${post.postId}}" class="interior-btn">보기</a>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="section-footer">
             <a href="/interior" class="more-btn">전체 게시글 보기</a>
@@ -556,22 +672,46 @@
             <h2>이벤트</h2>
             <p>특별한 혜택과 이벤트를 만나보세요</p>
         </div>
-        <div class="event-grid">
-            <div class="event-card">
-                <div class="event-title">여름 세일 이벤트</div>
-                <div class="event-desc">7월 한 달간 전 상품 20% 할인 혜택을 드립니다.</div>
-                <div class="event-period">기간: 2025-07-01 ~ 2025-07-31</div>
+        <div class="event-grid" th:if="${not #lists.isEmpty(coupons)}">
+            <div class="event-card" th:each="coupon : ${coupons}">
+                <div class="event-header">
+                    <h3 class="event-title" th:text="${coupon.name}">쿠폰명</h3>
+                    <span class="event-code" th:text="${coupon.code}">코드</span>
+                </div>
+                <div class="event-discount">
+                    <span th:if="${coupon.type.name() == 'AMOUNT'}"
+                          th:text="${#numbers.formatInteger(coupon.discountAmount, 3)} + '원 할인'"></span>
+                    <span th:if="${coupon.type.name() == 'PERCENT'}"
+                          th:text="${coupon.discountPercent} + '% 할인'"></span>
+                </div>
+                <div class="event-details">
+                    <div class="event-detail">
+                        <strong>유효기간:</strong>
+                        <span th:text="${#temporals.format(coupon.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(coupon.endDate, 'yyyy-MM-dd')}"></span>
+                    </div>
+                    <div class="event-detail" th:if="${coupon.minOrderPrice > 0}">
+                        <strong>최소 주문금액:</strong>
+                        <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3)} + '원'"></span>
+                    </div>
+                </div>
+                <form th:action="@{/event/coupons/get}" method="post">
+                    <input type="hidden" name="couponId" th:value="${coupon.id}"/>
+                    <button type="submit" class="event-button"
+                            th:if="${loginUser != null}"
+                            th:disabled="${coupon.usageLimit == 0 or (receivedMap[coupon.id] != null and receivedMap[coupon.id])}">
+                        <span th:if="${coupon.usageLimit == 0}">마감</span>
+                        <span th:if="${coupon.usageLimit > 0 and (receivedMap[coupon.id] != null and receivedMap[coupon.id])}">지급 완료</span>
+                        <span th:if="${coupon.usageLimit > 0 and (receivedMap[coupon.id] == null or !receivedMap[coupon.id])}">쿠폰 받기</span>
+                    </button>
+                    <button type="button" class="event-button" th:if="${loginUser == null}" disabled>로그인 후 받기</button>
+                </form>
             </div>
-            <div class="event-card">
-                <div class="event-title">신규 회원 가입 이벤트</div>
-                <div class="event-desc">신규 가입자에게 첫 구매 시 10,000원 쿠폰 증정!</div>
-                <div class="event-period">기간: 상시 진행</div>
-            </div>
-            <div class="event-card">
-                <div class="event-title">포토 리뷰 이벤트</div>
-                <div class="event-desc">포토 리뷰 작성 시 추첨을 통해 상품권을 드립니다.</div>
-                <div class="event-period">기간: 2025-07-15 ~ 2025-08-15</div>
-            </div>
+        </div>
+        <div class="no-events" th:if="${#lists.isEmpty(coupons)}">
+            <p>현재 진행 중인 이벤트가 없습니다.</p>
+        </div>
+        <div class="section-footer">
+            <a href="/event" class="more-btn">모든 이벤트 보기</a>
         </div>
     </section>
 </main>

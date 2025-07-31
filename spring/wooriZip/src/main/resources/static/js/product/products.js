@@ -45,12 +45,45 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
-    // 2. 이미지 미리보기
+    // 2. 이미지 업로드 영역 클릭 이벤트
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    if (imageUploadArea) {
+        imageUploadArea.addEventListener('click', function() {
+            input.click();
+        });
+
+        // 드래그 앤 드롭 이벤트
+        imageUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        imageUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        imageUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            
+            if (imageFiles.length > 0) {
+                input.files = new DataTransfer().files;
+                input.files = imageFiles;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    // 3. 이미지 미리보기
     input.addEventListener('change', function () {
         selectedFiles = Array.from(this.files);
-        if (selectedFiles.length > 4) {
-            alert("이미지는 최대 4장까지 업로드할 수 있습니다.");
-            selectedFiles = selectedFiles.slice(0, 4);
+        if (selectedFiles.length > 1) {
+            alert("이미지는 1장만 업로드할 수 있습니다.");
+            selectedFiles = selectedFiles.slice(0, 1);
             this.value = '';
             preview.innerHTML = '';
             return;
@@ -61,11 +94,42 @@ document.addEventListener("DOMContentLoaded", function () {
             const reader = new FileReader();
             reader.onload = e => {
                 const box = document.createElement('div');
-                box.className = 'img-box';
+                box.className = 'image-container';
+                box.style.position = 'relative';
+                
                 const img = document.createElement('img');
                 img.src = e.target.result;
+                img.className = 'image-preview';
+                img.onerror = function() {
+                    console.error('이미지 로드 실패:', file.name);
+                    box.remove();
+                };
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle';
+                removeBtn.style.width = '25px';
+                removeBtn.style.height = '25px';
+                removeBtn.style.padding = '0';
+                removeBtn.style.lineHeight = '1';
+                removeBtn.style.margin = '5px';
+                removeBtn.innerHTML = '✕';
+                removeBtn.addEventListener('click', function() {
+                    const index = selectedFiles.indexOf(file);
+                    if (index > -1) {
+                        selectedFiles.splice(index, 1);
+                    }
+                    box.remove();
+                });
+                
                 box.appendChild(img);
+                box.appendChild(removeBtn);
                 preview.appendChild(box);
+                
+                console.log('이미지 미리보기 생성:', file.name);
+            };
+            reader.onerror = function() {
+                console.error('파일 읽기 실패:', file.name);
             };
             reader.readAsDataURL(file);
         });

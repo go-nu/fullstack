@@ -232,7 +232,17 @@ document.addEventListener("DOMContentLoaded", function () {
     function initializeTabs() {
         function switchTab(targetId) {
             document.querySelectorAll('.tab-button').forEach(b => {
-                b.classList.toggle('active', b.getAttribute('data-target') === targetId);
+                const isActive = b.getAttribute('data-target') === targetId;
+                b.classList.toggle('active', isActive);
+                
+                // 스타일 직접 업데이트
+                if (isActive) {
+                    b.style.borderBottom = '2px solid var(--brand-point)';
+                    b.style.color = 'var(--brand-point)';
+                } else {
+                    b.style.borderBottom = '2px solid transparent';
+                    b.style.color = '#666';
+                }
             });
             document.querySelectorAll('.tab-content-section').forEach(section => {
                 section.style.display = section.id === targetId ? 'block' : 'none';

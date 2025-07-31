@@ -26,4 +26,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN FETCH oi.productModel pm " +
             "WHERE o.orderId = :orderId")
     Optional<Order> findWithDetailsByOrderId(@Param("orderId") String orderId);
+
+    List<Order> findByUsersAndOrderStatusOrderByOrderDateDesc(Users user, OrderStatus orderStatus);
 }

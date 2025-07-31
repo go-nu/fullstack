@@ -15,15 +15,20 @@
             color: #4A4947;
         }
         main {
-            max-width: 900px;
-            margin: 120px auto 120px;
-            background-color: #fff;
-            padding: 10px 30px 20px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 60px auto 60px auto;
+            background-color: #FFF;
+            padding: 40px 40px 30px 40px;
+            box-sizing: border-box;
         }
         main > h1 {
             margin-top: 0;
             margin-bottom: 30px;
-            font-size: 32px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #B17457;
+            text-align: center;
         }
 
         form {
@@ -50,9 +55,9 @@
             width: 100%;
             padding: 12px 14px;
             font-size: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #E0E0E0;
             background-color: #F9F7F0;
-            border-radius: 6px;
+            border-radius: 0;
             box-sizing: border-box;
             margin-bottom: 10px;
         }
@@ -66,18 +71,44 @@
             flex: 1;
         }
         .flex-group button {
-            padding: 10px 14px;
+            padding: 12px 14px;
             font-size: 13px;
-            background-color: #D8D2C2;
-            color: #4A4947;
+            background-color: #B17457;
+            color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 0;
             cursor: pointer;
             white-space: nowrap;
+            margin-bottom: 10px;
         }
         .flex-group button:hover {
-            background-color: #B17457;
-            color: #F9F7F0;
+            background-color: #4A4947;
+            color: #fff;
+        }
+        .flex-group .email-at {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 0 10px;
+            padding: 0 6px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        select#domain-select,
+        input#email-domain {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #E0E0E0;
+            background-color: #F9F7F0;
+            border-radius: 0;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+        select#domain-select {
+            min-width: 160px; /* 또는 auto로 시도 */
         }
 
         .select-buttons {
@@ -125,6 +156,29 @@
             color: #F9F7F0;
         }
 
+        button[type="submit"] {
+            grid-column: 1 / 3;
+            width: 100%;
+            padding: 14px;
+            background-color: #D8D2C2;
+            color: #4A4947;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover:enabled {
+            background-color: #B17457;
+            color: #F9F7F0;
+        }
+        button[type="submit"]:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .success {
             color: green;
             font-size: 14px;
@@ -144,6 +198,26 @@
             }
             input[type="submit"] {
                 grid-column: auto;
+            }
+        }
+        @media (max-width: 1200px) {
+            main {
+                padding: 24px 2vw 40px 2vw;
+            }
+        }
+        @media (max-width: 700px) {
+            main {
+                padding: 16px 2vw 32px 2vw;
+            }
+            main > h1 {
+                font-size: 1.5rem;
+            }
+            form {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .flex-group {
+                flex-direction: column;
             }
         }
     </style>
@@ -168,11 +242,14 @@
     <form action="/user/signup" method="post" onsubmit="return validatePhoneNumber();">
         <!-- 좌측 컬럼 -->
         <div class="form-group-left">
-            <label for="email">이메일</label>
+            <div class="flex-group" style="align-items: flex-end;">
+                <label for="email" style="flex: 0 0 auto; margin-bottom: 0;">이메일</label>
+                <div id="emailCheckMsg" style="margin-left: 10px; font-size: 14px;"></div>
+            </div>
             <div class="flex-group">
                 <input type="hidden" id="email" name="email" required>
                 <input id="email-id" name="emailId" placeholder="아이디" type="text">
-                @
+                <span class="email-at">@</span>
                 <input id="email-domain" name="domain" placeholder="직접입력">
                 <select id="domain-select">
                     <option value="">직접입력</option>
@@ -182,14 +259,16 @@
                     <option value="nate.com">nate.com</option>
                 </select>
             </div>
-            <div id="emailCheckMsg"></div>
 
             <label for="userPw">비밀번호</label>
             <input type="password" name="userPw" id="userPw" required>
 
-            <label for="checkPw">비밀번호 확인</label>
+            <div class="flex-group" style="align-items: flex-end;">
+                <label for="checkPw" style="flex: 0 0 auto; margin-bottom: 0;">비밀번호 확인</label>
+                <div id="pwCheckResult" style="margin-left: 10px; font-size: 14px;"></div>
+            </div>
             <input type="password" name="checkPw" id="checkPw" required>
-            <div id="pwCheckResult"></div>
+
 
             <label>우편번호</label>
             <div class="flex-group">
@@ -201,7 +280,7 @@
             <input type="text" id="sample4_jibunAddress" name="lotAddr" placeholder="지번주소" required/>
             <input type="text" id="sample4_detailAddress" name="detailAddr" placeholder="상세주소" required/>
             <input type="text" id="sample4_extraAddress" name="extraAddr" placeholder="참고항목" readonly>
-            <span id="guide" style="color:#999;display:none"></span>
+            <span id="guide" style="color:#999; display:none"></span>
         </div>
 
         <!-- 우측 컬럼 -->
@@ -235,7 +314,7 @@
             </div>
 
             <label>가구 유형</label>
-            <p>가구 유형에 알맞은 제품들을 추천해드립니다.</p>
+            <p style="margin: 0 0 6px;">가구 유형에 알맞은 제품들을 추천해드립니다.</p>
             <div class="select-buttons" id="residenceGroup">
                 <input type="radio" name="residenceType" id="res1" value="1" hidden>
                 <label for="res1">1인가구</label>

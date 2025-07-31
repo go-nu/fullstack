@@ -85,8 +85,9 @@
             margin: 24px 0;
         }
         .image-preview {
-            max-width: 100%;
-            height: auto;
+            width: 450px;
+            height: 300px;
+            object-fit: cover;
             border: 1px solid #E0E0E0;
             background: #F9F7F0;
             margin: 8px 0;
@@ -176,7 +177,7 @@
             border-radius: 0;
             font-size: 1rem;
             font-family: inherit;
-            resize: vertical;
+            resize: none;
             min-height: 80px;
             box-sizing: border-box;
             outline: none;
@@ -208,6 +209,51 @@
         }
         .comment-form a:hover {
             color: #4A4947;
+        }
+        .comment-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+        .comment-edit-btn, .comment-delete-btn, .comment-submit-btn, .comment-cancel-btn {
+            background: #B17457;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .comment-edit-btn:hover, .comment-delete-btn:hover, .comment-submit-btn:hover {
+            background: #4A4947;
+        }
+        .comment-cancel-btn {
+            background: #888;
+        }
+        .comment-cancel-btn:hover {
+            background: #666;
+        }
+        .edit-form {
+            margin-top: 12px;
+            padding: 12px;
+            background: #F9F7F0;
+            border: 1px solid #E0E0E0;
+        }
+        .edit-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #E0E0E0;
+            border-radius: 0;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: none;
+            margin-bottom: 8px;
+        }
+        .edit-form-buttons {
+            display: flex;
+            gap: 8px;
         }
         @media (max-width: 1200px) {
             main {
@@ -244,6 +290,20 @@
             header.classList.remove('scrolled');
         }
     });
+
+    function showEditForm(commentId) {
+        const editForm = document.getElementById('editForm' + commentId);
+        if (editForm) {
+            editForm.style.display = 'block';
+        }
+    }
+
+    function hideEditForm(commentId) {
+        const editForm = document.getElementById('editForm' + commentId);
+        if (editForm) {
+            editForm.style.display = 'none';
+        }
+    }
 </script>
 
 <body>
@@ -274,7 +334,8 @@
                          th:if="${!#strings.isEmpty(img)}"
                          th:src="@{${img}}"
                          alt="첨부 이미지"
-                         class="image-preview"/>
+                         class="image-preview"
+                         style="width: 450px !important; height: 300px !important; object-fit: cover !important;"/>
                 </div>
                 <div th:if="${dto.filePathList == null or dto.filePathList.isEmpty()}">
                     <p>첨부 이미지 없음</p>
@@ -300,18 +361,26 @@
             <h3>댓글</h3>
             <div th:if="${commentList != null}">
                 <div th:each="comment : ${commentList}" class="comment-item">
-                    <p><strong th:text="${comment.nickname}">작성자</strong>: <span th:text="${comment.content}">내용</span></p>
+                    <p><strong th:text="${comment.nickname}">작성자</strong></p>
+                    <p><span th:text="${comment.content}">내용</span></p>
                     <p><small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</small></p>
 
                     <div th:if="${loginUser != null and (comment.email == loginUser.email or loginUser.role.name() == 'ADMIN')}">
+                        <div class="comment-actions">
+                            <button type="button" class="comment-edit-btn" th:onclick="|showEditForm(${comment.commentId})|">댓글 수정</button>
+                            <form th:action="@{'/interior/' + ${dto.postId} + '/comment/delete/' + ${comment.commentId}}"
+                                  method="post" style="display: inline;">
+                                <button type="submit" class="comment-delete-btn" th:text="${loginUser.role.name() == 'ADMIN' ? '관리자 댓글 삭제' : '댓글 삭제'}"
+                                        onclick="return confirm('댓글을 삭제하시겠습니까?');">댓글 삭제</button>
+                            </form>
+                        </div>
                         <form th:if="${comment.email == loginUser.email}" th:action="@{'/interior/' + ${dto.postId} + '/comment/edit/' + ${comment.commentId}}"
-                              method="post">
+                              method="post" class="edit-form" th:id="|editForm${comment.commentId}|" style="display: none;">
                             <textarea name="content" rows="2" th:text="${comment.content}"></textarea>
-                            <button type="submit">댓글 수정</button>
-                        </form>
-                        <form th:action="@{'/interior/' + ${dto.postId} + '/comment/delete/' + ${comment.commentId}}"
-                              method="post">
-                            <button type="submit" th:text="${loginUser.role.name() == 'ADMIN' ? '관리자 댓글 삭제' : '댓글 삭제'}">댓글 삭제</button>
+                            <div class="edit-form-buttons">
+                                <button type="submit" class="comment-submit-btn">수정 완료</button>
+                                <button type="button" class="comment-cancel-btn" th:onclick="|hideEditForm(${comment.commentId})|">취소</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -327,7 +396,7 @@
                 </form>
             </div>
             <div th:unless="${loginUser != null}">
-                <p>댓글을 작성하려면 <a th:href="@{/user/login}">로그인</a>이 필요합니다.</p>
+                <p>댓글을 작성하려면 <a th:href="@{/user/login}" style="text-decoration: none; color: #B17457; font-weight: 600; padding: 6px 16px; border: 1px solid #B17457; border-radius: 4px; background-color: transparent; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#B17457'; this.style.color='white';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#B17457';">로그인</a>이 필요합니다.</p>
             </div>
         </div>
 
