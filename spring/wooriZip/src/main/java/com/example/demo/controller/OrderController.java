@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CartDto;
 import com.example.demo.dto.OrderDto;
-import com.example.demo.entity.OrderItem;
+import com.example.demo.entity.Order;
 import com.example.demo.oauth2.CustomOAuth2User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.OrderService;
@@ -10,7 +10,6 @@ import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -107,11 +106,23 @@ public class OrderController {
     @GetMapping("/history")
     public String history(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        model.addAttribute("loginUser", UserUtils.getUser(authentication));
         if (email == null) return "redirect:/user/login";
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        List<OrderItem> orderItems = orderService.history(email);
-        model.addAttribute("orders", orderItems);
+        List<Order> orders = orderService.findOrdersByUserEmail(email);
+        model.addAttribute("orders", orders);
+
         return "order/orderHistory";
+    }
+
+    // 주문 내역 상세 보기
+    @GetMapping("/detail")
+    public String viewOrderDetail(@RequestParam("orderId") String orderId, Model model, Authentication authentication) {
+        model.addAttribute("loginUser", UserUtils.getUser(authentication));
+
+        OrderDto orderDto = orderService.getOrderByOrderIdForDetail(orderId);
+        model.addAttribute("orderDto", orderDto);
+        log.info("orderDto.item: {}", orderDto.getItems());
+        return "order/orderCompleteDetail";
     }
 }

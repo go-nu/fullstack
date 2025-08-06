@@ -20,6 +20,7 @@
             color: var(--brand-text);
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -35,7 +36,6 @@
             text-align: center;
             color: var(--brand-text);
         }
-        /* 필터 영역 */
         .filter-board {
             background: var(--brand-point-bg);
             padding: 24px 20px 20px 20px;
@@ -75,28 +75,27 @@
             box-sizing: border-box;
         }
         .filter-btn {
-            width: 180px;
-            padding: 12px 0;
+            width: 162px;
+            padding: 10px 0;
             background: var(--brand-point);
             color: #fff;
             border: none;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 0;
             cursor: pointer;
-            margin-top: 8px;
             transition: background-color 0.2s;
+            transform: scale(0.9);
         }
         .filter-btn:hover {
             background: #8d5a41;
         }
-        /* 상품 리스트 그리드 */
         .product-list-title {
             font-size: 2rem;
             font-weight: bold;
             margin: 48px 0 32px 0;
             text-align: center;
-            color: var(--brand-text);
+            color: var(--brand-point);
         }
         .product-grid {
             display: grid;
@@ -120,6 +119,9 @@
             background: #e0e0e0;
             display: block;
         }
+        .product-count-wrapper {
+            margin-bottom: 10px;
+        }
         .product-info {
             padding: 20px;
             display: flex;
@@ -136,7 +138,7 @@
             line-height: 1.4;
         }
         .product-card .product-name a {
-            color: var(--brand-text);
+            color: var(--brand-text);1
             text-decoration: none;
         }
         .product-card .product-name a:hover {
@@ -168,8 +170,7 @@
         .text-muted {
             color: #999;
         }
-        
-        /* 페이징 스타일 */
+
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -213,7 +214,7 @@
         }
         
         .product-count-info {
-            text-align: center;
+            text-align: left;
             margin-top: 20px;
             color: var(--brand-text);
             font-size: 0.9rem;
@@ -279,7 +280,7 @@
 <div th:replace="~{index/header :: header}"></div>
 
 <main>
-    <h2>전체 상품</h2>
+    <h2 id="mainTitle">전체 상품</h2>
 
     <div class="filter-board">
         <div class="filter-row">
@@ -291,11 +292,18 @@
                 <label for="childCategory">소분류 선택</label>
                 <select id="childCategory"></select>
             </div>
+            <div style="display:flex;flex-direction:column;justify-content:end;">
+                <button class="filter-btn" onclick="filterByCategory()">검색</button>
+            </div>
         </div>
-        <button class="filter-btn" onclick="filterByCategory()">검색</button>
     </div>
 
-    <div class="product-list-title">앨범 형식의 상품 리스트</div>
+    <div class="product-count-wrapper">
+        <!-- 상품 개수 정보 -->
+        <div class="product-count-info" th:if="${totalElements > 0}">
+            총 <span th:text="${totalElements}"></span>개
+        </div>
+    </div>
     <div class="product-grid">
         <a th:each="product : ${products}"
            th:href="@{'/products/' + ${product.id}}"
@@ -309,7 +317,7 @@
                     <div class="product-name">
                         <span th:text="${product.name}"></span>
                     </div>
-                    <div class="product-price" th:text="'₩' + ${product.price}"></div>
+                    <div class="product-price" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></div>
                     <div class="rating-display" th:if="${product.averageRating > 0}">
                         <div class="stars">
                             <span th:each="i : ${#numbers.sequence(1, 5)}"
@@ -362,11 +370,6 @@
             다음
         </a>
         <span th:unless="${hasNext}" class="pagination-btn disabled">다음</span>
-    </div>
-    
-    <!-- 상품 개수 정보 -->
-    <div class="product-count-info" th:if="${totalElements > 0}">
-        총 <span th:text="${totalElements}"></span>개의 상품이 있습니다.
     </div>
 </main>
 

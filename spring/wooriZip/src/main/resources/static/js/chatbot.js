@@ -31,20 +31,20 @@ function handleKeyPress(event) {
 function sendMessage(message = null) {
     const messageInput = document.getElementById('messageInput');
     const messageText = message || messageInput.value.trim();
-    
+
     if (!messageText || isTyping) return;
-    
+
     // 사용자 메시지 추가
     addMessage(messageText, 'user');
-    
+
     // 입력창 초기화
     if (!message) {
         messageInput.value = '';
     }
-    
+
     // 타이핑 표시
     showTypingIndicator();
-    
+
     // 서버에 메시지 전송
     fetch('/api/chatbot/chat', {
         method: 'POST',
@@ -63,9 +63,8 @@ function sendMessage(message = null) {
         hideTypingIndicator();
         addMessage('죄송합니다. 오류가 발생했습니다. 다시 시도해 주세요.', 'bot');
 
-        if (message === '가구 카테고리 보여줘') {
-            addBackToSuggestionsButton();
-        }
+        // 오류 발생 시 기본 제안사항 표시
+        updateSuggestions(['자주하는질문', '카테고리 보여줘', '배송 안내 알려줘', '반품 정책 알려줘', '결제 방법 알려줘', '이벤트 정보 알려줘']);
     });
 }
 
@@ -100,13 +99,29 @@ function handleBotResponse(response) {
 
     addMessage(responseContent, 'bot');
 
-    // ✅ 여기 조건 수정
-    if (type === 'product_list') {
+    // 서브카테고리 타입들도 처리
+    if (type === 'product_list' ||
+        type === 'category_selection' ||
+        type === 'furniture_subcategory' ||
+        type === 'lighting_subcategory' ||
+        type === 'fabric_subcategory' ||
+        type === 'storage_subcategory' ||
+        type === 'kitchen_subcategory' ||
+        type === 'daily_subcategory' ||
+        type === 'interior_subcategory') {
         addBackToSuggestionsButton();
     }
 
     if (suggestions && suggestions.length > 0) {
         updateSuggestions(suggestions);
+    }
+
+    // 뒤로가기 버튼이 포함된 경우 기존 뒤로가기 버튼 제거
+    if (suggestions && suggestions.includes('뒤로가기')) {
+        const existingBackBtn = document.getElementById('backToSuggestionsBtn');
+        if (existingBackBtn) {
+            existingBackBtn.remove();
+        }
     }
 }
 
@@ -116,18 +131,18 @@ function addMessage(content, sender) {
     const chatMessages = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}-message`;
-    
+
     const now = new Date();
     const timeString = now.toLocaleTimeString('ko-KR', {
         hour: '2-digit',
         minute: '2-digit'
     });
-    
+
     messageDiv.innerHTML = `
         <div class="message-content">${content}</div>
         <div class="message-time">${timeString}</div>
     `;
-    
+
     chatMessages.appendChild(messageDiv);
     scrollToBottom();
 }
@@ -135,13 +150,13 @@ function addMessage(content, sender) {
 // 타이핑 표시
 function showTypingIndicator() {
     if (isTyping) return;
-    
+
     isTyping = true;
     const chatMessages = document.getElementById('chatMessages');
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message bot-message';
     typingDiv.id = 'typing-indicator';
-    
+
     typingDiv.innerHTML = `
         <div class="typing-indicator">
             <div class="typing-dot"></div>
@@ -149,7 +164,7 @@ function showTypingIndicator() {
             <div class="typing-dot"></div>
         </div>
     `;
-    
+
     chatMessages.appendChild(typingDiv);
     scrollToBottom();
 }
@@ -161,16 +176,30 @@ function hideTypingIndicator() {
     if (typingIndicator) {
         typingIndicator.remove();
     }
+    // 추가 안전장치: 3초 후에도 타이핑 인디케이터가 남아있으면 강제 제거
+    setTimeout(() => {
+        const remainingIndicator = document.getElementById('typing-indicator');
+        if (remainingIndicator) {
+            remainingIndicator.remove();
+            isTyping = false;
+        }
+    }, 3000);
 }
 
 // 제안사항 업데이트
 function updateSuggestions(suggestions) {
     const suggestionsContainer = document.getElementById('suggestions');
     suggestionsContainer.innerHTML = '';
-    
+
     suggestions.forEach(suggestion => {
         const button = document.createElement('button');
         button.className = 'suggestion-btn';
+
+        // 뒤로가기 버튼인 경우 특별한 스타일 적용
+        if (suggestion === '뒤로가기') {
+            button.className = 'suggestion-btn back-btn';
+        }
+
         button.textContent = suggestion;
         button.onclick = () => sendMessage(suggestion);
         suggestionsContainer.appendChild(button);

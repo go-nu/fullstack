@@ -60,10 +60,10 @@ document.getElementById('submitBtn').addEventListener('click', function () {
             alert("등록 완료!");
             location.href = '/interior';
         } else if (result === 'unauthorized') {
-            alert("로그인 후 작성 가능합니다.");
             location.href = '/user/login';
         } else {
             alert("등록 실패");
         }
     });
 });
+

@@ -31,7 +31,7 @@ public class ProductDetailController {
     // 관리자용 상품 선택 페이지 (상세정보 관리)
     @GetMapping("/admin/product-details")
     public String adminProductDetailList(Model model, Authentication authentication) {
-        Users loginUser = (Users) UserUtils.getUser(authentication);
+        Users loginUser = UserUtils.getUser(authentication);
         if (loginUser == null) {
             return "redirect:/user/login";
         }
@@ -58,7 +58,7 @@ public class ProductDetailController {
     public String addDetailForm(@PathVariable Long productId, Model model, Authentication authentication) {
         try {
             // 관리자 권한 체크
-            Users loginUser = (Users) UserUtils.getUser(authentication);
+            Users loginUser = UserUtils.getUser(authentication);
             if (loginUser == null) {
                 return "redirect:/user/login";
             }
@@ -97,7 +97,7 @@ public class ProductDetailController {
                            @RequestParam(value = "removedImages", required = false) List<String> removedImages,
                            Authentication authentication) {
         try {
-            Users loginUser = (Users) UserUtils.getUser(authentication);
+            Users loginUser = UserUtils.getUser(authentication);
             if (loginUser == null) {
                 return "unauthorized";
             }
@@ -129,7 +129,7 @@ public class ProductDetailController {
                                                 Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Users loginUser = (Users) UserUtils.getUser(authentication);
+            Users loginUser = UserUtils.getUser(authentication);
             if (loginUser == null) {
                 response.put("success", false);
                 response.put("message", "권한이 없습니다.");
@@ -202,7 +202,7 @@ public class ProductDetailController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            Users loginUser = (Users) UserUtils.getUser(authentication);
+            Users loginUser = UserUtils.getUser(authentication);
             if (loginUser == null) {
                 response.put("success", false);
                 response.put("message", "권한이 없습니다.");

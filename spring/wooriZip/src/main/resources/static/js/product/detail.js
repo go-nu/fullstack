@@ -49,14 +49,18 @@ document.addEventListener("DOMContentLoaded", function () {
         // 모델 정보 표시 업데이트
         if (!modelName || currentPrice === 0) {
         // 초기 상태 또는 모델명 없이 price만 있는 경우
-        modelInfo.innerText = '옵션을 선택하세요.';
+        modelInfo.innerHTML = `<span style="color: #666; font-weight: 500; font-style: italic;">옵션을 선택해주세요</span>`;
+        modelInfo.style.display = 'block';
         document.getElementById('cartButton').disabled = true;
         document.getElementById('buyButton').disabled = true;
         } else {
-        modelInfo.innerText = `모델명: ${modelName} 가격: ${currentPrice.toLocaleString()}원, 재고: ${currentStock}`;
+        const count = parseInt(countInput?.value) || 1;
+        modelInfo.innerHTML = `<span style="color: #8d5a41; font-weight: 600;">${modelName}</span> <span style="color: #666; margin: 0 8px;">•</span> <span style="color: #28a745; font-weight: 600;">${currentPrice.toLocaleString()}원</span> <span style="color: #666; margin: 0 8px;">•</span> <span style="color: #007bff; font-weight: 600;">수량: ${count}</span>`;
+        modelInfo.style.display = 'block';
 
         if (currentStock <= 0) {
-                    modelInfo.innerText += ' (품절)';
+                    const count = parseInt(countInput?.value) || 1;
+                    modelInfo.innerHTML = `<span style="color: #8d5a41; font-weight: 600;">${modelName}</span> <span style="color: #666; margin: 0 8px;">•</span> <span style="color: #28a745; font-weight: 600;">${currentPrice.toLocaleString()}원</span> <span style="color: #666; margin: 0 8px;">•</span> <span style="color: #dc3545; font-weight: 600;">품절</span>`;
                     cartButton.disabled = true;
                     cartButton.classList.add("btn-disabled");
          // TODO: 품절 시 장바구니/구매 버튼 비활성화 로직 추가
@@ -107,9 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // =====================================================================
     // 3. ProductModel을 찾는 로직 (개별 옵션 드롭다운 변경 시)
-    // =====================================================================
     function findAndSelectModelFromIndividualOptions() {
         const selectedColorId = colorSelect?.value ? Number(colorSelect.value) : null;
         const selectedSizeId = sizeSelect?.value ? Number(sizeSelect.value) : null;
@@ -156,10 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // =====================================================================
     // 4. 이벤트 리스너 설정
-    // =====================================================================
-
     // 메인 모델 드롭다운 변경 시
     modelSelect?.addEventListener('change', function () {
         const selected = this.selectedOptions[0];
@@ -218,8 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // =====================================================================
     // 5. 초기 로딩 시 UI 상태 설정
-    // =====================================================================
-    // 페이지 로드 시 Product의 초기 가격을 표시합니다.
+    // 페이지 로드 시 Product의 초기 가격을 표시
     // HTML의 selectedPriceSpan에 th:data-initial-price="${product.price}"가 있어야 합니다.
     const initialPrice = parseInt(selectedPriceSpan.dataset.initialPrice || '0');
     // 초기 로드 시 ProductModel이 선택되지 않았으므로 재고나 모델명은 알 수 없습니다.
@@ -228,7 +226,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // =====================================================================
     // 6. 탭 전환 로직
-    // =====================================================================
     function initializeTabs() {
         function switchTab(targetId) {
             document.querySelectorAll('.tab-button').forEach(b => {
@@ -299,9 +296,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(() => {
                     const section = document.querySelector(window.location.hash);
                     if (section) {
-                        section.scrollIntoView({ behavior: 'smooth' });
+                        section.scrollIntoView({ behavior: 'auto' });
                     }
-                }, 100);
+                }, 50);
             }
         }
 
@@ -329,7 +326,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // =====================================================================
     // 7. 장바구니/구매 폼 전송 함수 (이전과 동일)
-    // =====================================================================
     window.submitForm = function (action) {
         const form = document.getElementById('productForm');
 
@@ -411,12 +407,12 @@ function scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
             if (section) {
                 section.scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: 'auto',
                     block: 'start',
                     inline: 'nearest'
                 });
             }
-        }, 200);
+        }, 100);
     } else if (sectionId === 'review-section') {
         // 리뷰 탭으로 직접 전환 (기존 함수 사용)
         switchTabDirect('review-section');
@@ -424,18 +420,18 @@ function scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
             if (section) {
                 section.scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: 'auto',
                     block: 'start',
                     inline: 'nearest'
                 });
             }
-        }, 200);
+        }, 100);
     } else {
         // 상세정보 등 일반 섹션
         const section = document.getElementById(sectionId);
         if (section) {
             section.scrollIntoView({
-                behavior: 'smooth',
+                behavior: 'auto',
                 block: 'start',
                 inline: 'nearest'
             });
@@ -460,7 +456,7 @@ function scrollToTop() {
     closeFloatingNav();
     window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'auto'
     });
 }
 
@@ -518,10 +514,10 @@ function handleTabFromHash() {
             if (targetSection) {
                 targetSection.style.display = 'block';
 
-                // 스크롤 애니메이션 (리뷰/QnA 등록/수정 후 스크롤을 위해 지연 시간 증가)
+                // 스크롤 이동 (리뷰/QnA 등록/수정 후 스크롤)
                 setTimeout(() => {
-                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 500);
+                    targetSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }, 100);
             }
         }
     }
@@ -558,8 +554,8 @@ document.querySelectorAll('.tab-button').forEach(button => {
             const hash = '#' + targetId.replace('-section', '-tab');
             history.pushState(null, '', hash);
 
-            // 스크롤 애니메이션
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // 스크롤 이동
+            targetSection.scrollIntoView({ behavior: 'auto', block: 'start' });
         }
     });
 });
@@ -573,15 +569,15 @@ window.addEventListener('load', function() {
             switchTabDirect('review-section');
             setTimeout(() => {
                 const el = document.getElementById('review-' + scrollTo);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 200);
+                if (el) el.scrollIntoView({ behavior: 'auto', block: 'center' });
+            }, 100);
         } else if (scrollTo && activeTab === 'qna') {
             switchTabDirect('qna-section');
             setTimeout(() => {
                 const el = document.getElementById('qna-' + scrollTo);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 200);
+                if (el) el.scrollIntoView({ behavior: 'auto', block: 'center' });
+            }, 100);
         }
-    }, 200);
+    }, 100);
 });
 

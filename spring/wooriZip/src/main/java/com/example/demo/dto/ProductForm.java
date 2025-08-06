@@ -29,9 +29,6 @@ public class ProductForm {
 
     private List<String> imageUrls;
 
-    // 상품 속성값 id 리스트 (예: 색상-화이트, 사이즈-퀸 등)
-    // private List<Long> attributeValueIds = new ArrayList<>();
-
     // 엔티티 변환
     public Product createProduct(Category category, Users user) {
         Product product = new Product();
@@ -55,7 +52,6 @@ public class ProductForm {
             }
         }
 
-        // ProductModelDto의 attributeValueIds는 서비스에서 ProductModelAttribute로 변환/연결 처리 예정
         return product;
     }
 

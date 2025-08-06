@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CouponDto;
-import com.example.demo.entity.Coupon;
 import com.example.demo.service.CouponService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

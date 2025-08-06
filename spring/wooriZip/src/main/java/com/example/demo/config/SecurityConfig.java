@@ -79,7 +79,6 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/user/login")
                         .loginProcessingUrl("/user/login")
-//                        .defaultSuccessUrl("/")
                         .successHandler(successHandler())
                         .permitAll()
                 )
@@ -99,7 +98,6 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(successHandler())
-//                        .defaultSuccessUrl("/", false)
                 );
 
         return http.build();

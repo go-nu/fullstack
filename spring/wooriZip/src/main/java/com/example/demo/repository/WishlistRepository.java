@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
 import com.example.demo.entity.Wishlist;
@@ -21,5 +20,4 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     @Query("SELECT w.product.id FROM Wishlist w WHERE w.user.id = :userId")
     List<Long> findProductByUser(@Param("userId") Long userId);
 
-    void deleteByProduct(Product product); // 0721 해당 상품 관련 product_id가 있는 행 삭제 상품관리
 }

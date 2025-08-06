@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,8 +27,6 @@ public class ProductModelDto {
 
     public void setModelName(String modelName) {
         this.modelName = modelName;
-        // String -> Enum 변환 (예: "퀸" -> ProductModelSelect.QUEEN)
-        // enum 삭제로 단순 대입
         this.productModelSelect = modelName;
     }
 }

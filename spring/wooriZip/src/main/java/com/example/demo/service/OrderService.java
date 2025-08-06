@@ -2,24 +2,19 @@ package com.example.demo.service;
 
 import com.example.demo.constant.OrderStatus;
 import com.example.demo.constant.CouponType;
-import com.example.demo.dto.CartDto;
-import com.example.demo.dto.CartItemDto;
-import com.example.demo.dto.OrderDto;
-import com.example.demo.dto.OrderItemDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -495,7 +490,7 @@ public class OrderService {
 
         int finalAmount = totalPrice + deliveryFee - discountAmount;
 
-        // 💾 저장
+        // 저장
         order.setTotalPrice(totalPrice);
         order.setDiscountAmount(discountAmount);
         order.setDeliveryFee(deliveryFee);
@@ -573,4 +568,102 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<Order> getAllOrdersForAdmin() {
+        return orderRepository.findAllWithDetailsForAdmin();
+    }
+
+    public Page<Order> getPagedOrders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate").descending());
+        return orderRepository.findAll(pageable);
+    }
+
+    public List<DailyOrderCountDto> getRecent7DaysOrderCount() {
+        List<Object[]> result = orderRepository.getOrderCountLast7Days();
+        return result.stream()
+                .map(row -> new DailyOrderCountDto(
+                        ((java.sql.Date) row[0]).toLocalDate(),
+                        (Long) row[1]
+                )).toList();
+    }
+
+    public List<CategoryMonthSalesDto> getAllCategorySalesByMonth() {
+        List<Object[]> rows = orderRepository.getAllCategorySalesByMonth();
+        return rows.stream()
+                .map(row -> new CategoryMonthSalesDto(
+                        (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).intValue()
+                )).toList();
+    }
+
+    public List<CategoryMonthSalesDto> getThisMonthCategorySales() {
+        List<Object[]> rows = orderRepository.getThisMonthCategorySales();
+        return rows.stream()
+                .map(row -> new CategoryMonthSalesDto(
+                        (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).intValue()
+                )).toList();
+    }
+
+    public List<Order> findOrdersByUserEmail(String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return orderRepository.findByUsersAndOrderStatusOrderByOrderDateDesc(user, OrderStatus.ORDER);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDto getOrderByOrderIdForDetail(String orderId) {
+        // 주문 엔티티 조회 (주문 + 주문아이템 + 상품 + 상품모델)
+        Order order = orderRepository.findWithDetailsByOrderId(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+
+        // 주문 아이템 → DTO 변환
+        List<OrderItemDto> orderItemDtos = order.getOrderItems().stream()
+                .map(oi -> {
+                    OrderItemDto dto = new OrderItemDto();
+                    dto.setOrderItemId(oi.getId());
+                    dto.setProductId(oi.getProduct().getId());
+                    dto.setProductName(oi.getProduct().getName());
+                    dto.setModelId(oi.getProductModel().getId());
+                    dto.setCount(oi.getCount());
+                    dto.setPrice(oi.getProductModel().getPrice());
+                    dto.setImgUrl(
+                            oi.getProduct().getImages().isEmpty() ?
+                                    null : oi.getProduct().getImages().get(0).getImageUrl()
+                    );
+                    // 배송비 계산
+                    int totalOrderPrice = order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum();
+                    if (totalOrderPrice >= 50000) {
+                        dto.setDeliveryFee(0);
+                        dto.setDeliveryType("무료배송");
+                    } else {
+                        dto.setDeliveryFee(3000);
+                        dto.setDeliveryType("유료배송");
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        // DTO 생성 및 리턴
+        return OrderDto.builder()
+                .orderNo(order.getId())
+                .totalPrice(order.getOrderItems().stream().mapToInt(OrderItem::getTotalPrice).sum())
+                .items(orderItemDtos)
+                .userName(order.getUsers().getName())
+                .orderId(order.getOrderId())
+                .email(order.getUsers().getEmail())
+                .phone(order.getUsers().getPhone())
+                .pCode(order.getUsers().getP_code())
+                .loadAddress(order.getUsers().getLoadAddr())
+                .lotAddress(order.getUsers().getLotAddr())
+                .detailAddress(order.getUsers().getDetailAddr())
+                .orderTime(order.getOrderDate().toLocalDate())
+                .payInfo(order.getPaymentMethod())
+                .totalPrice(order.getTotalPrice())
+                .discountAmount(order.getDiscountAmount())
+                .deliveryFee(order.getDeliveryFee())
+                .finalAmount(order.getFinalAmount())
+                .build();
+    }
 }

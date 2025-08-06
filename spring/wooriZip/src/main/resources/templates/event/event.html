@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>공지/이벤트</title>
+    <title>쿠폰</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
@@ -11,6 +11,7 @@
             background: #fff;
             color: #4A4947;
             font-family: 'Arial', sans-serif;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -169,7 +170,7 @@
 
 <main>
     <div class="coupon-container">
-        <h1 class="page-title">공지/이벤트</h1>
+        <h1 class="page-title">쿠폰 받기</h1>
 
         <div class="coupon-grid" th:if="${not #lists.isEmpty(coupons)}">
             <div class="coupon-card" th:each="coupon : ${coupons}">
@@ -180,7 +181,7 @@
 
                 <div class="coupon-discount">
                     <span th:if="${coupon.type.name() == 'AMOUNT'}"
-                          th:text="${#numbers.formatInteger(coupon.discountAmount, 3)} + '원 할인'"></span>
+                          th:text="${#numbers.formatInteger(coupon.discountAmount, 3, 'COMMA')} + '원 할인'"></span>
                     <span th:if="${coupon.type.name() == 'PERCENT'}"
                           th:text="${coupon.discountPercent} + '% 할인'"></span>
                 </div>
@@ -192,12 +193,8 @@
                     </div>
                     <div class="coupon-detail">
                         <strong>최소 주문금액:</strong>
-                        <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3)} + '원'"></span>
+                        <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3, 'COMMA')} + '원'"></span>
                     </div>
-<!--                    <div class="coupon-detail">-->
-<!--                        <strong>남은 수량:</strong>-->
-<!--                        <span th:text="${coupon.usageLimit} + '개'"></span>-->
-<!--                    </div>-->
                 </div>
 
                 <form th:action="@{/event/coupons/get}" method="post">

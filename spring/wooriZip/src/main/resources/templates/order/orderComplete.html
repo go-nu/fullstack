@@ -26,6 +26,7 @@
             color: var(--brand-text);
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
+            padding-top: 70px !important;
         }
 
         main {
@@ -495,14 +496,6 @@
                             <span class="mobile-detail-label">수량</span>
                             <span class="mobile-detail-value" th:text="${item.count}"></span>
                         </div>
-<!--                        <div class="mobile-detail-item">-->
-<!--                            <span class="mobile-detail-label">배송구분</span>-->
-<!--                            <span class="mobile-detail-value" th:text="${item.deliveryType}"></span>-->
-<!--                        </div>-->
-<!--                        <div class="mobile-detail-item">-->
-<!--                            <span class="mobile-detail-label">배송비</span>-->
-<!--                            <span class="mobile-detail-value" th:text="${#numbers.formatDecimal(item.deliveryFee, 0, 'COMMA', 0, 'COMMA')} + '원'"></span>-->
-<!--                        </div>-->
                     </div>
                     <div class="mobile-total-price">
                         총 가격: <span th:text="${#numbers.formatDecimal(item.price * item.count, 0, 'COMMA', 0, 'COMMA')}">0</span>원

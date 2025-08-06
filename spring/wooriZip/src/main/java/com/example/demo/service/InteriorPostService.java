@@ -118,6 +118,36 @@ public class InteriorPostService {
                         .and(Sort.by(Sort.Direction.DESC, "postId"))); // 그 다음 최신순
         return repository.findAll(pageable).map(InteriorPostDto::fromEntity);
     }
+    
+    /** 검색 기능이 포함된 페이지네이션 */
+    public Page<InteriorPostDto> findPagedPostsWithSearch(int page, int size, String searchType, String keyword) {
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.DESC, "isNotice")  // 공지사항 우선
+                        .and(Sort.by(Sort.Direction.DESC, "postId"))); // 그 다음 최신순
+        
+        Page<InteriorPost> postPage;
+        
+        if (keyword == null || keyword.trim().isEmpty()) {
+            // 검색어가 없으면 전체 조회
+            postPage = repository.findAll(pageable);
+        } else {
+            // 검색 타입에 따라 다른 검색 수행
+            switch (searchType) {
+                case "title":
+                    postPage = repository.findByTitleContainingOrderByCreatedAtDesc(keyword.trim(), pageable);
+                    break;
+                case "author":
+                    postPage = repository.findByUserNicknameContainingOrderByCreatedAtDesc(keyword.trim(), pageable);
+                    break;
+                case "all":
+                default:
+                    postPage = repository.findByTitleContainingOrUserNicknameContainingOrderByCreatedAtDesc(keyword.trim(), pageable);
+                    break;
+            }
+        }
+        
+        return postPage.map(InteriorPostDto::fromEntity);
+    }
 
     /** 사용자가 작성한 게시글 목록 */
     public List<InteriorPostDto> findByUser(Users user) {
@@ -135,7 +165,13 @@ public class InteriorPostService {
         if (post.getFilePath() != null && !post.getFilePath().isEmpty()) {
             filePathList = Arrays.stream(post.getFilePath().split(","))
                     .map(String::trim)
+                    .filter(path -> !path.equals("/images/default-image.jpg")) // 디폴트 이미지 제외
                     .collect(Collectors.toList());
+            
+            // 필터링 후 리스트가 비어있으면 null로 설정
+            if (filePathList.isEmpty()) {
+                filePathList = null;
+            }
         }
 
         return InteriorPostDto.builder()

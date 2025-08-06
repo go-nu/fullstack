@@ -1,40 +1,24 @@
 $(document).ready(function () {
-console.log($);
-    let appliedCouponAmount = 0; // 전역 할인 금액 저장
+    let appliedCouponAmount = 0;
+    let isCouponValid = true;
 
-    // ✅ 쿠폰 선택 시 할인 금액 계산 및 반영
     $("#couponSelect").on("change", function () {
-        const selectedValue = $(this).val();
-        if (selectedValue === "") {
-            // 쿠폰이 선택되지 않은 경우 할인 금액 초기화
-            appliedCouponAmount = 0;
-            $("#appliedCoupon").text("0");
-        }
-        updateSummary(); // 쿠폰 선택도 요약 재계산에 포함
+        updateSummary();
     });
 
-    // ✅ 페이지 진입 시 최초 1회 결제 요약 계산
     updateSummary();
 
-    // ✅ 결제 요약 계산 함수
     function updateSummary() {
-        // 총 상품금액을 가져올 때 콤마 제거 후 숫자로 변환
         let totalPriceText = $("#finalTotalPrice").text().trim();
         let totalPrice = parseInt(totalPriceText.replace(/,/g, "")) || 0;
-        let deliveryFee = 3000; // 기본 배송비
+        let deliveryFee = totalPrice >= 50000 ? 0 : 3000;
 
-        // ✅ 5만원 미만일 때만 배송비 적용
-        if (totalPrice >= 50000) {
-            deliveryFee = 0;
-        }
-
-        // ✅ 쿠폰 할인 계산
         const selectedCoupon = $("#couponSelect").find("option:selected");
         const selectedValue = $("#couponSelect").val();
 
-        // 쿠폰이 선택되지 않은 경우 할인 금액 0으로 설정
         if (selectedValue === "" || !selectedValue) {
             appliedCouponAmount = 0;
+            isCouponValid = false;
             $("#appliedCoupon").text("0원");
         } else {
             const type = selectedCoupon.data("type");
@@ -44,40 +28,41 @@ console.log($);
 
             if (type && minOrderPrice > 0 && totalPrice < minOrderPrice) {
                 appliedCouponAmount = 0;
+                isCouponValid = false;
                 $("#appliedCoupon").text("0원 (최소주문금액 미달)");
             } else if (type === "AMOUNT") {
                 appliedCouponAmount = amount;
+                isCouponValid = true;
                 $("#appliedCoupon").text(amount.toLocaleString() + "원");
             } else if (type === "PERCENT") {
                 appliedCouponAmount = Math.floor(totalPrice * percent / 100);
+                isCouponValid = true;
                 $("#appliedCoupon").text(appliedCouponAmount.toLocaleString() + "원 (" + percent + "% 할인)");
             } else {
                 appliedCouponAmount = 0;
+                isCouponValid = false;
                 $("#appliedCoupon").text("0원");
             }
         }
 
         const finalAmount = totalPrice + deliveryFee - appliedCouponAmount;
 
-        // ✅ 모든 금액 표시 업데이트 (HTML에 이미 "원"이 있으므로 숫자만 업데이트)
         $("#deliveryFee").text(deliveryFee.toLocaleString());
         $("#deliveryFeeDisplay").text(deliveryFee.toLocaleString());
         $("#totalWithDelivery").text((totalPrice + deliveryFee).toLocaleString());
         $("#finalPaymentAmount").text(finalAmount.toLocaleString());
     }
 
-    // 주문 요청
-    // 결제하기 버튼 클릭 시
     $('#submit-orderDto').on('click', function (e) {
         e.preventDefault();
 
         const orderId = $('input[name="orderId"]').val();
-        const couponId = $('#couponSelect').val(); // 선택된 쿠폰 ID
+        const rawCouponId = $('#couponSelect').val();
+        const couponId = (!isCouponValid || rawCouponId === "") ? null : rawCouponId;
 
-        // 쿠폰이 선택되지 않은 경우 null로 전송
         const requestData = {
             orderId: orderId,
-            couponId: couponId === "" ? null : couponId
+            couponId: couponId
         };
 
         $.ajax({
@@ -181,3 +166,47 @@ document.addEventListener("DOMContentLoaded", function () {
     domainSelect.value = "";
     });
 });
+
+// 주소 API
+function sample4_execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var roadAddr = data.roadAddress;
+            var extraRoadAddr = '';
+
+            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                extraRoadAddr += data.bname;
+            }
+            if(data.buildingName !== '' && data.apartment === 'Y'){
+                extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            if(extraRoadAddr !== ''){
+                extraRoadAddr = ' (' + extraRoadAddr + ')';
+            }
+
+            document.getElementById("sample4_postcode").value = data.zonecode;
+            document.getElementById("sample4_roadAddress").value = roadAddr;
+            document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+
+            if(roadAddr !== ''){
+                document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+            } else {
+                document.getElementById("sample4_extraAddress").value = '';
+            }
+
+            var guideTextBox = document.getElementById("guide");
+            if(data.autoRoadAddress) {
+                var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                guideTextBox.style.display = 'block';
+            } else if(data.autoJibunAddress) {
+                var expJibunAddr = data.autoJibunAddress;
+                guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                guideTextBox.style.display = 'block';
+            } else {
+                guideTextBox.innerHTML = '';
+                guideTextBox.style.display = 'none';
+            }
+        }
+    }).open();
+}

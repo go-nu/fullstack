@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -21,10 +22,12 @@ public class OrderItem {
 
     // 상품 고유 번호 가져오기
     @ManyToOne(fetch = FetchType.LAZY) // 지연로딩
-    @JoinColumn
+    @org.hibernate.annotations.NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(name = "product_id")
     private Product product; // 제품 아이디 조인
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연로딩
+    @org.hibernate.annotations.NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "product_model_id") // 0729 dk 수정
     private ProductModel productModel; // 제품 모델 조인
 

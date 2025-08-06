@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.QnaPostDto;
 import com.example.demo.entity.Users;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.QnaPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +29,7 @@ public class QnaPostController {
 
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         dto.setProductId(productId);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
@@ -60,7 +58,7 @@ public class QnaPostController {
 
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
         
@@ -88,7 +86,7 @@ public class QnaPostController {
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         qnaPostService.deleteQna(id, user.getEmail());
 
         if (Boolean.TRUE.equals(fromMyPage)) {

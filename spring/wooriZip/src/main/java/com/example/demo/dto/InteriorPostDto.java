@@ -40,7 +40,13 @@ public class    InteriorPostDto {
         if (post.getFilePath() != null && !post.getFilePath().isEmpty()) {
             filePathList = Arrays.stream(post.getFilePath().split(","))
                     .map(String::trim)
+                    .filter(path -> !path.equals("/images/default-image.jpg")) // 디폴트 이미지 제외
                     .collect(Collectors.toList());
+            
+            // 필터링 후 리스트가 비어있으면 null로 설정
+            if (filePathList.isEmpty()) {
+                filePathList = null;
+            }
         }
 
         return InteriorPostDto.builder()

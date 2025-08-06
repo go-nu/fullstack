@@ -26,6 +26,7 @@
             color: var(--brand-text);
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
+            padding-top: 70px !important;
         }
 
         main {
@@ -43,12 +44,10 @@
         }
 
         .page-title {
-            color: var(--brand-text);
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: #B17457;
+            margin-bottom: 16px;
         }
 
         .breadcrumb {
@@ -186,7 +185,7 @@
         }
 
         .btn-lg {
-            padding: 14px 28px;
+            padding: 10px 28px;
             font-size: 1.1rem;
         }
 
@@ -201,11 +200,12 @@
         }
 
         .col-md-8 {
-            flex: 2;
+            flex: 1;
         }
 
         .col-md-4 {
-            flex: 1;
+            flex: 0 0 auto;
+            width: 200px;
         }
 
         .alert {
@@ -231,7 +231,7 @@
 
         .section-title {
             color: var(--brand-text);
-            font-size: 1.4rem;
+            font-size: 2rem;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -243,11 +243,15 @@
             font-size: 0.75rem;
             font-weight: 500;
             border-radius: 4px;
-            color: #fff;
+            color: #6c757d;
+            background: transparent;
+            border: 1px solid #6c757d;
         }
 
         .bg-secondary {
-            background: #6c757d;
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #6c757d;
         }
 
         /* 상품 그리드 */
@@ -434,15 +438,7 @@
 
 <main>
     <div class="page-header">
-        <h2 class="page-title">
-            📦 상품 관리
-        </h2>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">홈</a></li>
-                <li class="breadcrumb-item active">상품 관리</li>
-            </ol>
-        </nav>
+        <h2 class="page-title">상품 관리</h2>
     </div>
 
     <!-- 드롭다운 선택 방식 -->
@@ -480,7 +476,7 @@
                 📦 전체 상품 목록
                 <span class="badge bg-secondary" th:text="${#lists.size(products)}">0</span>
             </h5>
-            <a href="/products/form" class="btn btn-success">
+            <a href="/products/form" class="btn btn-success btn-sm">
                 ➕ 새 상품 등록
             </a>
         </div>

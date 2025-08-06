@@ -7,7 +7,6 @@ document.getElementById('likeBtn').addEventListener('click', function () {
     })
         .then(response => {
             if (response.status === 401 || response.status === 403) {
-                alert('로그인 후 이용해주세요.');
                 location.href = '/user/login';
                 return;
             }

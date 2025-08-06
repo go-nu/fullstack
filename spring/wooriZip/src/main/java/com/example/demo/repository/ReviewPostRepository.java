@@ -25,4 +25,7 @@ public interface ReviewPostRepository extends JpaRepository<ReviewPost, Long> {
     void deleteByProduct(com.example.demo.entity.Product product);
 
     int countByProductId(Long productId); // 0727 dk추가
+
+    // 사용자 이메일로 리뷰 글 삭제
+    void deleteByEmail(String email);
 }

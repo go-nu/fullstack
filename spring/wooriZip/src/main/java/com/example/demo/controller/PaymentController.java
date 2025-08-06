@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.entity.Coupon;
 import com.example.demo.service.CartService;
+import com.example.demo.service.CouponService;
 import com.example.demo.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
@@ -31,6 +33,7 @@ public class PaymentController {
 
     private final OrderService orderService;
     private final CartService cartService;
+    private final CouponService couponService;
 
     @PostMapping(value = "/confirm")
     public String confirmPayment(@RequestBody String jsonBody, Model model, Authentication authentication) {
@@ -114,14 +117,14 @@ public class PaymentController {
                 // 검증시작 - 쿠폰 할인이 적용된 실제 결제 금액으로 검증
                 if (orderService.validatePayment(orderId, Integer.parseInt(amount))) {
                     orderService.updateOrderWithPaymentInfo(orderId, paymentMethod, payInfo);
-                    // ✅ 주문에 포함된 cartItemId를 모두 조회
+                    // 주문에 포함된 cartItemId를 모두 조회
                     OrderDto orderDto = orderService.getOrderByOrderId(orderId);
                     List<Long> cartItemIds = orderDto.getItems().stream()
                             .map(OrderItemDto::getCartItemId)
                             .filter(Objects::nonNull)
                             .toList();
 
-                    // ✅ 장바구니에서 해당 항목 제거
+                    // 장바구니에서 해당 항목 제거
                     String email = UserUtils.getEmail(authentication);
                     cartService.removeItemsFromCart(email, cartItemIds);
                     log.info("주문에 포함된 cartItemIds: {}", cartItemIds);
@@ -165,17 +168,28 @@ public class PaymentController {
         String email = UserUtils.getEmail(authentication);
 
         try {
-            // 결제 직전 쿠폰 연결(선택된 경우에만)
+            OrderDto orderDto = orderService.getOrder(email);
+            int totalPrice = orderDto.getTotalPrice();
+
+            // 쿠폰 검증 및 적용
             if (couponId != null) {
-                orderService.applyCouponToOrder(orderId, couponId, email);
-                // 쿠폰이 선택된 경우에만 쿠폰 사용 처리
-                orderService.markCouponUsedForOrder(orderId);
+                Coupon coupon = couponService.getCouponById(couponId); // 쿠폰 조회
+                int minOrderPrice = coupon.getMinOrderPrice();
+
+                if (totalPrice >= minOrderPrice) {
+                    // 최소 주문금액 이상인 경우에만 쿠폰 적용 및 사용 처리
+                    orderService.applyCouponToOrder(orderId, couponId, email);
+                    orderService.markCouponUsedForOrder(orderId);
+                } else {
+                    log.warn("쿠폰 최소주문금액 미달로 인해 적용되지 않음: 쿠폰ID={}, 최소금액={}, 주문금액={}",
+                            couponId, minOrderPrice, totalPrice);
+                }
             }
-            // 쿠폰 할인이 적용된 실제 결제 금액 사용
+
+            // 할인 적용된 실제 결제 금액 계산
             int finalAmount = orderService.getFinalPaymentAmount(email);
             String amount = String.valueOf(finalAmount);
-            OrderDto orderDto = orderService.getOrder(email);
-            String paymentKey = orderDto.getOrderId();
+            String paymentKey = orderDto.getOrderId(); // 또는 결제 고유 키 생성 방식
 
             Map<String, String> response = new HashMap<>();
             response.put("success", "true");
@@ -188,16 +202,16 @@ public class PaymentController {
             request.getSession().setAttribute("orderDto", orderDto);
 
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-
-            log.error("결제 요청 중 오류: {}", e.getMessage(), e); // 서버 콘솔에 전체 스택트레이스와 메시지 출력
-
+            log.error("결제 요청 중 오류: {}", e.getMessage(), e);
             Map<String, String> response = new HashMap<>();
             response.put("success", "false");
             response.put("message", "결제 요청 중 오류가 발생했습니다.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     @GetMapping(value = "/pay/checkoutPage")
     public String checkoutPage(@RequestParam String orderId, @RequestParam String amount,

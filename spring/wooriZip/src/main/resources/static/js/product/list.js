@@ -12,21 +12,43 @@ window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
         
+        // URL 파라미터에서 카테고리 이름 확인
+        const categoryNameParam = urlParams.get('categoryName');
+        
         if (categoryParam) {
-            // 카테고리 이름으로 ID 찾기
-            const category = findCategoryByName(data, categoryParam);
+            // 카테고리 ID로 직접 찾기
+            let category = null;
+            let parentCategory = null;
+            
+            for (let cat of data) {
+                if (cat.id == categoryParam) {
+                    category = cat;
+                    break;
+                }
+                if (cat.children) {
+                    for (let child of cat.children) {
+                        if (child.id == categoryParam) {
+                            category = child;
+                            parentCategory = cat;
+                            break;
+                        }
+                    }
+                }
+            }
+            
             if (category) {
                 // 대분류 선택
-                document.getElementById("parentCategory").value = category.id;
+                document.getElementById("parentCategory").value = parentCategory ? parentCategory.id : category.id;
                 
                 // 소분류가 있다면 소분류도 선택
-                if (category.children && category.children.length > 0) {
-                    populateChildCategory(category.children);
-                    document.getElementById("childCategory").value = category.children[0].id;
+                if (parentCategory) {
+                    populateChildCategory(parentCategory.children);
+                    document.getElementById("childCategory").value = category.id;
                 }
                 
-                // 자동 검색 실행
-                filterByCategory();
+                // 제목 업데이트 (URL 파라미터의 카테고리 이름 우선 사용)
+                const titleToUse = categoryNameParam || category.name;
+                updateCategoryTitle(titleToUse);
             }
         }
     });
@@ -77,5 +99,34 @@ function filterByCategory() {
         alert("카테고리를 선택해주세요.");
         return;
     }
-    window.location.href = `/products?category=${categoryId}`;
+    
+    // 선택된 카테고리 이름 가져오기
+    const selectedCategoryName = getSelectedCategoryName();
+    
+    // URL에 카테고리 이름도 포함하여 전달
+    const url = `/products?category=${categoryId}&categoryName=${encodeURIComponent(selectedCategoryName)}`;
+    window.location.href = url;
+}
+
+// 선택된 카테고리 이름 가져오기
+function getSelectedCategoryName() {
+    const childCategory = document.getElementById("childCategory");
+    const parentCategory = document.getElementById("parentCategory");
+    
+    if (childCategory.value) {
+        return childCategory.options[childCategory.selectedIndex].text;
+    } else if (parentCategory.value) {
+        return parentCategory.options[parentCategory.selectedIndex].text;
+    }
+    return "전체 상품";
+}
+
+// 카테고리 제목 업데이트
+function updateCategoryTitle(categoryName) {
+    const mainTitleElement = document.getElementById("mainTitle");
+    if (mainTitleElement) {
+        // 카테고리 이름이 없거나 "전체 상품"인 경우 기본값 설정
+        const displayName = categoryName && categoryName !== "전체 상품" ? categoryName : "전체 상품";
+        mainTitleElement.textContent = displayName;
+    }
 }

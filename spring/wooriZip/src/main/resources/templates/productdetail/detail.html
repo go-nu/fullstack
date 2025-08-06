@@ -9,12 +9,10 @@
 
                 <!-- 상품 상세정보 표시 -->
                 <div th:if="${productDetail != null}" class="product-detail-info mt-4">
-                    <h5 class="fw-bold mb-3">상세정보</h5>
 
                     <!-- 상세 이미지들 표시 -->
                     <div th:if="${productDetail.detailImagePathList != null and !productDetail.detailImagePathList.isEmpty()}"
                          class="mb-4">
-                        <h6 class="fw-bold mb-3">상세 이미지</h6>
                         <div class="row">
                             <div th:each="imagePath : ${productDetail.detailImagePathList}" class="col-12 mb-3">
                                 <img th:src="${imagePath}" class="img-fluid rounded shadow-sm" alt="상세 이미지"
@@ -26,7 +24,7 @@
                     <!-- 상세정보 텍스트 -->
                     <div th:if="${productDetail.detailInfo != null and !#strings.isEmpty(productDetail.detailInfo)}"
                          class="detail-info-section">
-                        <h6 class="fw-bold mb-3">상품 정보</h6>
+                        <h5 class="fw-bold mb-3">상품 정보</h5>
                         <div class="card">
                             <div class="card-body">
                                 <pre th:text="${productDetail.detailInfo}" class="mb-0"

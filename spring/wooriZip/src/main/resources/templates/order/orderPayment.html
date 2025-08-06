@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -13,6 +14,7 @@
             background: #fff;
             color: #4A4947;
             font-family: 'Arial', sans-serif;
+            padding-top: 70px !important;
         }
         main {
             max-width: 900px;
@@ -258,7 +260,7 @@
 <div th:replace="~{index/header :: header}"></div>
 <main>
     <div>
-        <h1>ORDER</h1>
+        <h1>주문하기</h1>
         <div class="pc-only">
             <table class="table">
                 <thead class="table-light">
@@ -326,18 +328,30 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="address">주소 *</label>
+                    <label for="sample4_postcode">주소 *</label>
                     <div>
                         <div class="address-inputs">
-                            <input id="address" placeholder="우편번호" type="text" th:value="${orderDto.getPCode()}">
-                            <button type="button">우편번호</button>
+                            <input type="text" id="sample4_postcode" name="pCode"
+                                   placeholder="우편번호" th:value="${orderDto.pCode}" required/>
+                            <button type="button" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
                         </div>
                         <div class="address-inputs">
-                            <input placeholder="기본주소" type="text" th:value="${orderDto.getLoadAddress()}">
+                            <input type="text" id="sample4_roadAddress" name="loadAddress"
+                                   placeholder="도로명주소" th:value="${orderDto.loadAddress}" required/>
                         </div>
                         <div class="address-inputs">
-                            <input placeholder="나머지주소 (선택입력가능)" type="text" th:value="${orderDto.getDetailAddress()}">
+                            <input type="text" id="sample4_jibunAddress" name="lotAddress"
+                                   placeholder="지번주소" th:value="${orderDto.lotAddress}" readonly/>
                         </div>
+                        <div class="address-inputs">
+                            <input type="text" id="sample4_detailAddress" name="detailAddress"
+                                   placeholder="상세주소" th:value="${orderDto.detailAddress}" required/>
+                        </div>
+                        <div class="address-inputs">
+                            <input type="text" id="sample4_extraAddress" name="extraAddress"
+                                   placeholder="참고항목" th:value="${orderDto.extraAddress}" readonly/>
+                        </div>
+                        <p id="guide" style="color:#999; display:none"></p>
                     </div>
                 </div>
                 <div class="form-group">

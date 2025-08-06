@@ -84,6 +84,8 @@ function cartesianProduct(arrays) {
     return arrays.reduce((a, b) => a.flatMap(d => b.map(e => [...d, e])), [[]]);
 }
 
+document.getElementById('generateOptionsBtn').addEventListener('click', generateOptionTable);
+
 function generateOptionTable() {
     const colors = getCheckedValuesWithLabel('color');
     const sizes = getCheckedValuesWithLabel('size');
@@ -94,21 +96,44 @@ function generateOptionTable() {
         return;
     }
 
-    const allCombos = cartesianProduct([colors, sizes, materials]);
-    const tbody = document.querySelector('#optionTable tbody');
-    tbody.innerHTML = '';
+    // 기존 옵션명과 가격/재고 백업
+    const previousData = new Map();
+    document.querySelectorAll('#optionTable tbody tr').forEach(row => {
+        if (row.classList.contains('manual-row')) return; // 수동 옵션은 건드리지 않음
+        const name = row.querySelector('span')?.innerText?.trim();
+        const price = row.querySelector('.option-price')?.value || '';
+        const stock = row.querySelector('.option-stock')?.value || '';
+        if (name) previousData.set(name, { price, stock });
+    });
 
-    allCombos.forEach((combo, idx) => {
+    // 수동 row 유지하고 자동생성 부분만 초기화
+    const tbody = document.querySelector('#optionTable tbody');
+    const manualRows = Array.from(tbody.querySelectorAll('tr.manual-row'));
+    tbody.innerHTML = '';
+    manualRows.forEach(row => tbody.appendChild(row));
+
+    // 새 조합 생성
+    const allCombos = cartesianProduct([colors, sizes, materials]);
+    const createdNames = new Set(manualRows.map(row => row.querySelector('span')?.innerText?.trim()));
+
+    allCombos.forEach(combo => {
         const optionName = combo.map(c => c.label).join('/');
+        if (previousData.has(optionName) || createdNames.has(optionName)) return; // 중복 방지
+
         const attrIds = combo.map(c => c.id);
         const tr = document.createElement('tr');
+        const existing = previousData.get(optionName) || { price: '', stock: '' };
+
         tr.innerHTML = `
             <td>
                 <input type="hidden" class="attr-ids" value="${attrIds.join(',')}">
                 <span>${optionName}</span>
             </td>
-            <td><input type="number" class="option-price" min="0" required></td>
-            <td><input type="number" class="option-stock" min="0" required></td>
+            <td><input type="number" class="option-price" min="0" required value="${existing.price}"></td>
+            <td><input type="number" class="option-stock" min="0" required value="${existing.stock}"></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger remove-option-btn">삭제</button>
+            </td>
         `;
         tbody.appendChild(tr);
     });
@@ -116,11 +141,19 @@ function generateOptionTable() {
     document.getElementById('optionTable').style.display = '';
 }
 
-// ✅ 수동 옵션 추가: 버튼 생성 및 삽입
+// 삭제 버튼 작동
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-option-btn')) {
+        const tr = e.target.closest('tr');
+        if (tr) tr.remove();
+    }
+});
+
+
+// 수동 옵션 추가: 버튼 생성 및 삽입
 const manualBtn = document.createElement('button');
 manualBtn.type = 'button';
 manualBtn.id = 'addManualOptionBtn';
-manualBtn.className = 'btn btn-outline-secondary mb-2';
 manualBtn.innerText = '수동 옵션 추가';
 document.getElementById('generateOptionsBtn')?.after(manualBtn);
 
@@ -181,7 +214,7 @@ manualBtn.addEventListener('click', function () {
     tbody.appendChild(tr);
 });
 
-// ✅ 수정 페이지: 기존 옵션 자동 렌더링 시 가격값 출력 + 수정 가능하게
+// 수정 페이지: 기존 옵션 자동 렌더링 시 가격값 출력 + 수정 가능하게
 if (window.productModels && Array.isArray(window.productModels) && window.productModels.length > 0) {
     const tbody = document.querySelector('#optionTable tbody');
     tbody.innerHTML = '';
@@ -233,7 +266,7 @@ if (editForm) {
                 const prStock = row.querySelector('.option-stock')?.value || 0;
 
                 models.push({
-                    id: modelId, // ✅ 이게 핵심
+                    id: modelId, // 이게 핵심
                     productModelSelect: optionName,
                     price: price,
                     prStock: prStock,
@@ -299,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentMiddleId = document.getElementById("currentMiddleId").value;
     const currentCategoryId = document.getElementById("currentCategoryId").value;
 
-    // ✅ 여기에 추가
+    // 여기에 추가
         console.log("🔍 window.productModels 확인:", window.productModels);
 
     // 1. 대분류 로딩

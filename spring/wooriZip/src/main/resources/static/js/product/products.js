@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('generateOptionsBtn').addEventListener('click', generateOptionTable);
 
-    // ✅ 수동 옵션 추가: input → Enter 누르면 span으로 변환
+    // 수동 옵션 추가: input → Enter 누르면 span으로 변환
         const manualBtn = document.createElement('button');
         manualBtn.type = 'button';
         manualBtn.id = 'addManualOptionBtn';
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const td = document.createElement('td');
             td.innerHTML = `<input type="hidden" class="attr-ids" value="">`;
 
-            const input = document.createElement('input'); // ✅ 변경
+            const input = document.createElement('input'); // 변경
             input.type = 'text';
             input.placeholder = '옵션명 입력 후 Enter';
             input.required = true;
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     const span = document.createElement('span');
                     span.textContent = input.value.trim();
-                    td.replaceChild(span, input); // ✅ input → span
+                    td.replaceChild(span, input); // input → span
                 }
             });
 
@@ -245,8 +245,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const models = [];
         rows.forEach(row => {
             const attrIds = row.querySelector('.attr-ids').value.split(',').filter(Boolean);
-            const optionNameEl = row.querySelector('span') || row.querySelector('.option-name-input'); // ✅ 변경
-            const optionName = optionNameEl?.innerText || optionNameEl?.value || ''; // ✅ 변경
+            const optionNameEl = row.querySelector('span') || row.querySelector('.option-name-input'); // 변경
+            const optionName = optionNameEl?.innerText || optionNameEl?.value || ''; // 변경
             const price = row.querySelector('.option-price').value;
             const prStock = row.querySelector('.option-stock').value;
             models.push({

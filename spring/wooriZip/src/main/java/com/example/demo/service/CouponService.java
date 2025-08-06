@@ -110,4 +110,9 @@ public class CouponService {
         coupon.setActive(isActive);
         couponRepository.save(coupon);
     }
+
+    public Coupon getCouponById(Long couponId) {
+        return couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰을 찾을 수 없습니다."));
+    }
 }

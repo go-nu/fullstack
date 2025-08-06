@@ -3,14 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.dto.ReviewPostDto;
 import com.example.demo.entity.ReviewPost;
 import com.example.demo.entity.Users;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.ReviewPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +31,7 @@ public class ReviewPostController {
                                  Model model,
                                  Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        Users user = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        Users user = email != null ? UserUtils.getUser(authentication) : null;
         Page<ReviewPost> reviewPage = reviewPostService.getReviews(productId, page, sortBy);
 
         Map<Integer, Long> ratingSummary = reviewPostService.getRatingDistribution(productId);
@@ -61,7 +57,7 @@ public class ReviewPostController {
                                Authentication authentication) throws IOException {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         
         // 구매 여부 확인
         if (!reviewPostService.hasPurchasedProduct(dto.getProductId(), user.getEmail())) {
@@ -105,7 +101,7 @@ public class ReviewPostController {
                                Authentication authentication) throws IOException {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         dto.setEmail(user.getEmail());
         dto.setNickname(user.getNickname());
 

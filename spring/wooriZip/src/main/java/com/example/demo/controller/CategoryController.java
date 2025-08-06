@@ -5,7 +5,6 @@ import com.example.demo.dto.CategoryResponseDto;
 import com.example.demo.dto.CategoryTreeDto;
 import com.example.demo.dto.ProductListDto;
 import com.example.demo.entity.Category;
-import com.example.demo.entity.Product;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.ProductService;
@@ -62,13 +61,6 @@ public class CategoryController {
         List<CategoryTreeDto> tree = categoryService.getCategoryTree();
         return ResponseEntity.ok(tree);
     }
-
-//    @GetMapping("/products")
-//    public String productList(@RequestParam(required = false) Long category, Model model) {
-//        List<Product> products = productService.findProducts(category);
-//        model.addAttribute("products", products);
-//        return "products"; // 상품 목록 템플릿
-//    }
 
     // 사용자용 목록리스트
     @GetMapping("/products")

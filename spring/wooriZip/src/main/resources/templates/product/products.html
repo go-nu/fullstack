@@ -25,6 +25,7 @@
             color: var(--brand-text);
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
+            padding-top: 70px !important;
         }
 
         main {
@@ -105,7 +106,6 @@
             transition: all 0.2s;
         }
 
-        /* 이미지 업로드 영역 개선 */
         .image-upload-area {
             border: 2px dashed #ddd;
             border-radius: 8px;
@@ -154,7 +154,6 @@
             font-size: 0.9rem;
         }
 
-        /* 이미지 미리보기 개선 */
         .preview-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -236,15 +235,43 @@
         }
 
         #generateOptionsBtn {
-            background: var(--brand-point);
+            background: #B17457;
             color: #fff;
             padding: 14px 28px;
             font-size: 1.1rem;
-            margin: 20px 0;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 10px 15px 10px 0;
+            min-width: 160px;
         }
 
         #generateOptionsBtn:hover {
             background: #8d5a41;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(177, 116, 87, 0.2);
+        }
+
+        #addManualOptionBtn {
+            background: #F9F7F0;
+            color: #4A4947;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 10px 15px 10px 0;
+            min-width: 160px;
+        }
+
+        #addManualOptionBtn:hover {
+            background: #e8e6df;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(249, 247, 240, 0.3);
         }
 
         .product-form table {
@@ -316,7 +343,6 @@
             display: block;
         }
 
-        /* 반응형 디자인 */
         @media (max-width: 768px) {
             main {
                 padding: 20px 16px 60px 16px;
@@ -384,7 +410,6 @@
           enctype="multipart/form-data" th:object="${productForm}">
         <label>상품명: <input type="text" th:field="*{name}" required/></label><br/>
 
-
         <!-- 대분류 선택 -->
         <label>대분류:
             <select id="parentCategory">
@@ -437,7 +462,7 @@
                 <th>옵션명</th>
                 <th>가격</th>
                 <th>재고</th>
-                <th>삭제</th> <!-- ✅ 추가 -->
+                <th>삭제</th>
             </tr>
             </thead>
             <tbody></tbody>

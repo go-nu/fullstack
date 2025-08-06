@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CouponDto;
 import com.example.demo.service.CouponService;
-import com.example.demo.service.EventService;
 import com.example.demo.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

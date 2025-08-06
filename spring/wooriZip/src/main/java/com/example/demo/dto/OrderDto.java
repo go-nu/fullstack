@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @Getter
 @Builder
+@ToString
 public class OrderDto {
 
     // 주문 정보 Dto
@@ -43,6 +44,7 @@ public class OrderDto {
     private String loadAddress; // 도로
     private String lotAddress; //  지번
     private String detailAddress; // 상세
+    private String extraAddress;
 
     private LocalDate orderTime;
 

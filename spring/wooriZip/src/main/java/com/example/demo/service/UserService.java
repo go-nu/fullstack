@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.entity.Cart;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.UserCoupon;
 import com.example.demo.entity.Users;
-import com.example.demo.repository.UserCouponRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserCouponRepository userCouponRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final QnaPostRepository qnaPostRepository;
+    private final ReviewPostRepository reviewPostRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public void signUp(UserDto dto) {
@@ -40,8 +47,32 @@ public class UserService {
     }
 
     public void delete(Long id) {
+        Users user = userRepository.findById(id).get();
+
+        // 사용자가 작성한 QnA 글 삭제
+        qnaPostRepository.deleteByEmail(user.getEmail());
+
+        // 사용자가 작성한 리뷰 글 삭제
+        reviewPostRepository.deleteByEmail(user.getEmail());
+
+        // 주문 및 주문 항목 삭제
+        List<Order> orders = orderRepository.findByUsers(user);
+        for (Order order : orders) {
+            orderItemRepository.deleteAllByOrder(order);  // 주문 항목 먼저 삭제
+        }
+        orderRepository.deleteAll(orders);                // 주문 삭제
+
+        // 장바구니 관련 삭제
+        Cart cart = cartRepository.findByUser(user);
+        if (cart != null) {
+            cartItemRepository.deleteAllByCart(cart);     // 장바구니 항목 먼저 삭제
+            cartRepository.delete(cart);                  // 장바구니 삭제
+        }
+
+        // 유저 삭제
         userRepository.deleteById(id);
     }
+
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
@@ -72,10 +103,6 @@ public class UserService {
 
     public List<UserCoupon> getUserCoupons(Users user) {
         return userCouponRepository.findByUserAndUsedFalse(user);
-    }
-
-    public List<UserCoupon> getAllUserCoupons(Users user) {
-        return userCouponRepository.findByUser(user);
     }
 
 }

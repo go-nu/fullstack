@@ -24,7 +24,6 @@ import java.util.*;
 
 import com.example.demo.entity.ReviewPost;
 import java.util.ArrayList;
-import com.example.demo.entity.QnaPost;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 
@@ -43,23 +42,13 @@ public class ProductController {
     private final ReviewPostRepository reviewPostRepository;
     private final CategoryRepository categoryRepository;
 
-    //    @GetMapping("/admin/products")
-//    public String adminProductList(Model model, Authentication authentication) {
-//        String email = UserUtils.getEmail(authentication);
-//        if (email == null) return "redirect:/user/login";
-//        model.addAttribute("loginUser", UserUtils.getUser(authentication));
-//
-//        List<Product> products = productService.findProducts(null); // null = 모든 상품 조회
-//        model.addAttribute("products", products);
-//        return "product/admin-list";
-//    }
+
     @GetMapping("/admin/products")
     public String adminProductList(Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        // 관리자는 원본 Product 목록이 필요할 수
         // DTO로 변환 (평균 평점 + 리뷰 수 + 재고 합계 포함)
         List<ProductListDto> dtoList = productRepository.findAll().stream()
                 .map(product -> {
@@ -102,7 +91,7 @@ public class ProductController {
         String email = UserUtils.getEmail(authentication);
         try {
             if (email == null) return "redirect:/user/login";
-            Users loginUser = (Users) UserUtils.getUser(authentication);
+            Users loginUser = UserUtils.getUser(authentication);
 
             // 옵션 리스트 JSON 파싱 (프론트에서 넘어온 경우)
             if (modelsJson != null && !modelsJson.isEmpty()) {
@@ -121,26 +110,15 @@ public class ProductController {
             e.printStackTrace();
             return "redirect:/error";
         }
-        return "redirect:/products";
+        return "redirect:/admin/products";
     }
-
-//    @GetMapping("/products")
-//    public String showProductList(@RequestParam(name = "category", required = false) Long categoryId,
-//                                  Model model, Authentication authentication) {
-//        String email = UserUtils.getEmail(authentication);
-//        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
-//        model.addAttribute("loginUser", loginUser);
-//        List<Product> productList = productService.findProducts(categoryId);
-//        model.addAttribute("products", productList);
-//        return "product/list";
-//    }
 
     @GetMapping("/products")
     public String showProductList(@RequestParam(name = "category", required = false) String categoryParam,
                                   @RequestParam(defaultValue = "1") int page,
                                   Model model, Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        Users loginUser = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        Users loginUser = email != null ? UserUtils.getUser(authentication) : null;
         model.addAttribute("loginUser", loginUser);
 
         // 카테고리 파라미터 처리 (ID 또는 이름)
@@ -173,7 +151,6 @@ public class ProductController {
     }
 
 
-
     @GetMapping("/products/{id}")
     public String viewProduct(@PathVariable Long id,
                               @RequestParam(defaultValue = "1") int page,
@@ -183,7 +160,7 @@ public class ProductController {
                               Model model,
                               Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
-        Users user = email != null ? (Users) UserUtils.getUser(authentication) : null;
+        Users user = email != null ? UserUtils.getUser(authentication) : null;
 
         // ───────────── 상품 상세 정보 ─────────────
         ProductDetailDto dto = productService.getProductDetail(id, user);
@@ -253,7 +230,7 @@ public class ProductController {
                                  Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         wishlistService.toggleWishlist(user, productId);
         return "redirect:/products/" + productId;
     }
@@ -288,7 +265,7 @@ public class ProductController {
                                 Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users loginUser = (Users) UserUtils.getUser(authentication);
+        Users loginUser = UserUtils.getUser(authentication);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             ProductForm form = objectMapper.readValue(productJson, ProductForm.class);

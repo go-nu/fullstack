@@ -12,6 +12,7 @@
             background: #fff;
             color: #4A4947;
             font-family: 'Arial', sans-serif;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -65,7 +66,7 @@
             background: #F9F7F0;
         }
         .form-group textarea {
-            resize: vertical;
+            resize: none;
             min-height: 200px;
         }
         .form-group input[type="file"] {
@@ -233,6 +234,9 @@
             <div class="form-group">
                 <label>이미지 추가 (최대 8장)</label>
                 <input type="file" id="imageInput" accept="image/*" multiple>
+                <small style="color: #666; font-size: 0.9rem; margin-top: 4px; display: block;">
+                    ※ 이미지를 첨부하지 않으면 기본 이미지가 자동으로 제공됩니다.
+                </small>
                 <div id="previewArea"></div>
             </div>
 

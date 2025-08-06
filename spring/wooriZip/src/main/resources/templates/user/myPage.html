@@ -13,6 +13,7 @@
             background-color: #FFFFFF;
             color: #4A4947;
             margin: 0;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -275,7 +276,7 @@
             <th>코드</th>
             <th>할인</th>
             <th>사용 여부</th>
-            <th>지급일</th>
+            <th>마감일</th>
         </tr>
         </thead>
         <tbody>
@@ -284,12 +285,12 @@
             <td th:text="${uc.coupon.code}"></td>
             <td>
                 <span th:if="${uc.coupon.type.name() == 'AMOUNT'}"
-                      th:text="${uc.coupon.discountAmount} + '원'"></span>
+                      th:text="${#numbers.formatInteger(uc.coupon.discountAmount, 3, 'COMMA')} + '원'"></span>
                 <span th:if="${uc.coupon.type.name() == 'PERCENT'}"
                       th:text="${uc.coupon.discountPercent} + '%'"></span>
             </td>
             <td th:text="${uc.used ? '사용됨' : (uc.coupon.isActive ? '미사용' : '사용불가(비활성)')}"></td>
-            <td th:text="${#temporals.format(uc.assignedAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(uc.coupon.endDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         <tr th:if="${#lists.isEmpty(userCoupons)}">
             <td colspan="5" class="text-center">받은 쿠폰이 없습니다.</td>
@@ -313,15 +314,15 @@
                     <strong th:text="${product.name}"></strong>
                 </a>
                 <div class="wishlist-price">
-                    <span th:text="'₩' + ${product.price}"></span>
+                    <span th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}"></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 인테리어 자랑 게시글 섹션 -->
+    <!-- 인테리어 게시글 섹션 -->
     <div class="post-section">
-        <h4>내가 작성한 인테리어 자랑</h4>
+        <h4>내가 작성한 커뮤니티 게시글</h4>
         <table class="table">
             <thead>
             <tr>
@@ -351,7 +352,7 @@
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(myInteriorPosts)}">
-                <td colspan="5" class="text-center">작성한 인테리어 자랑 게시글이 없습니다.</td>
+                <td colspan="5" class="text-center">작성한 커뮤니티 게시글이 없습니다.</td>
             </tr>
             </tbody>
         </table>
@@ -431,7 +432,6 @@
             </table>
         </div>
     </div>
-
 </main>
 
 <div th:replace="~{index/footer :: footer}"></div>

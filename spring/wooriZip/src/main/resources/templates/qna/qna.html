@@ -5,21 +5,20 @@
             <h4>Q&A (<span th:text="${qnaTotal}"></span>)</h4>
 
             <!-- QnA 필터 버튼 -->
-            <div class="btn-group" role="group">
+            <div style="display: flex; gap: 8px; align-items: center;" role="group">
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='all')} + '#qna-tab'"
-                   class="btn"
-                   th:classappend="${qnaFilter == 'all' || qnaFilter == null} ? 'btn-primary' : 'btn-outline-primary'"
-                   style="padding: 6px 16px; font-size: 0.9rem;">
+                   style="padding: 10px 20px; font-size: 0.95rem; font-weight: 600; border: 2px solid #8d5a41; background: #fff; color: #8d5a41; border-radius: 6px; text-decoration: none; transition: all 0.2s ease; cursor: pointer; display: inline-block; text-align: center; min-width: 80px;"
+                   th:styleappend="${qnaFilter == 'all' || qnaFilter == null} ? 'background: #8d5a41; color: #fff; box-shadow: 0 2px 4px rgba(141, 90, 65, 0.3);' : ''">
                     전체보기
                 </a>
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='answered')} + '#qna-tab'"
-                   class="btn" th:classappend="${qnaFilter == 'answered'} ? 'btn-primary' : 'btn-outline-primary'"
-                   style="padding: 6px 16px; font-size: 0.9rem;">
+                   style="padding: 10px 20px; font-size: 0.95rem; font-weight: 600; border: 2px solid #8d5a41; background: #fff; color: #8d5a41; border-radius: 6px; text-decoration: none; transition: all 0.2s ease; cursor: pointer; display: inline-block; text-align: center; min-width: 80px;"
+                   th:styleappend="${qnaFilter == 'answered'} ? 'background: #8d5a41; color: #fff; box-shadow: 0 2px 4px rgba(141, 90, 65, 0.3);' : ''">
                     답변완료
                 </a>
                 <a th:href="@{'/products/' + ${product.id}(qnaFilter='unanswered')} + '#qna-tab'"
-                   class="btn" th:classappend="${qnaFilter == 'unanswered'} ? 'btn-primary' : 'btn-outline-primary'"
-                   style="padding: 6px 16px; font-size: 0.9rem;">
+                   style="padding: 10px 20px; font-size: 0.95rem; font-weight: 600; border: 2px solid #8d5a41; background: #fff; color: #8d5a41; border-radius: 6px; text-decoration: none; transition: all 0.2s ease; cursor: pointer; display: inline-block; text-align: center; min-width: 80px;"
+                   th:styleappend="${qnaFilter == 'unanswered'} ? 'background: #8d5a41; color: #fff; box-shadow: 0 2px 4px rgba(141, 90, 65, 0.3);' : ''">
                     미답변
                 </a>
             </div>
@@ -292,3 +291,54 @@
         </ul>
     </nav>
 </div>
+
+<style>
+    /* Q&A 필터 버튼 스타일링 */
+    .qna-filter-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    
+    .qna-filter-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: 2px solid #8d5a41;
+        background: #fff;
+        color: #8d5a41;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        min-width: 80px;
+    }
+    
+    .qna-filter-btn:hover {
+        background: #8d5a41;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(141, 90, 65, 0.2);
+    }
+    
+    .qna-filter-btn.active {
+        background: #8d5a41;
+        color: #fff;
+        box-shadow: 0 2px 4px rgba(141, 90, 65, 0.3);
+    }
+    
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
+        .qna-filter-buttons {
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .qna-filter-btn {
+            width: 100%;
+            min-width: auto;
+        }
+    }
+</style>

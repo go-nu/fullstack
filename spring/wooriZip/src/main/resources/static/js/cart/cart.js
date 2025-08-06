@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let appliedCouponAmount = 0; // 전역 할인 금액 저장
 
-    // ✅ 수량 변경 시 서버에 반영하고 요약만 갱신
+    // 수량 변경 시 서버에 반영하고 요약만 갱신
     $('.item-count').on('change', function () {
         let $input = $(this);
         let newCount = $input.val();
@@ -27,40 +27,68 @@ $(document).ready(function () {
         });
     });
 
-    // ✅ 전체 주문 클릭 시 전체 선택 후 전송
+    // 전체 주문 클릭 시 전체 선택 후 전송
     $(".allOrder").on("click", function (event) {
         event.preventDefault();
         $(".cart-item-checkbox").prop("checked", true);
         updateSummary();
+        const selectedItems = document.querySelectorAll(".cart-item-checkbox:checked");
+for (let item of selectedItems) {
+    const stock = parseInt(item.dataset.stock);
+    const cartItemId = item.value;
+
+    // 해당 cart item과 같은 ID를 가진 수량 input을 찾아야 함
+    const countInput = document.querySelector(`.item-count[data-cart-id='${cartItemId}']`);
+    const count = parseInt(countInput.value);
+
+    if (stock < count) {
+        alert("재고가 부족한 상품이 있습니다.");
+        return;
+    }
+}
         sendOrderRequest();
     });
 
-    // ✅ 선택 주문 클릭 시 선택된 항목만 전송
+    // 선택 주문 클릭 시 선택된 항목만 전송
     $(".selectOrder").on("click", function (event) {
         event.preventDefault();
+        const selectedItems = document.querySelectorAll(".cart-item-checkbox:checked");
+for (let item of selectedItems) {
+    const stock = parseInt(item.dataset.stock);
+    const cartItemId = item.value;
+
+    // 해당 cart item과 같은 ID를 가진 수량 input을 찾아야 함
+    const countInput = document.querySelector(`.item-count[data-cart-id='${cartItemId}']`);
+    const count = parseInt(countInput.value);
+
+    if (stock < count) {
+        alert("재고가 부족한 상품이 있습니다.");
+        return;
+    }
+}
         sendOrderRequest();
     });
 
-    // ✅ 전체 선택/해제 체크박스
+    // 전체 선택/해제 체크박스
     $("#selectAll").on("change", function () {
         $(".cart-item-checkbox").prop("checked", $(this).prop("checked"));
         updateSummary();
     });
 
-    // ✅ 수량 or 체크박스 변경 시 요약 갱신
+    // 수량 or 체크박스 변경 시 요약 갱신
     $(".cart-item-checkbox, .item-count").on("change", function () {
         updateSummary();
     });
 
-    // ✅ 쿠폰 선택 시 할인 금액 계산 및 반영
+    // 쿠폰 선택 시 할인 금액 계산 및 반영
     $("#couponSelect").on("change", function () {
         updateSummary(); // 쿠폰 선택도 요약 재계산에 포함
     });
 
-    // ✅ 페이지 진입 시 최초 1회 결제 요약 계산
+    // 페이지 진입 시 최초 1회 결제 요약 계산
     updateSummary();
 
-    // ✅ 결제 요약 계산 함수
+    // 결제 요약 계산 함수
     function updateSummary() {
         let totalPrice = 0;
         let deliveryFee = 3000;
@@ -73,7 +101,7 @@ $(document).ready(function () {
             if (!isNaN(price) && !isNaN(count)) {
                 const subtotal = price * count;
 
-                // ✅ 합계 셀 업데이트 (index 6)
+                // 합계 셀 업데이트 (index 6)
                 $(this).find("td").eq(6).text(subtotal.toLocaleString() + "원");
 
                 if ($(this).find(".cart-item-checkbox").prop("checked")) {
@@ -82,7 +110,7 @@ $(document).ready(function () {
             }
         });
 
-        // ✅ 쿠폰 할인 계산
+        // 쿠폰 할인 계산
                 const selectedCoupon = $("#couponSelect").find("option:selected");
                 const type = selectedCoupon.data("type");
                 const amount = parseInt(selectedCoupon.data("amount")) || 0;
@@ -112,7 +140,7 @@ $(document).ready(function () {
                 $("#finalPaymentAmount").text(finalAmount.toLocaleString() + "원");
             }
 
-    // ✅ 선택된 항목 기반 주문 전송 함수
+    // 선택된 항목 기반 주문 전송 함수
     function sendOrderRequest() {
         let selectedItems = $(".cart-item-checkbox:checked").map(function () {
             return $(this).val();
@@ -183,7 +211,7 @@ $(document).ready(function () {
         });
     });
 
-    // ✅ 전체 항목 삭제
+    // 전체 항목 삭제
     $('.deleteAll').click(function () {
         if (!confirm('장바구니의 모든 상품을 삭제하시겠습니까?')) return;
 

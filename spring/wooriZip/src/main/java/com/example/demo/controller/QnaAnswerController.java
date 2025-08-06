@@ -1,16 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.QnaAnswerDto;
-import com.example.demo.entity.QnaAnswer;
-import com.example.demo.entity.QnaPost;
 import com.example.demo.entity.Users;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.QnaAnswerService;
 import com.example.demo.service.QnaPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +28,7 @@ public class QnaAnswerController {
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         qnaAnswerService.saveAnswer(postId, content, user);
         Long productId = qnaPostService.getProductIdByQnaPostId(postId);
 
@@ -51,7 +46,7 @@ public class QnaAnswerController {
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user =  (Users) UserUtils.getUser(authentication);
+        Users user =  UserUtils.getUser(authentication);
         qnaAnswerService.updateAnswer(answerId, content, user);
 
         // 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
@@ -67,7 +62,7 @@ public class QnaAnswerController {
                          Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user =  (Users) UserUtils.getUser(authentication);
+        Users user =  UserUtils.getUser(authentication);
         qnaAnswerService.deleteAnswer(answerId, user);
 
         // 페이지 정보가 있으면 해당 페이지로, 없으면 기본 페이지로
@@ -82,7 +77,7 @@ public class QnaAnswerController {
         if (email == null) return "redirect:/user/login";
 
         // 로그인 사용자 정보 추가
-        Users loginUser = (Users) UserUtils.getUser(authentication);
+        Users loginUser = UserUtils.getUser(authentication);
         model.addAttribute("loginUser", loginUser);
 
         // 전체 통계
@@ -106,7 +101,7 @@ public class QnaAnswerController {
                                      Authentication authentication) {
         String email = UserUtils.getEmail(authentication);
         if (email == null) return "redirect:/user/login";
-        Users user = (Users) UserUtils.getUser(authentication);
+        Users user = UserUtils.getUser(authentication);
         qnaAnswerService.deleteAnswer(answerId, user);
 
         return "redirect:/qna/answer/admin/dashboard";
@@ -119,7 +114,7 @@ public class QnaAnswerController {
         if (email == null) return "redirect:/user/login";
 
         // 로그인 사용자 정보 추가
-        Users loginUser = (Users) UserUtils.getUser(authentication);
+        Users loginUser = UserUtils.getUser(authentication);
         model.addAttribute("loginUser", loginUser);
 
         model.addAttribute("unansweredQna", qnaPostService.getUnansweredQna());

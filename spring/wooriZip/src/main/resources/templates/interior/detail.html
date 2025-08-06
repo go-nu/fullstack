@@ -12,6 +12,7 @@
             background: #fff;
             color: #4A4947;
             font-family: 'Arial', sans-serif;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -281,6 +282,8 @@
     </style>
 </head>
 
+
+
 <script>
     window.addEventListener('scroll', function () {
         const header = document.querySelector('.header');
@@ -304,6 +307,8 @@
             editForm.style.display = 'none';
         }
     }
+
+
 </script>
 
 <body>
@@ -367,7 +372,8 @@
 
                     <div th:if="${loginUser != null and (comment.email == loginUser.email or loginUser.role.name() == 'ADMIN')}">
                         <div class="comment-actions">
-                            <button type="button" class="comment-edit-btn" th:onclick="|showEditForm(${comment.commentId})|">댓글 수정</button>
+                            <!-- 일반 사용자만 수정 버튼 표시 -->
+                            <button type="button" class="comment-edit-btn" th:if="${comment.email == loginUser.email}" th:onclick="|showEditForm(${comment.commentId})|">댓글 수정</button>
                             <form th:action="@{'/interior/' + ${dto.postId} + '/comment/delete/' + ${comment.commentId}}"
                                   method="post" style="display: inline;">
                                 <button type="submit" class="comment-delete-btn" th:text="${loginUser.role.name() == 'ADMIN' ? '관리자 댓글 삭제' : '댓글 삭제'}"

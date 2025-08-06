@@ -33,7 +33,7 @@ function toggleDiscountInputs() {
 
 window.onload = toggleDiscountInputs;
 
-// ✅ 쿠폰 활성화/비활성화 상태 토글 함수 (boolean 사용)
+// 쿠폰 활성화/비활성화 상태 토글 함수 (boolean 사용)
 function toggleCouponStatus(checkbox) {
     const couponId = checkbox.getAttribute('data-id');
     const isActive = checkbox.checked;
@@ -50,7 +50,7 @@ function toggleCouponStatus(checkbox) {
         return response.json();
     })
     .then(data => {
-        // ✅ 상태 텍스트를 즉시 변경
+        // 상태 텍스트를 즉시 변경
         const labelSpan = checkbox.closest('td').querySelector('.form-check-label span');
         if (labelSpan) {
             labelSpan.textContent = isActive ? '활성화' : '비활성화';

@@ -30,7 +30,6 @@ public class OrderItemDto {
         this.modelId =  orderItem.getProductModel().getId();
         this.count = orderItem.getCount();
         this.price = orderItem.getProductModel().getPrice(); // 옵션별 가격으로 수정
-        // 대표사진만 필요
         this.imgUrl = orderItem.getProduct().getImages().get(0).getImageUrl();
         this.deliveryFee = 0; // 기본 배송비
         this.deliveryType = "무료배송"; // 기본 배송 구분

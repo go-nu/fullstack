@@ -5,7 +5,6 @@ import com.example.demo.dto.InteriorPostDto;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Users;
-import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.InteriorPostService;
 import com.example.demo.service.RecommendService;
@@ -13,22 +12,11 @@ import com.example.demo.service.ReviewPostService;
 import com.example.demo.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.http.HttpHeaders;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -49,7 +37,7 @@ public class MainController {
             model.addAttribute("loginUser", user);
         }
 
-        // ✅ 추천 상품 추가
+        // 추천 상품 추가
         if (user != null) {
             List<Product> recommended = recommendService.getRecommendedProducts(user.getId());
             try {

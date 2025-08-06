@@ -12,6 +12,7 @@
             background: #fff;
             color: #4A4947;
             font-family: 'Arial', sans-serif;
+            padding-top: 70px !important;
         }
         main {
             max-width: 1100px;
@@ -73,7 +74,7 @@
             color: #666;
         }
         .form-group textarea {
-            resize: vertical;
+            resize: none;
             min-height: 200px;
         }
         .form-group input[type="file"] {
@@ -185,6 +186,8 @@
                 gap: 12px;
             }
         }
+        
+
     </style>
 </head>
 
@@ -205,7 +208,7 @@
 <main>
     <div class="interior-container">
         <div class="interior-header">
-            <h1 th:text="${param.isNotice != null and param.isNotice[0] == 'true' ? '공지사항 작성' : '인테리어 글쓰기'}">글쓰기</h1>
+            <h1 th:text="${param.isNotice != null and param.isNotice[0] == 'true' ? '공지사항 작성' : '방꾸미기 글쓰기'}">글쓰기</h1>
         </div>
 
         <form id="writeForm" class="interior-form" enctype="multipart/form-data">
@@ -230,6 +233,9 @@
             <div class="form-group">
                 <label>사진 첨부 (최대 8장):</label>
                 <input type="file" id="imageInput" accept="image/*">
+                <small style="color: #666; font-size: 0.9rem; margin-top: 4px; display: block;">
+                    ※ 이미지를 첨부하지 않으면 기본 이미지가 자동으로 제공됩니다.
+                </small>
             </div>
 
             <div id="previewContainer"></div>

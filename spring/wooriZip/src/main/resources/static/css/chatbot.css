@@ -114,6 +114,21 @@
     box-shadow: var(--shadow-md);
 }
 
+/* 뒤로가기 버튼 스타일 */
+.suggestion-btn.back-btn {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.suggestion-btn.back-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
 /* 입력 영역 */
 .chat-input-container {
     display: flex;

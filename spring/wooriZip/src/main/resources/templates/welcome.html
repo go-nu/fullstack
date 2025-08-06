@@ -543,27 +543,27 @@
     <!-- 히어로 슬라이더 -->
     <section class="hero-slider">
         <div class="slider-container">
-            <div class="slide">
+            <a href="/products" class="slide">
                 <img src="/images/slide1.jpg" alt="슬라이드1">
                 <div class="slide-content">
                     <h2>신상품이 입고되었어요</h2>
                     <p>2025년 최신 인테리어 트렌드를 만나보세요</p>
                 </div>
-            </div>
-            <div class="slide">
+            </a>
+            <a href="/event" class="slide">
                 <img src="/images/slide2.jpg" alt="슬라이드2">
                 <div class="slide-content">
                     <h2>특별한 할인 혜택</h2>
                     <p>한정 기간 특가 상품을 놓치지 마세요</p>
                 </div>
-            </div>
-            <div class="slide">
+            </a>
+            <a href="/interior" class="slide">
                 <img src="/images/slide3.jpg" alt="슬라이드3">
                 <div class="slide-content">
-                    <h2>인테리어 자랑 게시판</h2>
-                    <p>여러분의 아름다운 공간을 자랑해주세요</p>
+                    <h2>방꾸미기 게시판</h2>
+                    <p>여러분이 꾸민 방을 자랑해주세요</p>
                 </div>
-            </div>
+            </a>
         </div>
         <button class="slider-btn prev" onclick="prevSlide()">‹</button>
         <button class="slider-btn next" onclick="nextSlide()">›</button>
@@ -573,21 +573,15 @@
             <div class="slider-dot" onclick="showSlide(2)"></div>
         </div>
     </section>
-
     <!-- 추천 상품 섹션 -->
     <section class="section">
         <div class="section-header">
             <h2>추천 상품</h2>
             <p>고객님이 가장 많이 찾으시는 인기 상품들을 소개합니다</p>
         </div>
-
         <!-- 카테고리 네비게이션 -->
         <section class="category-nav">
             <a href="/products" class="category-btn active">전체보기</a>
-            <a th:each="category : ${categories}"
-               th:href="@{'/products?category=' + ${category.name}}"
-               class="category-btn"
-               th:text="${category.name}">카테고리</a>
         </section>
 
         <div class="product-grid">
@@ -614,12 +608,12 @@
     <!-- 인테리어 자랑 게시판 섹션 -->
     <section class="interior-section">
         <div class="section-header">
-            <h2>인테리어 자랑 게시판</h2>
-            <p>여러분의 아름다운 공간을 자랑해주세요</p>
+            <h2>방꾸미기 게시판</h2>
+            <p>여러분이 꾸민 방을 자랑해주세요</p>
         </div>
         <div class="interior-grid">
             <!-- 공지사항 카드 -->
-            <a th:href="@{'/interior/' + ${notice.postId}}" 
+            <a th:href="@{'/interior/' + ${notice.postId}}"
                th:if="${notice != null}"
                style="text-decoration: none; color: inherit; display: block;">
                 <div class="interior-card">
@@ -640,7 +634,7 @@
                 </div>
             </a>
             <!-- 일반 게시글 카드 -->
-            <a th:href="@{'/interior/' + ${post.postId}}" 
+            <a th:href="@{'/interior/' + ${post.postId}}"
                th:each="post : ${latestInteriorPosts}"
                style="text-decoration: none; color: inherit; display: block;">
                 <div class="interior-card">
@@ -680,7 +674,7 @@
                 </div>
                 <div class="event-discount">
                     <span th:if="${coupon.type.name() == 'AMOUNT'}"
-                          th:text="${#numbers.formatInteger(coupon.discountAmount, 3)} + '원 할인'"></span>
+                          th:text="${#numbers.formatInteger(coupon.discountAmount, 3, 'COMMA')} + '원 할인'"></span>
                     <span th:if="${coupon.type.name() == 'PERCENT'}"
                           th:text="${coupon.discountPercent} + '% 할인'"></span>
                 </div>
@@ -691,7 +685,7 @@
                     </div>
                     <div class="event-detail" th:if="${coupon.minOrderPrice > 0}">
                         <strong>최소 주문금액:</strong>
-                        <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3)} + '원'"></span>
+                        <span th:text="${#numbers.formatInteger(coupon.minOrderPrice, 3, 'COMMA')} + '원'"></span>
                     </div>
                 </div>
                 <form th:action="@{/event/coupons/get}" method="post">

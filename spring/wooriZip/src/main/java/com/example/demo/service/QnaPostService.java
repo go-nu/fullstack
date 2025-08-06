@@ -344,18 +344,6 @@ public class QnaPostService {
         return categoryStats;
     }
 
-    // QnaPost와 페이지 정보를 함께 담는 내부 클래스
-    @Getter
-    public class QnaPostWithPage {
-        private final QnaPost post;
-        private final int page;
-
-        public QnaPostWithPage(QnaPost post, int page) {
-            this.post = post;
-            this.page = page;
-        }
-    }
-
     public List<QnaPost> getUnansweredQna() {
         return qnaPostRepository.findAll().stream()
                 .filter(qna -> qna.getAnswer() == null)

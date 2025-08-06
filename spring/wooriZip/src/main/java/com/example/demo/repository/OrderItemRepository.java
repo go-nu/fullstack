@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderItem;
 import com.example.demo.entity.ProductModel;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     // 해당 옵션 ID를 참조하는 주문 항목이 존재하는지 확인
     boolean existsByProductModelId(Long productModelId); // 0729 dk추가
+
+    void deleteAllByOrder(Order order);
 }
