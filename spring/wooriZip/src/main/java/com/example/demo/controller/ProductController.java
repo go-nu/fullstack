@@ -49,8 +49,11 @@ public class ProductController {
         if (email == null) return "redirect:/user/login";
         model.addAttribute("loginUser", UserUtils.getUser(authentication));
 
-        // DTO로 변환 (평균 평점 + 리뷰 수 + 재고 합계 포함)
-        List<ProductListDto> dtoList = productRepository.findAll().stream()
+        // 등록일 기준으로 정렬된 상품 리스트 조회
+        List<Product> productList = productRepository.findAllByOrderByCreatedAtDesc();
+
+        // DTO로 변환 (평균 평점 + 리뷰 수 포함)
+        List<ProductListDto> dtoList = productList.stream()
                 .map(product -> {
                     double avgRating = reviewPostRepository.findByProductId(product.getId())
                             .stream().mapToInt(ReviewPost::getRating).average().orElse(0.0);
@@ -58,7 +61,7 @@ public class ProductController {
                     return new ProductListDto(product, avgRating, reviewCount);
                 }).toList();
 
-        model.addAttribute("products", dtoList);  // ← 반드시 DTO 리스트를 넘겨야 함!
+        model.addAttribute("products", dtoList);
         return "product/admin-list";
     }
 

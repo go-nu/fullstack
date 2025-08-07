@@ -31,8 +31,18 @@ public class CouponController {
     }
 
     @PostMapping("/add")
-    public String createCoupon(CouponDto dto) {
-        couponService.create(dto);
+    public String createCoupon(CouponDto dto, @RequestParam(value = "isActiveValue", required = false) String isActiveValue, Model model) {
+        boolean isActive = "true".equals(isActiveValue);
+        dto.setActive(isActive);
+
+        try {
+            couponService.create(dto);
+        } catch (IllegalArgumentException e) {
+            // 중복 코드 등 예외 발생 시 에러 메시지 전달
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("coupons", couponService.getAllCoupons1());
+            return "/admin/couponPage";
+        }
         return "redirect:/admin/coupons";
     }
 

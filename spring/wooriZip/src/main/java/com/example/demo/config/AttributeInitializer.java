@@ -22,9 +22,11 @@ public class AttributeInitializer implements CommandLineRunner {
         Attribute size = attributeRepository.findByName("사이즈")
                 .orElseGet(() -> attributeRepository.save(new Attribute("사이즈")));
         addAttributeValueIfNotExists(size, "S(1인용)");
-        addAttributeValueIfNotExists(size, "SS(1~2인용)");
         addAttributeValueIfNotExists(size, "M(3인용)");
         addAttributeValueIfNotExists(size, "L(4인용)");
+        addAttributeValueIfNotExists(size, "SS(슈퍼싱글)");
+        addAttributeValueIfNotExists(size, "Q(퀸)");
+        addAttributeValueIfNotExists(size, "K(킹)");
 
         // 색상
         Attribute color = attributeRepository.findByName("색상")
@@ -36,6 +38,8 @@ public class AttributeInitializer implements CommandLineRunner {
         addAttributeValueIfNotExists(color, "골드");
         addAttributeValueIfNotExists(color, "실버");
         addAttributeValueIfNotExists(color, "우드");
+        addAttributeValueIfNotExists(color, "메이플");
+        addAttributeValueIfNotExists(color, "아이보리");
 
         // 소재
         Attribute material = attributeRepository.findByName("소재")
@@ -44,6 +48,7 @@ public class AttributeInitializer implements CommandLineRunner {
         addAttributeValueIfNotExists(material, "원목");
         addAttributeValueIfNotExists(material, "매트리스");
         addAttributeValueIfNotExists(material, "패브릭");
+        addAttributeValueIfNotExists(material, "MDF(E1)");
     }
 
     private void addAttributeValueIfNotExists(Attribute attribute, String value) {

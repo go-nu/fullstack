@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findByIsActiveTrue();
@@ -18,4 +19,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     @Query("UPDATE Coupon c SET c.isActive = false WHERE c.endDate < :today AND c.isActive = true")
     int deactivateExpiredCoupons(@Param("today") LocalDate today);
 
+    Optional<Coupon> findByCode(String code);
 }

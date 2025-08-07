@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @Where(clause = "is_deleted = false") // 0731 추가
@@ -48,9 +50,9 @@ public class Product { // 상품
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    
+
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "create_at", updatable = false)
     private LocalDateTime createdAt;
 
     public void addProductModel(ProductModel model) {

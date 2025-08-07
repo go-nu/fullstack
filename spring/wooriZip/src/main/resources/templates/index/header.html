@@ -20,8 +20,9 @@
         
         /* 헤더 아래 콘텐츠가 가려지지 않도록 body에 상단 여백 추가 */
         body {
-            padding-top: 70px;
+            padding-top: 70px !important;
         }
+        
         .header-inner {
             position: relative;
             max-width: 1200px;
@@ -33,11 +34,13 @@
             width: 100%;
             height: 100%;
         }
+        
         .logo {
             display: flex;
             align-items: center;
             height: 100%;
         }
+        
         .logo a {
             font-size: 35px;
             font-family: "Stardos Stencil", system-ui;
@@ -51,13 +54,13 @@
             height: 100%;
         }
 
-        /* 중앙 메뉴 */
+        /* 중앙 메뉴 - 데스크톱용 */
         .gnb-group-1 {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 80px; /* 상하 동일 간격 */
+            gap: 80px;
         }
 
         .gnb-item {
@@ -67,7 +70,7 @@
             position: relative;
         }
 
-        /* 개별 드롭다운 스타일 수정 */
+        /* 개별 드롭다운 스타일 */
         .dropdown-column {
             display: none;
             flex-direction: column;
@@ -100,23 +103,6 @@
         /* 관리자 로그인 시에만 관리자 메뉴 색상 변경 */
         .admin-logged-in .gnb-item:last-child .gnb-label {
             color: #B17457;
-        }
-
-        .dropdown-column {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-top: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            padding: 10px 0;
-            z-index: 1000;
-            min-width: 160px;
-            height: auto;
-            text-align: center;
         }
 
         .dropdown-column a {
@@ -303,6 +289,92 @@
             background-color: #e9e5dc;
         }
 
+        /* 햄버거 메뉴 버튼 */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        .hamburger-menu span {
+            width: 25px;
+            height: 3px;
+            background-color: #4A4947;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* 모바일 메뉴 */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background-color: #fff;
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-content {
+            padding: 20px;
+        }
+
+        .mobile-menu-section {
+            margin-bottom: 30px;
+        }
+
+        .mobile-menu-section h3 {
+            color: #B17457;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1eee8;
+        }
+
+        .mobile-menu-section a {
+            display: block;
+            padding: 12px 0;
+            color: #4A4947;
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid #f5f5f5;
+            transition: color 0.2s;
+        }
+
+        .mobile-menu-section a:hover {
+            color: #B17457;
+        }
+
+        .mobile-menu-section a:last-child {
+            border-bottom: none;
+        }
+
         /* 반응형 */
         @media (max-width: 1200px) {
             .header-inner {
@@ -331,10 +403,24 @@
             .logo a {
                 font-size: 28px;
             }
-            .gnb-label {
-                font-size: 14px;
-                padding: 4px 8px;
+            
+            /* 데스크톱 메뉴 숨기기 */
+            .gnb-group-1 {
+                display: none;
             }
+            
+            /* 햄버거 메뉴 표시 */
+            .hamburger-menu {
+                display: flex;
+            }
+            
+            /* 모바일 메뉴 표시 */
+            .mobile-menu {
+                display: block;
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+            
             .gnb-group-2 a {
                 font-size: 12px;
                 padding: 4px 6px;
@@ -351,6 +437,11 @@
             .logo a {
                 font-size: 24px;
             }
+            
+            .mobile-menu {
+                top: 55px;
+                height: calc(100vh - 55px);
+            }
         }
     </style>
 
@@ -359,6 +450,7 @@
             <a href="/">WooriZIP</a>
         </h1>
 
+        <!-- 데스크톱 메뉴 -->
         <div class="gnb-group-1">
             <div class="gnb-item">
                 <div class="gnb-label">쇼핑</div>
@@ -437,7 +529,93 @@
             <a th:if="${loginUser == null}" href="/user/signup">회원가입</a>
             <a th:if="${loginUser != null}" href="/user/mypage">마이페이지</a>
         </div>
+
+        <!-- 햄버거 메뉴 버튼 -->
+        <button class="hamburger-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <!-- 모바일 메뉴 -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-section">
+                <h3>쇼핑</h3>
+                <a href="/products">전체보기</a>
+                <a href="/products?category=1">가구</a>
+                <a href="/products?category=82">수납/정리</a>
+                <a href="/products?category=72">인테리어소품</a>
+                <a href="/products?category=62">조명</a>
+                <a href="/products?category=54">생활용품</a>
+                <a href="/products?category=43">패브릭</a>
+                <a href="/products?category=34">주방용품</a>
+            </div>
+            
+            <div class="mobile-menu-section">
+                <h3>커뮤니티</h3>
+                <a href="/interior">방꾸미기 게시판</a>
+                <a href="/interior/write">게시글 작성</a>
+            </div>
+            
+            <div class="mobile-menu-section">
+                <h3>이벤트</h3>
+                <a th:href="@{/event}">쿠폰 받기</a>
+            </div>
+            
+            <div th:if="${loginUser != null and loginUser.role.name() == 'ADMIN'}" class="mobile-menu-section">
+                <h3>관리자</h3>
+                <a href="/admin/products">상품 관리</a>
+                <a href="/admin/product-details">상품상세정보 관리</a>
+                <a href="/admin/coupons">쿠폰 관리</a>
+                <a href="/qna/answer/admin/dashboard">QnA 관리</a>
+                <a href="/interior/write?isNotice=true">공지사항 작성</a>
+                <a href="/admin/orderCheck">전체 주문 내역</a>
+            </div>
+            
+            <div class="mobile-menu-section">
+                <h3>사용자</h3>
+                <a th:href="@{/chatbot}">💬 챗봇</a>
+                <a th:if="${loginUser == null}" href="/user/login">로그인</a>
+                <a th:if="${loginUser != null}" href="/user/logout">로그아웃</a>
+                <a th:if="${loginUser == null}" href="/user/signup">회원가입</a>
+                <a th:if="${loginUser != null}" href="/user/mypage">마이페이지</a>
+            </div>
+        </div>
     </div>
 </header>
+
+<script>
+function toggleMobileMenu() {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+}
+
+// 모바일 메뉴 외부 클릭 시 닫기
+document.addEventListener('click', function(event) {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (!hamburger.contains(event.target) && !mobileMenu.contains(event.target)) {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// 모바일 메뉴 링크 클릭 시 메뉴 닫기
+document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', function() {
+        const hamburger = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    });
+});
+</script>
 
 <div th:replace="~{index/floating-chatbot :: floating-chatbot}"></div>

@@ -34,6 +34,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     @Query("SELECT p FROM Product p ORDER BY p.createdAt DESC")
     List<Product> findTop5ByOrderByCreatedAtDesc(Pageable pageable);
+
+    List<Product> findAllByOrderByCreatedAtDesc();
     
     // 기본 메서드들 (Pageable 없이)
     default List<Product> findTop5ByOrderByPriceAsc() {

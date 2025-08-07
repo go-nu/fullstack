@@ -24,6 +24,10 @@ public class CouponService {
     private final UserCouponRepository userCouponRepository;
 
     public void create(CouponDto dto) {
+        // 중복 코드 체크
+        if (couponRepository.findByCode(dto.getCode()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 쿠폰 코드입니다.");
+        }
         Coupon coupon = Coupon.createCoupon(dto);
         couponRepository.save(coupon);
     }
