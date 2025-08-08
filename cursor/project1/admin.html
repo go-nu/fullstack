@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Academy - 관리자 대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .admin-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: #333;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            min-height: 70vh;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Applications List */
+        .applications-container {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .application-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .application-card:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .app-header h3 {
+            color: #333;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.9rem;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .app-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-info p {
+            margin: 0;
+            color: #555;
+        }
+
+        .app-info strong {
+            color: #333;
+        }
+
+        .motivation-section {
+            grid-column: 1 / -1;
+        }
+
+        .motivation-text {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            border-left: 4px solid #667eea;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .app-actions {
+            text-align: right;
+        }
+
+        .delete-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        /* Scrollbar Styling */
+        .applications-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .applications-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .applications-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .applications-container::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-stats {
+                gap: 1rem;
+            }
+
+            .content-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .app-content {
+                grid-template-columns: 1fr;
+            }
+
+            .app-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .application-card {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="header-content">
+            <div class="header-title">AI Academy 관리자 대시보드</div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalApplications">0</div>
+                    <div class="stat-label">총 신청</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="todayApplications">0</div>
+                    <div class="stat-label">오늘 신청</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="thisWeekApplications">0</div>
+                    <div class="stat-label">이번 주</div>
+                </div>
+            </div>
+            <a href="index.html" class="back-btn">메인으로 돌아가기</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <div class="content-header">
+                <h2 class="content-title">수강신청 관리</h2>
+                <button class="refresh-btn" onclick="loadApplications()">새로고침</button>
+            </div>
+            
+            <div class="applications-container">
+                <div id="applicationsList">
+                    <div class="loading">데이터를 불러오는 중...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Admin Script -->
+    <script>
+        // 전역 변수
+        let applications = [];
+
+        // DOM 요소들
+        const applicationsList = document.getElementById('applicationsList');
+        const totalApplications = document.getElementById('totalApplications');
+        const todayApplications = document.getElementById('todayApplications');
+        const thisWeekApplications = document.getElementById('thisWeekApplications');
+
+        // Firebase에서 신청 데이터 가져오기
+        async function loadApplications() {
+            try {
+                applicationsList.innerHTML = '<div class="loading">데이터를 불러오는 중...</div>';
+                
+                const snapshot = await db.collection('applications').orderBy('timestamp', 'desc').get();
+                applications = [];
+                snapshot.forEach(doc => {
+                    applications.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                displayApplications();
+                updateStats();
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                applicationsList.innerHTML = '<div class="no-data">데이터를 불러오는 중 오류가 발생했습니다.</div>';
+            }
+        }
+
+        // 신청 데이터 화면에 표시
+        function displayApplications() {
+            if (applications.length === 0) {
+                applicationsList.innerHTML = '<div class="no-data">아직 신청된 데이터가 없습니다.</div>';
+                return;
+            }
+
+            applicationsList.innerHTML = applications.map(app => `
+                <div class="application-card">
+                    <div class="app-header">
+                        <h3>${app.name}</h3>
+                        <span class="timestamp">${formatDate(app.timestamp)}</span>
+                    </div>
+                    <div class="app-content">
+                        <div class="app-info">
+                            <p><strong>이메일:</strong> ${app.email}</p>
+                            <p><strong>휴대폰:</strong> ${app.phone}</p>
+                        </div>
+                        <div class="motivation-section">
+                            <p><strong>신청동기:</strong></p>
+                            <div class="motivation-text">${app.motivation}</div>
+                        </div>
+                    </div>
+                    <div class="app-actions">
+                        <button class="delete-btn" onclick="deleteApplication('${app.id}')">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const total = applications.length;
+            const today = new Date();
+            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const weekStart = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+            const todayCount = applications.filter(app => {
+                const appDate = app.timestamp.toDate();
+                return appDate >= todayStart;
+            }).length;
+
+            const weekCount = applications.filter(app => {
+                const appDate = app.timestamp.toDate();
+                return appDate >= weekStart;
+            }).length;
+
+            totalApplications.textContent = total;
+            todayApplications.textContent = todayCount;
+            thisWeekApplications.textContent = weekCount;
+        }
+
+        // 날짜 포맷팅
+        function formatDate(timestamp) {
+            const date = timestamp.toDate();
+            return date.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 신청 데이터 삭제
+        async function deleteApplication(id) {
+            if (confirm('정말로 이 신청을 삭제하시겠습니까?')) {
+                try {
+                    await db.collection('applications').doc(id).delete();
+                    await loadApplications(); // 목록 새로고침
+                    alert('신청이 삭제되었습니다.');
+                } catch (error) {
+                    console.error('삭제 오류:', error);
+                    alert('삭제 중 오류가 발생했습니다.');
+                }
+            }
+        }
+
+        // 페이지 로드 시 데이터 불러오기
+        document.addEventListener('DOMContentLoaded', function() {
+            loadApplications();
+        });
+    </script>
+</body>
+</html> 
