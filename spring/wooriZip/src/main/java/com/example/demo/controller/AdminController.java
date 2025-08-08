@@ -77,17 +77,30 @@ public class AdminController {
 
     @GetMapping("/admin/orderChartData")
     @ResponseBody
-    public List<Map<String, Object>> getCategoryChartData(@RequestParam String range) {
-        List<Object[]> result = range.equals("month")
-                ? orderRepository.getThisMonthCategorySales()
-                : orderRepository.getAllCategorySalesByMonth();
-
-        return result.stream().map(row -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("category", row[1]);  // row[0] = month, row[1] = category, row[2] = count
-            map.put("count", row[2]);
-            return map;
-        }).collect(Collectors.toList());
+    public List<Map<String, Object>> getCategoryChartData(@RequestParam String range)
+    {
+        List<Object[]> result;
+        if ("all".equals(range)) {
+            result = orderRepository.getTotalCategorySales(); // SELECT category, count
+            return result.stream()
+                    .map(row -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("category", row[0]);
+                        map.put("count", ((Number) row[1]).intValue());
+                        return map;
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            result = orderRepository.getThisMonthCategorySales(); // SELECT month, category,count
+            return result.stream()
+                    .map(row -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("category", row[1]);
+                        map.put("count", ((Number) row[2]).intValue());
+                        return map;
+                    })
+                    .collect(Collectors.toList());
+        }
     }
 
 }

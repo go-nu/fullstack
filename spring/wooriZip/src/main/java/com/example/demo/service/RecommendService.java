@@ -22,7 +22,7 @@ public class RecommendService {
     private final ProductRepository productRepository;
     private final ProductModelAttributeRepository productModelAttributeRepository;
 
-    private final String RECOMMEND_API = "https://a3172476d805.ngrok-free.app/recommend"; // ngrok 주소
+    private final String RECOMMEND_API = "https://3187062a24cc.ngrok-free.app/recommend"; // ngrok 주소
 
     private int getMostUsedOption(String attributeName) {
         List<ProductModelAttribute> all = productModelAttributeRepository.findAll();

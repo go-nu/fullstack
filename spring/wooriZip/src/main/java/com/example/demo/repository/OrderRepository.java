@@ -87,24 +87,23 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = """
         WITH RECURSIVE category_hierarchy AS (
-            SELECT id, name, parent_id, name AS top_category
-            FROM category
-            WHERE parent_id IS NULL
-            UNION ALL
-            SELECT c.id, c.name, c.parent_id, ch.top_category
-            FROM category c
-            JOIN category_hierarchy ch ON c.parent_id = ch.id
+        SELECT id, name, parent_id, name AS top_category
+        FROM category
+        WHERE parent_id IS NULL
+        UNION ALL
+        SELECT c.id, c.name, c.parent_id, ch.top_category
+        FROM category c
+        JOIN category_hierarchy ch ON c.parent_id = ch.id
         )
-        SELECT DATE_FORMAT(o.order_date, '%Y-%m') AS month,
-               ch.top_category AS category,
-               IFNULL(SUM(oi.count), 0) AS count
+        SELECT ch.top_category AS category,
+        IFNULL(SUM(oi.count), 0) AS count
         FROM category_hierarchy ch
         LEFT JOIN product p ON p.category_id = ch.id
         LEFT JOIN order_item oi ON oi.product_id = p.id
         LEFT JOIN orders o ON o.id = oi.order_id
-            AND o.order_status = 'ORDER'
-        GROUP BY DATE_FORMAT(o.order_date, '%Y-%m'), ch.top_category
-        ORDER BY month ASC, category ASC
+        AND o.order_status = 'ORDER'
+        GROUP BY ch.top_category
+        ORDER BY ch.top_category ASC
     """, nativeQuery = true)
-    List<Object[]> getAllCategorySalesByMonth();
+    List<Object[]> getTotalCategorySales();
 }

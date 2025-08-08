@@ -36,8 +36,8 @@ public class ProductDetailController {
             return "redirect:/user/login";
         }
 
-        // 모든 상품 조회 (페이지네이션 없이)
-        List<Product> allProducts = productRepository.findAll();
+        // 🔽 최신 등록 순으로 정렬된 상품 조회
+        List<Product> allProducts = productRepository.findAllByOrderByCreatedAtDesc();
         
         // 각 상품에 대한 상세정보 존재 여부 확인
         Map<Long, Boolean> hasDetailMap = new HashMap<>();

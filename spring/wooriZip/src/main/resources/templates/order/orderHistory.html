@@ -177,9 +177,7 @@
                         <td th:if="${iterStat.index == 0}"
                             th:rowspan="${#lists.size(order.orderItems)}"
                             th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'COMMA')} + '원'">금액</td>
-
-                        <td th:if="${iterStat.index == 0}"
-                            th:rowspan="${#lists.size(order.orderItems)}">
+                        <td>
                             <a th:href="@{'/products/' + ${item.product.id}}">제품보기</a><br/>
                             <a th:href="@{'/products/' + ${item.product.id} + '#review-section'}">리뷰작성</a><br/>
                             <a th:href="@{'/order/detail?orderId=' + ${order.orderId}}">상세보기</a>

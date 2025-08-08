@@ -587,7 +587,7 @@ public class OrderService {
     }
 
     public List<CategoryMonthSalesDto> getAllCategorySalesByMonth() {
-        List<Object[]> rows = orderRepository.getAllCategorySalesByMonth();
+        List<Object[]> rows = orderRepository.getTotalCategorySales();
         return rows.stream()
                 .map(row -> new CategoryMonthSalesDto(
                         (String) row[0],
